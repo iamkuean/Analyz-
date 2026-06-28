@@ -862,13 +862,17 @@ const TRAIN_DEFS=[
   {key:"d2_att_l",color:NEG,kb:"W",pol:"neg"},
   {key:"d2_def", color:POS,kb:"E",pol:"pos"},
   {key:"d2_def_l",color:NEG,kb:"R",pol:"neg"},
+  {key:"pass_ok", color:POS,kb:"C",pol:"pos"},
+  {key:"pass_no", color:NEG,kb:"X",pol:"neg"},
 ];
-const EXERCISES=["finishing","d1","d2"];
-const exLabel=e=>t(e==="finishing"?"ex_finishing":e==="d1"?"ex_1v1":"ex_2v1");
+const EXERCISES=["finishing","passing","d1","d2"];
+const EX_LABELS={finishing:"ex_finishing",passing:"ex_passing",d1:"ex_1v1",d2:"ex_2v1"};
+const exLabel=e=>t(EX_LABELS[e]||"ex_finishing");
 const ALLSTATS=STATS.concat(GK_STATS).concat(TRAIN_DEFS);
 const SDEF=k=>ALLSTATS.find(s=>s.key===k);
 function trainButtons(ex,isGk){
   if(ex==="finishing")return isGk?GK_STATS.slice():[SDEF("fin_on"),SDEF("fin_off")];
+  if(ex==="passing")return [SDEF("pass_ok"),SDEF("pass_no")];
   if(ex==="d1")return [SDEF("d1_att"),SDEF("d1_att_l"),SDEF("d1_def"),SDEF("d1_def_l")];
   return [SDEF("d2_att"),SDEF("d2_att_l"),SDEF("d2_def"),SDEF("d2_def_l")];
 }
@@ -884,9 +888,9 @@ const I18N={
   wiz_match_sub:"Quarters, opponent, score",wiz_train_sub:"Finishing & duels",lbl_quarters:"Quarters",lbl_video_opt:"Video link (optional)",
   lbl_datetime:"Date & time",lbl_minper:"Min / quarter",lbl_time:"Time",wiz_total:"Total play time: {n} min ({q}×{m})",lbl_format:"Format (e.g. 7v7)",
   field_mode:"Field mode (big buttons)",field_label:"Mobile mode",field_sub:"Big buttons for pitchside tagging",field_hint:"Tap a player, then tap an action.",
-  lbl_exercise:"Exercise",ex_finishing:"Finishing",ex_1v1:"1v1 duel",ex_2v1:"2v1 duel",
+  lbl_exercise:"Exercise",ex_finishing:"Finishing",ex_passing:"Passing",ex_1v1:"1v1 duel",ex_2v1:"2v1 duel",
   lbl_train_details:"Training details",train_details_ph:"Drills, focus, notes for this session…",
-  s_fin_on:"On target",s_fin_off:"Off target",s_d1_att:"1v1 attack won",s_d1_def:"1v1 defence won",s_d2_att:"2v1 attack won",s_d2_def:"2v1 defence won",
+  s_fin_on:"On target",s_fin_off:"Off target",s_pass_ok:"Pass completed",s_pass_no:"Pass lost",s_d1_att:"1v1 attack won",s_d1_def:"1v1 defence won",s_d2_att:"2v1 attack won",s_d2_def:"2v1 defence won",
   s_d1_att_l:"1v1 attack lost",s_d1_def_l:"1v1 defence lost",s_d2_att_l:"2v1 attack lost",s_d2_def_l:"2v1 defence lost",
   h_train_summary:"Training summary",col_on:"On",col_off:"Off",col_acc:"Acc %",col_d1a:"1v1 atk",col_d1d:"1v1 def",col_d2a:"2v1 atk",col_d2d:"2v1 def",
   tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_settings:"Settings",
@@ -956,9 +960,9 @@ const I18N={
   wiz_match_sub:"ควอเตอร์ คู่แข่ง สกอร์",wiz_train_sub:"จบสกอร์ & ดวล",lbl_quarters:"ควอเตอร์",lbl_video_opt:"ลิงก์วิดีโอ (ไม่บังคับ)",
   lbl_datetime:"วันที่ & เวลา",lbl_minper:"นาที / ควอเตอร์",lbl_time:"เวลา",wiz_total:"เวลารวมที่เล่น: {n} นาที ({q}×{m})",lbl_format:"รูปแบบ (เช่น 7v7)",
   field_mode:"โหมดข้างสนาม (ปุ่มใหญ่)",field_label:"โหมดมือถือ",field_sub:"ปุ่มใหญ่ แท็กข้างสนามสะดวก",field_hint:"แตะเลือกนักเตะ แล้วแตะการกระทำ",
-  lbl_exercise:"แบบฝึก",ex_finishing:"จบสกอร์",ex_1v1:"ดวล 1v1",ex_2v1:"ดวล 2v1",
+  lbl_exercise:"แบบฝึก",ex_finishing:"จบสกอร์",ex_passing:"การส่งบอล",ex_1v1:"ดวล 1v1",ex_2v1:"ดวล 2v1",
   lbl_train_details:"รายละเอียดเทรนนิ่ง",train_details_ph:"แบบฝึก จุดเน้น โน้ตของเซสชันนี้…",
-  s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
+  s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_pass_ok:"ส่งสำเร็จ",s_pass_no:"ส่งไม่สำเร็จ",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
   s_d1_att_l:"1v1 แพ้เกมรุก",s_d1_def_l:"1v1 แพ้เกมรับ",s_d2_att_l:"2v1 แพ้เกมรุก",s_d2_def_l:"2v1 แพ้เกมรับ",
   h_train_summary:"สรุปเทรนนิ่ง",col_on:"เข้า",col_off:"ไม่เข้า",col_acc:"แม่น %",col_d1a:"1v1 รุก",col_d1d:"1v1 รับ",col_d2a:"2v1 รุก",col_d2d:"2v1 รับ",
   tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_settings:"ตั้งค่า",
@@ -1722,7 +1726,11 @@ function renderTrainDash(m){
   const kpi=(v,l)=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
   const d1w=C("d1_att")+C("d1_def"),d1t=d1w+C("d1_att_l")+C("d1_def_l");
   const d2w=C("d2_att")+C("d2_def"),d2t=d2w+C("d2_att_l")+C("d2_def_l");
-  $("kpis").innerHTML=kpi(C("fin_on"),t("s_fin_on"))+kpi(C("fin_off"),t("s_fin_off"))+kpi(ratio(C("fin_on"),C("fin_on")+C("fin_off")),t("col_acc"))+kpi(C("gk_save"),t("col_save"))+kpi(ratio(d1w,d1t),t("ex_1v1"))+kpi(ratio(d2w,d2t),t("ex_2v1"));
+  if(m.exercise==="passing"){
+    $("kpis").innerHTML=kpi(C("pass_ok"),t("s_pass_ok"))+kpi(C("pass_no"),t("s_pass_no"))+kpi(ratio(C("pass_ok"),C("pass_ok")+C("pass_no")),t("col_acc"));
+  }else{
+    $("kpis").innerHTML=kpi(C("fin_on"),t("s_fin_on"))+kpi(C("fin_off"),t("s_fin_off"))+kpi(ratio(C("fin_on"),C("fin_on")+C("fin_off")),t("col_acc"))+kpi(C("gk_save"),t("col_save"))+kpi(ratio(d1w,d1t),t("ex_1v1"))+kpi(ratio(d2w,d2t),t("ex_2v1"));
+  }
   $("tops").innerHTML="";
   const head=`<tr><th>#</th><th class='name' style='text-align:left'>${t("col_player")}</th><th>${t("col_on")}</th><th>${t("col_off")}</th><th>${t("col_acc")}</th><th>${t("col_save")}</th><th>${t("col_conc")}</th><th>${t("col_savepct")}</th><th>${t("col_d1a")}</th><th>${t("col_d1d")}</th><th>${t("col_d2a")}</th><th>${t("col_d2d")}</th></tr>`;
   const wl=(w,l)=>`${w}-${l}`;
