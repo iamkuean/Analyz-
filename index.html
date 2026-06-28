@@ -1361,17 +1361,11 @@ async function cloudAfterLogin(){
     loginMsg(rej?t("conn_rejected"):t("conn_pending"),rej?"err":"");
     return;
   }
-  // each approved user has their OWN org → their data is isolated by RLS
-  let mem=null;
-  try{const r=await withTimeout(cloud.sb.from("org_members").select("org_id").limit(1),12000,"org");mem=r.data;}
-  catch(e){loginMsg(t("conn_timeout"),"err");showGate();return;}
+  // each approved user has their OWN org → created server-side so RLS can't race
   try{
-    if(!mem||!mem.length){
-      const co=await withTimeout(cloud.sb.from("organizations").insert({name:(cloud.profile.username||"my")+"-team"}).select("id").single(),12000,"org-create");
-      if(co.error||!co.data){loginMsg(t("conn_no_org"),"err");showGate();return;}
-      mem=[{org_id:co.data.id}];
-    }
-    cloud.orgId=mem[0].org_id;
+    const ro=await withTimeout(cloud.sb.rpc("ensure_my_org"),12000,"org");
+    if(ro.error||!ro.data){loginMsg(t("conn_no_org"),"err");showGate();return;}
+    cloud.orgId=ro.data;
     let [{data:teams},{data:seas}]=await withTimeout(Promise.all([
       cloud.sb.from("teams").select("id").eq("org_id",cloud.orgId).limit(1),
       cloud.sb.from("seasons").select("id").eq("org_id",cloud.orgId).limit(1)
