@@ -887,10 +887,11 @@ const STATS=[
   {key:"key_pass",       color:POS,kb:"K",pol:"pos"},
   {key:"assist",         color:POS,kb:"P",pol:"pos"},
   {key:"shot",           color:POS,kb:"S",pol:"pos"},
+  {key:"shot_on",        color:POS,kb:"O",pol:"pos"},
   {key:"score",          color:POS,kb:"G",pol:"pos"},
   {key:"recovery",       color:POS,kb:"R",pol:"pos"},
 ];
-const KB_STAT={c:"pass_complete",i:"pass_incomplete",a:"att_won",q:"att_lost",d:"def_won",e:"def_lost",t:"interception",l:"block",b:"into_box",k:"key_pass",p:"assist",s:"shot",g:"score",r:"recovery"};
+const KB_STAT={c:"pass_complete",i:"pass_incomplete",a:"att_won",q:"att_lost",d:"def_won",e:"def_lost",t:"interception",l:"block",b:"into_box",k:"key_pass",p:"assist",s:"shot",o:"shot_on",g:"score",r:"recovery"};
 // goalkeeper-only actions, shown when a GK is the active player
 const GK_STATS=[
   {key:"gk_save",    color:POS,kb:"V",pol:"pos"},
@@ -918,7 +919,7 @@ const exLabel=e=>t(EX_LABELS[e]||"ex_finishing");
 const ALLSTATS=STATS.concat(GK_STATS).concat(TRAIN_DEFS);
 const SDEF=k=>ALLSTATS.find(s=>s.key===k);
 function trainButtons(ex,isGk){
-  if(ex==="finishing")return isGk?GK_STATS.slice():[SDEF("fin_on"),SDEF("fin_off")];
+  if(ex==="finishing")return isGk?GK_STATS.slice():[SDEF("shot"),SDEF("shot_on"),SDEF("score")];
   if(ex==="passing")return [SDEF("pass_ok"),SDEF("pass_no")];
   if(ex==="d1")return [SDEF("d1_att"),SDEF("d1_att_l"),SDEF("d1_def"),SDEF("d1_def_l")];
   return [SDEF("d2_att"),SDEF("d2_att_l"),SDEF("d2_def"),SDEF("d2_def_l")];
@@ -956,7 +957,7 @@ const I18N={
   cmp_mode:"Compare",cmp_players:"Players",cmp_matches:"Matches",cmp_across:"One player, across matches",
   rep_pick_metrics:"Metrics (radar axes)",rep_pick_players:"Players",rep_pick_matches:"Matches",rep_team_avg:"Show team average",rep_scope:"Data",rep_scope_match:"This match",rep_scope_all:"All matches",
   rep_team_average:"Team average",rep_radar_note:"Each spoke is scaled to the highest value among those compared. Raw numbers are in the table.",rep_need2:"Pick at least two to compare.",rep_need3metrics:"Pick at least three metrics.",
-  met_pass_pct:"Pass %",met_att_pct:"Att duel %",met_def_pct:"Def duel %",met_conv_pct:"Conversion %",met_goals:"Goals",met_shots:"Shots",met_into_box:"Into box",met_key_passes:"Key passes",met_recoveries:"Recoveries",met_passes:"Passes",met_involve:"Involvements",
+  met_pass_pct:"Pass %",met_att_pct:"Att duel %",met_def_pct:"Def duel %",met_conv_pct:"Conversion %",met_ontarget_pct:"On-target %",col_shot:"Shots",col_ontarget:"On target",met_goals:"Goals",met_shots:"Shots",met_into_box:"Into box",met_key_passes:"Key passes",met_recoveries:"Recoveries",met_passes:"Passes",met_involve:"Involvements",
   cmp_view:"View",view_radar:"Radar",view_bars:"Bars",view_board:"Leaderboard",board_metric:"Metric",board_note:"Ranks every player by one metric.",
   reselect:"Re-select your video file:",reselect_note:"(local files can't be reloaded automatically)",
   capture_for:"Capture time for the next tag",synced:"Synced to video",manual_clock:"Manual clock",start:"Start",pause:"Pause",reset:"Reset",
@@ -1000,7 +1001,7 @@ const I18N={
   h_members:"Members (admin)",members_note:"Approve new sign-ups and manage roles. Each member only sees their own teams, matches and sessions.",mem_none:"No members yet.",mem_approve:"Approve",mem_reject:"Reject",mem_promote:"Make admin",mem_demote:"Remove admin",mem_admin:"admin",mem_you:"you",st_pending:"pending",st_approved:"approved",st_rejected:"rejected",
   conn_connecting:"Connecting…",conn_need_login:"Connected. Now sign in with your Supabase user.",conn_loading_lib:"Loading library…",conn_lib_fail:"Couldn't load the Supabase library here — this usually works only when the file is downloaded or hosted, not in the preview.",conn_bad:"Connection failed. Check the URL and key.",conn_login_fail:"Sign-in failed. Check your email and password.",conn_no_org:"Signed in, but no organisation/team is linked to this user yet.",conn_synced:"Synced · {n} players · {m} matches",conn_offline:"Offline mode (data stays on this device).",conn_live:"Live sync on",ag_sub_login:"Sign in to continue",ag_sub_signup:"Create your account",ag_to_signup:"New here?",ag_to_login:"Already have an account?",ag_offline:"Use offline (no sync)",h_offline:"Offline",offline_note:"You're using the app offline. Sign in to sync your data across devices.",offline_signin:"Sign in to sync",conn_slow:"Still connecting… your network looks slow, please wait a moment.",pin_sub:"Enter the access PIN to use offline",pin_ph:"PIN",pin_enter:"Enter",pin_wrong:"Wrong PIN. Try again.",pin_back:"Back to login",h_pin:"Offline access PIN",pin_note:"People must enter this PIN to use the app offline (without signing in). Change it to keep it private.",pin_label:"PIN",pin_saved:"PIN saved.",pin_min:"PIN must be at least 4 characters.",conn_timeout:"Connection timed out. Check your network, or the project key may be wrong. Tell your admin.",
   h_account:"My account",acc_photo:"Change photo",acc_username:"Username",acc_newpwd:"New password",acc_save:"Save",acc_change:"Change",acc_pwd_ok:"Password changed.",acc_user_ok:"Username (display name) updated.",acc_photo_ok:"Photo updated.",
-  s_pass_complete:"Pass completed",s_pass_incomplete:"Pass incomplete",s_att_won:"Attacking duel won",s_att_lost:"Attacking duel lost",s_def_won:"Defensive duel won",s_def_lost:"Defensive duel lost",s_interception:"Interception",s_block:"Block",s_assist:"Assist",s_into_box:"Entry into the box",s_key_pass:"Key pass",s_shot:"Shot",s_score:"Goal",seek_hint:"Click to replay this moment",field_need_players:"Add players in the Team tab first, then open Mobile mode.",theme_auto:"Auto",reset_appearance:"Reset to default",reset_appearance_done:"Appearance reset.",confirm_remove_player:"Remove {name} from the team?",confirm_del_match:"Delete this match and all its tags? This cannot be undone.",er_title:"No players yet",er_sub:"Add players above, or start with a sample squad you can rename.",add_sample:"Add a sample squad",sample_added:"Sample players added — edit names above.",s_recovery:"Ball recovery",s_gk_save:"Save",s_gk_conceded:"Goal conceded"},
+  s_pass_complete:"Pass completed",s_pass_incomplete:"Pass incomplete",s_att_won:"Attacking duel won",s_att_lost:"Attacking duel lost",s_def_won:"Defensive duel won",s_def_lost:"Defensive duel lost",s_interception:"Interception",s_block:"Block",s_assist:"Assist",s_into_box:"Entry into the box",s_key_pass:"Key pass",s_shot:"Shot",s_shot_on:"Shot on target",s_score:"Goal",seek_hint:"Click to replay this moment",field_need_players:"Add players in the Team tab first, then open Mobile mode.",theme_auto:"Auto",reset_appearance:"Reset to default",reset_appearance_done:"Appearance reset.",confirm_remove_player:"Remove {name} from the team?",confirm_del_match:"Delete this match and all its tags? This cannot be undone.",er_title:"No players yet",er_sub:"Add players above, or start with a sample squad you can rename.",add_sample:"Add a sample squad",sample_added:"Sample players added — edit names above.",s_recovery:"Ball recovery",s_gk_save:"Save",s_gk_conceded:"Goal conceded"},
  th:{app_title:"วิเคราะห์ฟุตบอลเยาวชน",mode:"EZ Analyze",newmatch:"+ แมตช์",untitled:"(แมตช์ยังไม่ตั้งชื่อ)",vs:"พบ",
   newtraining:"+ เทรนนิ่ง",train_tag:"เทรนนิ่ง",sess_training:"เซสชันเทรนนิ่ง",
   new_session:"+ ใหม่",new_team:"+ ทีม",new_team_prompt:"ตั้งชื่อทีม:",team_created:"สร้างทีมแล้ว",h_teams:"ทีม & สิทธิ์เข้าถึง (แอดมิน)",teams_note:"เลือกทีม แล้วให้/ยกเลิกสิทธิ์ผู้ใช้แต่ละคน ผู้ใช้สร้างทีมของตัวเองได้จากแถบบน",lbl_team:"ทีม",team_delete:"ลบ",team_owner:"เจ้าของ",team_revoke:"ยกเลิกสิทธิ์",team_grant:"ให้สิทธิ์",team_has:"เข้าถึงได้",team_del_confirm:"ลบทีมนี้พร้อมผู้เล่น/แมตช์/แท็กทั้งหมด? ย้อนกลับไม่ได้",team_deleted:"ลบทีมแล้ว",team_rename:"เปลี่ยนชื่อ",team_rename_prompt:"ชื่อทีมใหม่:",team_renamed:"เปลี่ยนชื่อแล้ว",wiz_title:"สร้างเซสชันใหม่",wiz_sub:"อยากเก็บข้อมูลแบบไหน?",sess_match:"แมตช์",sess_training_short:"เทรนนิ่ง",wiz_notes:"โน้ต / คอมเมนต์",wiz_notes_ph:"สิ่งที่อยากจำเกี่ยวกับเซสชันนี้…",wiz_create:"สร้าง & เริ่ม",cancel:"ยกเลิก",back:"ย้อนกลับ",lbl_match_notes:"โน้ต / คอมเมนต์",
@@ -1028,7 +1029,7 @@ const I18N={
   cmp_mode:"เปรียบเทียบ",cmp_players:"ผู้เล่น",cmp_matches:"แมตช์",cmp_across:"คนเดียว ข้ามหลายแมตช์",
   rep_pick_metrics:"ตัวชี้วัด (แกนเรดาร์)",rep_pick_players:"ผู้เล่น",rep_pick_matches:"แมตช์",rep_team_avg:"แสดงค่าเฉลี่ยทีม",rep_scope:"ข้อมูล",rep_scope_match:"แมตช์นี้",rep_scope_all:"ทุกแมตช์",
   rep_team_average:"ค่าเฉลี่ยทีม",rep_radar_note:"แต่ละแกนปรับตามค่าสูงสุดในกลุ่มที่เทียบ · ตัวเลขจริงดูในตารางด้านล่าง",rep_need2:"เลือกอย่างน้อยสองรายการเพื่อเทียบ",rep_need3metrics:"เลือกตัวชี้วัดอย่างน้อยสามตัว",
-  met_pass_pct:"จ่าย %",met_att_pct:"เกมรุก %",met_def_pct:"เกมรับ %",met_conv_pct:"ยิงเข้า %",met_goals:"ประตู",met_shots:"ยิง",met_into_box:"เข้ากรอบ",met_key_passes:"คีย์พาส",met_recoveries:"แย่งบอลคืน",met_passes:"จ่ายสำเร็จ",met_involve:"มีส่วนร่วม",
+  met_pass_pct:"จ่าย %",met_att_pct:"เกมรุก %",met_def_pct:"เกมรับ %",met_conv_pct:"เป็นประตู %",met_ontarget_pct:"เข้ากรอบ %",col_shot:"ยิงรวม",col_ontarget:"เข้ากรอบ",met_goals:"ประตู",met_shots:"ยิง",met_into_box:"เข้ากรอบ",met_key_passes:"คีย์พาส",met_recoveries:"แย่งบอลคืน",met_passes:"จ่ายสำเร็จ",met_involve:"มีส่วนร่วม",
   cmp_view:"มุมมอง",view_radar:"เรดาร์",view_bars:"กราฟแท่ง",view_board:"จัดอันดับ",board_metric:"ตัวชี้วัด",board_note:"จัดอันดับผู้เล่นทุกคนตามตัวชี้วัดเดียว",
   reselect:"เลือกไฟล์วิดีโออีกครั้ง:",reselect_note:"(ไฟล์ในเครื่องโหลดเองอัตโนมัติไม่ได้)",
   capture_for:"เวลาที่จะบันทึกในแท็กถัดไป",synced:"ซิงค์กับวิดีโอ",manual_clock:"นาฬิกาจับเวลาเอง",start:"เริ่ม",pause:"หยุด",reset:"รีเซ็ต",
@@ -1072,7 +1073,7 @@ const I18N={
   h_members:"สมาชิก (แอดมิน)",members_note:"อนุมัติผู้สมัครใหม่และจัดการสิทธิ์ · สมาชิกแต่ละคนเห็นเฉพาะทีม แมตช์ และการซ้อมของตัวเอง",mem_none:"ยังไม่มีสมาชิก",mem_approve:"อนุมัติ",mem_reject:"ปฏิเสธ",mem_promote:"ตั้งเป็นแอดมิน",mem_demote:"ถอนแอดมิน",mem_admin:"แอดมิน",mem_you:"คุณ",st_pending:"รออนุมัติ",st_approved:"อนุมัติแล้ว",st_rejected:"ถูกปฏิเสธ",
   conn_connecting:"กำลังเชื่อมต่อ…",conn_need_login:"เชื่อมต่อแล้ว เข้าสู่ระบบด้วยผู้ใช้ Supabase ของคุณ",conn_loading_lib:"กำลังโหลดไลบรารี…",conn_lib_fail:"โหลดไลบรารี Supabase ตรงนี้ไม่ได้ — มักใช้ได้เฉพาะตอนดาวน์โหลดไฟล์ไปเปิดหรือ host เอง ไม่ใช่ในพรีวิว",conn_bad:"เชื่อมต่อไม่สำเร็จ ตรวจ URL และ key",conn_login_fail:"เข้าสู่ระบบไม่สำเร็จ ตรวจอีเมลและรหัสผ่าน",conn_no_org:"เข้าสู่ระบบแล้ว แต่ผู้ใช้นี้ยังไม่ได้ผูกกับองค์กร/ทีม",conn_synced:"ซิงค์แล้ว · {n} นักเตะ · {m} แมตช์",conn_offline:"โหมดออฟไลน์ (ข้อมูลอยู่ในเครื่องนี้)",conn_live:"ซิงค์สดเปิดอยู่",ag_sub_login:"เข้าสู่ระบบเพื่อใช้งาน",ag_sub_signup:"สร้างบัญชีของคุณ",ag_to_signup:"ยังไม่มีบัญชี?",ag_to_login:"มีบัญชีอยู่แล้ว?",ag_offline:"ใช้งานแบบออฟไลน์ (ไม่ซิงค์)",h_offline:"ออฟไลน์",offline_note:"กำลังใช้งานแบบออฟไลน์ เข้าสู่ระบบเพื่อซิงค์ข้อมูลข้ามอุปกรณ์",offline_signin:"เข้าสู่ระบบเพื่อซิงค์",conn_slow:"กำลังเชื่อมต่อ… เครือข่ายอาจช้า รอสักครู่นะครับ",pin_sub:"ใส่รหัส PIN เพื่อใช้งานแบบออฟไลน์",pin_ph:"PIN",pin_enter:"เข้าใช้งาน",pin_wrong:"PIN ไม่ถูกต้อง ลองใหม่",pin_back:"กลับไปหน้าล็อกอิน",h_pin:"PIN สำหรับใช้งานออฟไลน์",pin_note:"ผู้ใช้ต้องใส่ PIN นี้เพื่อใช้งานแบบออฟไลน์ (ไม่ล็อกอิน) เปลี่ยนเพื่อความเป็นส่วนตัว",pin_label:"PIN",pin_saved:"บันทึก PIN แล้ว",pin_min:"PIN ต้องยาวอย่างน้อย 4 ตัว",conn_timeout:"เชื่อมต่อหมดเวลา ลองเช็กเน็ต หรือคีย์โปรเจกต์อาจไม่ถูก แจ้งแอดมิน",
   h_account:"บัญชีของฉัน",acc_photo:"เปลี่ยนรูป",acc_username:"ชื่อผู้ใช้",acc_newpwd:"รหัสผ่านใหม่",acc_save:"บันทึก",acc_change:"เปลี่ยน",acc_pwd_ok:"เปลี่ยนรหัสผ่านแล้ว",acc_user_ok:"อัปเดตชื่อผู้ใช้แล้ว",acc_photo_ok:"อัปเดตรูปแล้ว",
-  s_pass_complete:"จ่ายบอลสำเร็จ",s_pass_incomplete:"จ่ายบอลพลาด",s_att_won:"เกมรุกชนะ",s_att_lost:"เกมรุกแพ้",s_def_won:"เกมรับชนะ",s_def_lost:"เกมรับแพ้",s_interception:"สกัดบอล",s_block:"บล็อก",s_assist:"แอสซิสต์",s_into_box:"เข้าเขตโทษ",s_key_pass:"คีย์พาส",s_shot:"ยิงประตู",s_score:"ทำประตู",seek_hint:"คลิกเพื่อย้อนดูจังหวะนี้",field_need_players:"เพิ่มผู้เล่นในแท็บทีมก่อน แล้วค่อยเปิดโหมดมือถือ",theme_auto:"อัตโนมัติ",reset_appearance:"คืนค่าเริ่มต้น",reset_appearance_done:"คืนค่าหน้าตาแล้ว",confirm_remove_player:"ลบ {name} ออกจากทีม?",confirm_del_match:"ลบแมตช์นี้พร้อมแท็กทั้งหมด? ย้อนกลับไม่ได้",er_title:"ยังไม่มีผู้เล่น",er_sub:"เพิ่มผู้เล่นด้านบน หรือเริ่มจากชุดตัวอย่างแล้วแก้ชื่อทีหลังก็ได้",add_sample:"เพิ่มผู้เล่นตัวอย่าง",sample_added:"เพิ่มผู้เล่นตัวอย่างแล้ว — แก้ชื่อด้านบนได้",s_recovery:"แย่งบอลคืน",s_gk_save:"เซฟประตู",s_gk_conceded:"เสียประตู"}
+  s_pass_complete:"จ่ายบอลสำเร็จ",s_pass_incomplete:"จ่ายบอลพลาด",s_att_won:"เกมรุกชนะ",s_att_lost:"เกมรุกแพ้",s_def_won:"เกมรับชนะ",s_def_lost:"เกมรับแพ้",s_interception:"สกัดบอล",s_block:"บล็อก",s_assist:"แอสซิสต์",s_into_box:"เข้าเขตโทษ",s_key_pass:"คีย์พาส",s_shot:"ยิงไม่เข้ากรอบ",s_shot_on:"ยิงเข้ากรอบ",s_score:"ทำประตู",seek_hint:"คลิกเพื่อย้อนดูจังหวะนี้",field_need_players:"เพิ่มผู้เล่นในแท็บทีมก่อน แล้วค่อยเปิดโหมดมือถือ",theme_auto:"อัตโนมัติ",reset_appearance:"คืนค่าเริ่มต้น",reset_appearance_done:"คืนค่าหน้าตาแล้ว",confirm_remove_player:"ลบ {name} ออกจากทีม?",confirm_del_match:"ลบแมตช์นี้พร้อมแท็กทั้งหมด? ย้อนกลับไม่ได้",er_title:"ยังไม่มีผู้เล่น",er_sub:"เพิ่มผู้เล่นด้านบน หรือเริ่มจากชุดตัวอย่างแล้วแก้ชื่อทีหลังก็ได้",add_sample:"เพิ่มผู้เล่นตัวอย่าง",sample_added:"เพิ่มผู้เล่นตัวอย่างแล้ว — แก้ชื่อด้านบนได้",s_recovery:"แย่งบอลคืน",s_gk_save:"เซฟประตู",s_gk_conceded:"เสียประตู"}
 };
 let settings={theme:"dark",accent:"#C9F25E",lang:"th",kbhints:true,supaUrl:"",supaKey:""};
 const t=k=>(I18N[settings.lang]&&I18N[settings.lang][k])||I18N.en[k]||k;
@@ -1361,6 +1362,10 @@ function paintFieldActive(flashKey){
 let gPeriod=0; // 0 = all periods (dashboard filter only)
 const inP=e=>gPeriod===0||(e.period||0)===gPeriod;
 const countFor=(pid,k)=>evs().filter(e=>e.player_id===pid&&e.stat_key===k&&inP(e)).length;
+const shotsOf=pid=>countFor(pid,"shot")+countFor(pid,"shot_on")+countFor(pid,"score");   // total attempts
+const onTargetOf=pid=>countFor(pid,"shot_on")+countFor(pid,"score");                      // on target (incl goals)
+const sTot=c=>(c.shot||0)+(c.shot_on||0)+(c.score||0);
+const sOn=c=>(c.shot_on||0)+(c.score||0);
 function periodLabel(i){return (settings.lang==="th"?"ช่วง ":"Q")+i;}
 function renderPeriodBar(){
   const m=curMatch();const bar=$("periodBar");if(!bar)return;
@@ -1788,10 +1793,6 @@ function addEvent(k){
   const ts=Math.round(captureTime()*10)/10, per=curPeriod();
   const e={id:uid("e"),player_id:activeId,stat_key:k,video_ts:ts,period:per,source:"manual",status:"unverified",created:Date.now()};
   evs().push(e);cw.addEvent(e);
-  if(k==="score"){ // a goal is also a shot → count it automatically (no need to tag a shot separately)
-    const se={id:uid("e"),player_id:activeId,stat_key:"shot",video_ts:ts,period:per,source:"manual",status:"unverified",created:Date.now()+1,from:e.id};
-    evs().push(se);cw.addEvent(se);
-  }
   renderStatBtns();renderLog();markDirty();
   if(typeof fieldOpen!=="undefined"&&fieldOpen)paintFieldActive(e.stat_key);
 }
@@ -1904,22 +1905,23 @@ function renderTrainDash(m){
   if(m.exercise==="passing"){
     $("kpis").innerHTML=kpi(C("pass_ok"),t("s_pass_ok"))+kpi(C("pass_no"),t("s_pass_no"))+kpi(ratio(C("pass_ok"),C("pass_ok")+C("pass_no")),t("col_acc"));
   }else{
-    $("kpis").innerHTML=kpi(C("fin_on"),t("s_fin_on"))+kpi(C("fin_off"),t("s_fin_off"))+kpi(ratio(C("fin_on"),C("fin_on")+C("fin_off")),t("col_acc"))+kpi(C("gk_save"),t("col_save"))+kpi(ratio(d1w,d1t),t("ex_1v1"))+kpi(ratio(d2w,d2t),t("ex_2v1"));
+    const sT=C("shot")+C("shot_on")+C("score"),sO=C("shot_on")+C("score");
+    $("kpis").innerHTML=kpi(sT,t("met_shots"))+kpi(sO,t("col_ontarget"))+kpi(C("score"),t("met_goals"))+kpi(ratio(sO,sT),t("met_ontarget_pct"))+kpi(ratio(C("score"),sT),t("met_conv_pct"))+kpi(C("gk_save"),t("col_save"))+kpi(ratio(d1w,d1t),t("ex_1v1"))+kpi(ratio(d2w,d2t),t("ex_2v1"));
   }
   $("tops").innerHTML="";
-  const head=`<tr><th>#</th><th class='name' style='text-align:left'>${t("col_player")}</th><th>${t("col_on")}</th><th>${t("col_off")}</th><th>${t("col_acc")}</th><th>${t("col_save")}</th><th>${t("col_conc")}</th><th>${t("col_savepct")}</th><th>${t("col_d1a")}</th><th>${t("col_d1d")}</th><th>${t("col_d2a")}</th><th>${t("col_d2d")}</th></tr>`;
+  const head=`<tr><th>#</th><th class='name' style='text-align:left'>${t("col_player")}</th><th>${t("col_shot")}</th><th>${t("col_ontarget")}</th><th>${t("met_goals")}</th><th>${t("col_acc")}</th><th>${t("col_save")}</th><th>${t("col_conc")}</th><th>${t("col_savepct")}</th><th>${t("col_d1a")}</th><th>${t("col_d1d")}</th><th>${t("col_d2a")}</th><th>${t("col_d2d")}</th></tr>`;
   const wl=(w,l)=>`${w}-${l}`;
-  let rows=ordered().map(p=>{const c=k=>countFor(p.id,k);return `<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td><td class="num">${c("fin_on")}</td><td class="num">${c("fin_off")}</td><td class="num">${ratio(c("fin_on"),c("fin_on")+c("fin_off"))}</td><td class="num">${c("gk_save")}</td><td class="num">${c("gk_conceded")}</td><td class="num">${ratio(c("gk_save"),c("gk_save")+c("gk_conceded"))}</td><td class="num">${wl(c("d1_att"),c("d1_att_l"))}</td><td class="num">${wl(c("d1_def"),c("d1_def_l"))}</td><td class="num">${wl(c("d2_att"),c("d2_att_l"))}</td><td class="num">${wl(c("d2_def"),c("d2_def_l"))}</td></tr>`;}).join("");
-  const T=k=>C(k);
-  rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td><td class="num">${T("fin_on")}</td><td class="num">${T("fin_off")}</td><td class="num">${ratio(T("fin_on"),T("fin_on")+T("fin_off"))}</td><td class="num">${T("gk_save")}</td><td class="num">${T("gk_conceded")}</td><td class="num">${ratio(T("gk_save"),T("gk_save")+T("gk_conceded"))}</td><td class="num">${wl(T("d1_att"),T("d1_att_l"))}</td><td class="num">${wl(T("d1_def"),T("d1_def_l"))}</td><td class="num">${wl(T("d2_att"),T("d2_att_l"))}</td><td class="num">${wl(T("d2_def"),T("d2_def_l"))}</td></tr>`;
+  let rows=ordered().map(p=>{const c=k=>countFor(p.id,k);const sT=c("shot")+c("shot_on")+c("score"),sO=c("shot_on")+c("score");return `<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td><td class="num">${sT}</td><td class="num">${sO}</td><td class="num">${c("score")}</td><td class="num">${ratio(sO,sT)}</td><td class="num">${c("gk_save")}</td><td class="num">${c("gk_conceded")}</td><td class="num">${ratio(c("gk_save"),c("gk_save")+c("gk_conceded"))}</td><td class="num">${wl(c("d1_att"),c("d1_att_l"))}</td><td class="num">${wl(c("d1_def"),c("d1_def_l"))}</td><td class="num">${wl(c("d2_att"),c("d2_att_l"))}</td><td class="num">${wl(c("d2_def"),c("d2_def_l"))}</td></tr>`;}).join("");
+  const T=k=>C(k);const TsT=T("shot")+T("shot_on")+T("score"),TsO=T("shot_on")+T("score");
+  rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td><td class="num">${TsT}</td><td class="num">${TsO}</td><td class="num">${T("score")}</td><td class="num">${ratio(TsO,TsT)}</td><td class="num">${T("gk_save")}</td><td class="num">${T("gk_conceded")}</td><td class="num">${ratio(T("gk_save"),T("gk_save")+T("gk_conceded"))}</td><td class="num">${wl(T("d1_att"),T("d1_att_l"))}</td><td class="num">${wl(T("d1_def"),T("d1_def_l"))}</td><td class="num">${wl(T("d2_att"),T("d2_att_l"))}</td><td class="num">${wl(T("d2_def"),T("d2_def_l"))}</td></tr>`;
   $("statstable").innerHTML=head+rows;
 }
 function renderStatsTable(){
   if(curMatch()&&curMatch().kind==="training")return;
   const ratio=(n,d)=>d?Math.round(n/d*100)+"%":"—";
   const passPct=pid=>ratio(countFor(pid,"pass_complete"),countFor(pid,"pass_complete")+countFor(pid,"pass_incomplete"));
-  const convPct=pid=>ratio(countFor(pid,"score"),countFor(pid,"shot"));            // goals per shot
-  const boxPct=pid=>ratio(countFor(pid,"shot"),countFor(pid,"into_box"));          // shots per entry into box
+  const convPct=pid=>ratio(countFor(pid,"score"),shotsOf(pid));            // goals per total shot
+  const boxPct=pid=>ratio(shotsOf(pid),countFor(pid,"into_box"));          // shots per entry into box
   const attPct=pid=>ratio(countFor(pid,"att_won"),countFor(pid,"att_won")+countFor(pid,"att_lost"));
   const defPct=pid=>ratio(countFor(pid,"def_won"),countFor(pid,"def_won")+countFor(pid,"def_lost"));
   const pctCols=pid=>`<td class="num">${passPct(pid)}</td><td class="num">${convPct(pid)}</td><td class="num">${boxPct(pid)}</td><td class="num">${attPct(pid)}</td><td class="num">${defPct(pid)}</td>`;
@@ -1931,7 +1933,7 @@ function renderStatsTable(){
   let rows=ordered().map(p=>`<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td>${STATS.map(s=>`<td class="num">${countFor(p.id,s.key)}</td>`).join("")}${pctCols(p.id)}${gkCols(p)}</tr>`).join("");
   const T=k=>evs().filter(e=>e.stat_key===k).length;
   const totals=STATS.map(s=>`<td class="num">${T(s.key)}</td>`).join("");
-  const teamPct=`<td class="num">${ratio(T("pass_complete"),T("pass_complete")+T("pass_incomplete"))}</td><td class="num">${ratio(T("score"),T("shot"))}</td><td class="num">${ratio(T("shot"),T("into_box"))}</td><td class="num">${ratio(T("att_won"),T("att_won")+T("att_lost"))}</td><td class="num">${ratio(T("def_won"),T("def_won")+T("def_lost"))}</td>`;
+  const teamPct=`<td class="num">${ratio(T("pass_complete"),T("pass_complete")+T("pass_incomplete"))}</td><td class="num">${ratio(T("score"),T("shot")+T("shot_on")+T("score"))}</td><td class="num">${ratio(T("shot")+T("shot_on")+T("score"),T("into_box"))}</td><td class="num">${ratio(T("att_won"),T("att_won")+T("att_lost"))}</td><td class="num">${ratio(T("def_won"),T("def_won")+T("def_lost"))}</td>`;
   const gkTot=`<td class="num">${T("gk_save")}</td><td class="num">${T("gk_conceded")}</td><td class="num">${ratio(T("gk_save"),T("gk_save")+T("gk_conceded"))}</td>`;
   rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td>${totals}${teamPct}${gkTot}</tr>`;
   $("statstable").innerHTML=head+rows;
@@ -1950,7 +1952,7 @@ $("expJSON").onclick=()=>download("match_events.json",JSON.stringify({match:curM
 /* ---- dashboard ---- */
 const cnt=k=>evs().filter(e=>e.stat_key===k&&inP(e)).length;                 // team total for a stat
 const pctOf=(a,b)=>{const d=cnt(a)+cnt(b);return d?Math.round(cnt(a)/d*100):null;};
-const involve=pid=>["pass_complete","att_won","into_box","shot","score","recovery","pass_incomplete","att_lost"].reduce((n,k)=>n+countFor(pid,k),0);
+const involve=pid=>["pass_complete","att_won","into_box","shot","shot_on","score","recovery","pass_incomplete","att_lost"].reduce((n,k)=>n+countFor(pid,k),0);
 function renderDashPeriodFilter(m){
   const bar=$("dashPeriod");if(!bar)return;
   const n=(m&&m.kind!=="training")?(m.periods||4):1;
@@ -1972,11 +1974,14 @@ function renderDashboard(){
   $("dashscore").innerHTML=(m&&m.opponent?(t("vs")+" "+m.opponent+" · "):"")+(m&&m.date?m.date+" · ":"")+`<b>${gf}–${ga}</b>`;
   const passPct=pctOf("pass_complete","pass_incomplete"),attPct=pctOf("att_won","att_lost"),defPct=pctOf("def_won","def_lost");
   const savePct=(cnt("gk_save")+cnt("gk_conceded"))?Math.round(cnt("gk_save")/(cnt("gk_save")+cnt("gk_conceded"))*100):null;
-  const convPct=cnt("shot")?Math.round(cnt("score")/cnt("shot")*100):null;
+  const totShots=cnt("shot")+cnt("shot_on")+cnt("score"),onT=cnt("shot_on")+cnt("score");
+  const convPct=totShots?Math.round(cnt("score")/totShots*100):null;
+  const onTPct=totShots?Math.round(onT/totShots*100):null;
   const kpi=(v,l,opt={})=>`<div class="kpi ${opt.pol||""}"><div class="v">${v}</div><div class="l">${l}</div>${opt.bar!=null?`<div class="bar"><i style="width:${opt.bar}%"></i></div>`:""}</div>`;
   let html="";
   html+=kpi(gf,t("dash_goals"),{pol:"pos"});
-  html+=kpi(cnt("shot"),t("dash_shots")+(convPct!=null?` · ${convPct}%`:""));
+  html+=kpi(totShots,t("dash_shots")+(convPct!=null?` · ${convPct}%`:""));
+  html+=kpi(onTPct!=null?onTPct+"%":"—",t("met_ontarget_pct"),{bar:onTPct||0});
   html+=kpi(passPct!=null?passPct+"%":"—",t("dash_passpct"),{bar:passPct||0});
   html+=kpi(cnt("into_box"),t("dash_intobox"));
   html+=kpi(attPct!=null?attPct+"%":"—",t("dash_attduel"),{bar:attPct||0});
@@ -2005,14 +2010,14 @@ $("expSummary").onclick=()=>{
     const base=[p.no||"",p.name,isGK(p)?"Goalkeeper":"Field player",...STATS.map(s=>countFor(p.id,s.key))];
     const pc=countFor(p.id,"pass_complete"),pi=countFor(p.id,"pass_incomplete");
     const sv=countFor(p.id,"gk_save"),co=countFor(p.id,"gk_conceded");
-    return [...base,ratio(pc,pc+pi),ratio(countFor(p.id,"score"),countFor(p.id,"shot")),ratio(countFor(p.id,"shot"),countFor(p.id,"into_box")),ratio(countFor(p.id,"att_won"),countFor(p.id,"att_won")+countFor(p.id,"att_lost")),ratio(countFor(p.id,"def_won"),countFor(p.id,"def_won")+countFor(p.id,"def_lost")),sv,co,ratio(sv,sv+co)].join(",");
+    return [...base,ratio(pc,pc+pi),ratio(countFor(p.id,"score"),shotsOf(p.id)),ratio(shotsOf(p.id),countFor(p.id,"into_box")),ratio(countFor(p.id,"att_won"),countFor(p.id,"att_won")+countFor(p.id,"att_lost")),ratio(countFor(p.id,"def_won"),countFor(p.id,"def_won")+countFor(p.id,"def_lost")),sv,co,ratio(sv,sv+co)].join(",");
   });
   download("match_summary.csv",[headCols.join(","),...lines.map(l=>l)].join("\n"),"text/csv");
 };
 $("expPrint").onclick=()=>{try{window.print();}catch(e){}};
 
 /* ===== reports & comparison ===== */
-const EV_KEYS=["pass_complete","pass_incomplete","att_won","att_lost","def_won","def_lost","into_box","key_pass","shot","score","recovery","gk_save","gk_conceded"];
+const EV_KEYS=["pass_complete","pass_incomplete","att_won","att_lost","def_won","def_lost","interception","block","into_box","key_pass","assist","shot","shot_on","score","recovery","gk_save","gk_conceded"];
 function countsFromEvents(list){const c={};EV_KEYS.forEach(k=>c[k]=0);(list||[]).forEach(e=>{if(c[e.stat_key]!=null)c[e.stat_key]++;});return c;}
 const evsOfMatch=mid=>eventsByMatch[mid]||[];
 const playerCountsInMatch=(mid,pid)=>countsFromEvents(evsOfMatch(mid).filter(e=>e.player_id===pid));
@@ -2026,14 +2031,15 @@ const METRICS=[
   {key:"pass_pct",f:c=>pctv(c.pass_complete,c.pass_complete+c.pass_incomplete)},
   {key:"att_pct", f:c=>pctv(c.att_won,c.att_won+c.att_lost)},
   {key:"def_pct", f:c=>pctv(c.def_won,c.def_won+c.def_lost)},
-  {key:"conv_pct",f:c=>pctv(c.score,c.shot)},
+  {key:"conv_pct",f:c=>pctv(c.score,sTot(c))},
+  {key:"ontarget_pct",f:c=>pctv(sOn(c),sTot(c))},
   {key:"goals",   f:c=>c.score},
-  {key:"shots",   f:c=>c.shot},
+  {key:"shots",   f:c=>sTot(c)},
   {key:"into_box",f:c=>c.into_box},
   {key:"key_passes",f:c=>c.key_pass},
   {key:"recoveries",f:c=>c.recovery},
   {key:"passes",  f:c=>c.pass_complete},
-  {key:"involve", f:c=>c.pass_complete+c.pass_incomplete+c.att_won+c.att_lost+c.into_box+c.shot+c.score+c.recovery},
+  {key:"involve", f:c=>c.pass_complete+c.pass_incomplete+c.att_won+c.att_lost+c.into_box+sTot(c)+c.recovery},
 ];
 const MET=k=>METRICS.find(m=>m.key===k);
 const metLabel=k=>t("met_"+k);
@@ -2156,9 +2162,9 @@ function renderMatchReport(){
   const m=curMatch();const c=teamCountsInMatch(currentMatchId);
   const score=`${c.score}–${c.gk_conceded}`;
   const kpi=(v,l)=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
-  const kpis=kpi(c.score,t("dash_goals"))+kpi(c.shot,t("dash_shots"))+kpi(rt(c.pass_complete,c.pass_complete+c.pass_incomplete),t("met_pass_pct"))+kpi(c.into_box,t("dash_intobox"))+kpi(rt(c.att_won,c.att_won+c.att_lost),t("met_att_pct"))+kpi(rt(c.def_won,c.def_won+c.def_lost),t("met_def_pct"))+kpi(c.recovery,t("dash_recoveries"))+kpi(rt(c.gk_save,c.gk_save+c.gk_conceded),t("dash_savepct"));
+  const kpis=kpi(c.score,t("dash_goals"))+kpi(sTot(c),t("dash_shots"))+kpi(rt(sOn(c),sTot(c)),t("met_ontarget_pct"))+kpi(rt(c.pass_complete,c.pass_complete+c.pass_incomplete),t("met_pass_pct"))+kpi(c.into_box,t("dash_intobox"))+kpi(rt(c.att_won,c.att_won+c.att_lost),t("met_att_pct"))+kpi(rt(c.def_won,c.def_won+c.def_lost),t("met_def_pct"))+kpi(c.recovery,t("dash_recoveries"))+kpi(rt(c.gk_save,c.gk_save+c.gk_conceded),t("dash_savepct"));
   // per-player table
-  let rows=ordered().map(p=>{const pc=playerCountsInMatch(currentMatchId,p.id);return `<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td><td class="num">${pc.score}</td><td class="num">${pc.shot}</td><td class="num">${rt(pc.pass_complete,pc.pass_complete+pc.pass_incomplete)}</td><td class="num">${rt(pc.att_won,pc.att_won+pc.att_lost)}</td><td class="num">${rt(pc.def_won,pc.def_won+pc.def_lost)}</td><td class="num">${pc.recovery}</td></tr>`;}).join("");
+  let rows=ordered().map(p=>{const pc=playerCountsInMatch(currentMatchId,p.id);return `<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td><td class="num">${pc.score}</td><td class="num">${sTot(pc)}</td><td class="num">${rt(pc.pass_complete,pc.pass_complete+pc.pass_incomplete)}</td><td class="num">${rt(pc.att_won,pc.att_won+pc.att_lost)}</td><td class="num">${rt(pc.def_won,pc.def_won+pc.def_lost)}</td><td class="num">${pc.recovery}</td></tr>`;}).join("");
   const tbl=`<table><tr><th>#</th><th style="text-align:left">${t("col_player")}</th><th>${t("met_goals")}</th><th>${t("met_shots")}</th><th>${t("met_pass_pct")}</th><th>${t("met_att_pct")}</th><th>${t("met_def_pct")}</th><th>${t("met_recoveries")}</th></tr>${rows}</table>`;
   // areas to work on (rule-based, team level)
   const areas=[];
@@ -2166,7 +2172,7 @@ function renderMatchReport(){
   if(pa>=10&&pp<70)areas.push(t("met_pass_pct")+": "+pp+"%");
   const ad=c.att_won+c.att_lost; if(ad>=6&&pctv(c.att_won,ad)<45)areas.push(t("met_att_pct")+": "+pctv(c.att_won,ad)+"%");
   const dd=c.def_won+c.def_lost; if(dd>=6&&pctv(c.def_won,dd)<45)areas.push(t("met_def_pct")+": "+pctv(c.def_won,dd)+"%");
-  if(c.shot>=5&&pctv(c.score,c.shot)<20)areas.push(t("met_conv_pct")+": "+pctv(c.score,c.shot)+"%");
+  if(sTot(c)>=5&&pctv(c.score,sTot(c))<20)areas.push(t("met_conv_pct")+": "+pctv(c.score,sTot(c))+"%");
   const areasHTML=areas.length?`<ul style="margin:6px 0 0;padding-left:18px">${areas.map(a=>`<li>${a}</li>`).join("")}</ul>`:`<div class="muted">${t("none_yet")}</div>`;
   $("rep-body").innerHTML=`<section class="card">
     <div class="dashhead"><h2 style="margin:0">${m&&m.opponent?(t("vs")+" "+m.opponent):t("h_summary")}</h2><div class="dashscore">${m&&m.date?m.date+" · ":""}<b>${score}</b></div></div>
@@ -2183,9 +2189,9 @@ function renderPlayerReport(){
   if(p){
     const played=matchesPlayedBy(pid);
     const tot=playerCountsAll(pid);
-    let rows=played.map(m=>{const c=playerCountsInMatch(m.id,pid);const mn=minutesPlayed(pid,m);return `<tr><td class="name">${matchName(m)}</td><td class="num">${mn}</td><td class="num">${c.score}</td><td class="num">${c.shot}</td><td class="num">${rt(c.pass_complete,c.pass_complete+c.pass_incomplete)}</td><td class="num">${rt(c.att_won,c.att_won+c.att_lost)}</td><td class="num">${rt(c.def_won,c.def_won+c.def_lost)}</td><td class="num">${c.recovery}</td><td class="num">${MET("involve").f(c)}</td></tr>`;}).join("");
+    let rows=played.map(m=>{const c=playerCountsInMatch(m.id,pid);const mn=minutesPlayed(pid,m);return `<tr><td class="name">${matchName(m)}</td><td class="num">${mn}</td><td class="num">${c.score}</td><td class="num">${sTot(c)}</td><td class="num">${rt(c.pass_complete,c.pass_complete+c.pass_incomplete)}</td><td class="num">${rt(c.att_won,c.att_won+c.att_lost)}</td><td class="num">${rt(c.def_won,c.def_won+c.def_lost)}</td><td class="num">${c.recovery}</td><td class="num">${MET("involve").f(c)}</td></tr>`;}).join("");
     const totMin=minutesPlayedAll(pid);const inv10=totMin?Math.round(MET("involve").f(tot)/(totMin/10)*10)/10:0;
-    rows+=`<tr class="totalrow"><td class="name">${t("rep_totals")}</td><td class="num">${totMin}</td><td class="num">${tot.score}</td><td class="num">${tot.shot}</td><td class="num">${rt(tot.pass_complete,tot.pass_complete+tot.pass_incomplete)}</td><td class="num">${rt(tot.att_won,tot.att_won+tot.att_lost)}</td><td class="num">${rt(tot.def_won,tot.def_won+tot.def_lost)}</td><td class="num">${tot.recovery}</td><td class="num">${MET("involve").f(tot)}</td></tr>`;
+    rows+=`<tr class="totalrow"><td class="name">${t("rep_totals")}</td><td class="num">${totMin}</td><td class="num">${tot.score}</td><td class="num">${sTot(tot)}</td><td class="num">${rt(tot.pass_complete,tot.pass_complete+tot.pass_incomplete)}</td><td class="num">${rt(tot.att_won,tot.att_won+tot.att_lost)}</td><td class="num">${rt(tot.def_won,tot.def_won+tot.def_lost)}</td><td class="num">${tot.recovery}</td><td class="num">${MET("involve").f(tot)}</td></tr>`;
     const tbl=`<table><tr><th style="text-align:left">${t("rep_per_match")}</th><th>${t("col_min")}</th><th>${t("met_goals")}</th><th>${t("met_shots")}</th><th>${t("met_pass_pct")}</th><th>${t("met_att_pct")}</th><th>${t("met_def_pct")}</th><th>${t("met_recoveries")}</th><th>${t("met_involve")}</th></tr>${rows}</table><div class="replabel" style="margin-top:8px">${t("met_involve")} ${t("met_per10")}: <b style="color:var(--chalk)">${inv10}</b> · ${totMin} ${t("min")}</div>`;
     const invs=played.map(m=>MET("involve").f(playerCountsInMatch(m.id,pid)));const mx=Math.max(1,...invs);
     const trend=played.length?`<div class="replabel">${t("met_involve")} · ${t("rep_per_match")}</div><div class="trend">`+invs.map(v=>`<div class="b" style="height:${Math.round(v/mx*100)}%" title="${v}"></div>`).join("")+`</div>`:"";
@@ -2226,14 +2232,14 @@ function playerInsights(c,gk){
              "Defending 1v1, delay & contain (don't dive in), reading the play early.")});
     else if(dp>=60)strengths.push(L("เกมรับแน่น ("+dp+"%)","Solid defending ("+dp+"%)"));}
   // Finishing
-  if(c.shot>=3){const cv=pct(c.score,c.shot);
+  if(sTot(c)>=3){const cv=pct(c.score,sTot(c));
     if(cv<20)develop.push({title:L("การจบสกอร์","Finishing"),tag:cv+"%",
       why:L("ยิงเข้าน้อยเมื่อเทียบกับจำนวนยิง อาจมาจากความนิ่ง/สมาธิหน้าประตู การเลือกช็อต หรือเทคนิคการยิง",
             "Low conversion — could be composure in front of goal, shot selection, or shooting technique."),
       work:L("ฝึกจบสกอร์หลายรูปแบบ, เลือกมุม/ยิงเร็ว 1–2 จังหวะ, ยิงด้วยความมั่นใจ",
              "Varied finishing drills, pick your corner / quick 1–2 touch finishes, shoot with conviction.")});
     else if(cv>=40)strengths.push(L("จบสกอร์เฉียบ ("+cv+"%)","Clinical finishing ("+cv+"%)"));}
-  else if(c.shot===0 && (c.into_box+c.key_pass)>=3)
+  else if(sTot(c)===0 && (c.into_box+c.key_pass)>=3)
     develop.push({title:L("กล้ายิงให้มากขึ้น","Take more shots"),tag:"0",
       why:L("มีส่วนร่วมเกมรุกดี (เข้าเขตโทษ/คีย์พาส) แต่ยังไม่ลองจบสกอร์เอง",
             "Good attacking involvement (box entries / key passes) but isn't shooting."),
@@ -2305,15 +2311,14 @@ function agentConsist(){
   const m=curMatch(),ev=evs(),out=[];
   ev.forEach(e=>{const off=minutesPlayed(e.player_id,m);if(off<matchMinutes(m)&&minuteOf(e)>off){const p=P(e.player_id);out.push(FQ("high","consist","f_offpitch",{name:p?p.name:"",m:minuteOf(e),o:off},"con-off-"+e.id));}});
   const seen={};ev.forEach(e=>{const k=e.player_id+e.stat_key+Math.round(e.video_ts/2);if(seen[k]){const p=P(e.player_id);out.push(FQ("low","consist","f_dup",{stat:slabel(e.stat_key),no:p?p.no:"?"},"con-dup-"+e.id));}seen[k]=1;});
-  ordered().forEach(p=>{if(countFor(p.id,"score")>countFor(p.id,"shot"))out.push(FQ("medium","consist","f_scoreshot",{no:p.no},"con-ss-"+p.id));});
   ev.forEach(e=>{if(e.stat_key==="gk_save"||e.stat_key==="gk_conceded"){const p=P(e.player_id);if(p&&!isGK(p))out.push(FQ("medium","consist","f_gkfield",{name:p.name},"con-gk-"+e.id));}});
   (veoByMatch[currentMatchId]||[]).forEach(v=>{const near=ev.find(e=>e.player_id===v.player_id&&e.stat_key===v.stat_key&&Math.abs(e.video_ts-v.video_ts)<5);if(!near){const p=P(v.player_id);out.push(FQ("medium","consist","f_veo",{stat:slabel(v.stat_key),no:p?p.no:"?"},"con-veo-"+v.id));}});
   return out;
 }
 function agentAnomaly(){
   const ev=evs(),out=[];
-  const teamShots=ev.filter(e=>e.stat_key==="shot").length;
-  if(teamShots>=5)ordered().forEach(p=>{const s=countFor(p.id,"shot");if(s/teamShots>0.7)out.push(FQ("low","anomaly","f_shothog",{pct:Math.round(s/teamShots*100)},"an-shot-"+p.id));});
+  const teamShots=ev.filter(e=>e.stat_key==="shot"||e.stat_key==="shot_on"||e.stat_key==="score").length;
+  if(teamShots>=5)ordered().forEach(p=>{const s=shotsOf(p.id);if(s/teamShots>0.7)out.push(FQ("low","anomaly","f_shothog",{pct:Math.round(s/teamShots*100)},"an-shot-"+p.id));});
   ["pass_complete","recovery","att_won"].forEach(k=>{const cs=ordered().map(p=>({p,v:countFor(p.id,k)})).sort((a,b)=>b.v-a.v);if(cs.length>=2&&cs[0].v>=10&&cs[0].v>cs[1].v*3)out.push(FQ("low","anomaly","f_outlier",{no:cs[0].p.no,stat:slabel(k),v:cs[0].v},"an-out-"+k));});
   return out;
 }
@@ -2450,7 +2455,7 @@ $("dlTemplate").onclick=()=>{
 /* ===== Veo / external data — separate source, only for cross-checking ===== */
 const VEO_MAP={
   goal:"score",score:"score",
-  shot:"shot",shot_on_target:"shot",shot_off_target:"shot",shot_on:"shot",shot_off:"shot",
+  shot:"shot",shot_on_target:"shot_on",shot_off_target:"shot",shot_on:"shot_on",shot_off:"shot",
   assist:"key_pass",key_pass:"key_pass",keypass:"key_pass",chance_created:"key_pass",
   pass:"pass_complete",pass_complete:"pass_complete",completed_pass:"pass_complete",pass_completed:"pass_complete",
   pass_incomplete:"pass_incomplete",incomplete_pass:"pass_incomplete",lost_pass:"pass_incomplete",misplaced_pass:"pass_incomplete",
