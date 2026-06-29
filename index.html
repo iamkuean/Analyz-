@@ -103,7 +103,23 @@
   .statgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
   @media(min-width:480px){.statgrid{grid-template-columns:repeat(3,1fr)}}
   @media(min-width:760px){.statgrid{grid-template-columns:repeat(4,1fr)}}
-  .statbtn{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface2);border-radius:9px;padding:7px 10px;cursor:pointer;text-align:left;color:var(--chalk);transition:transform .07s,border-color .12s,background .12s}
+  .statbtn{display:flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface2);border-radius:9px;padding:7px 10px;cursor:pointer;text-align:left;color:var(--chalk);transition:transform .07s,border-color .12s,background .12s;position:relative}
+  .statbtn[data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);background:var(--surface);color:var(--chalk);border:1px solid var(--line);box-shadow:0 10px 26px rgba(0,0,0,.4);border-radius:9px;padding:7px 10px;font-size:12px;font-weight:500;line-height:1.35;white-space:normal;width:max-content;max-width:230px;z-index:280;pointer-events:none}
+  .statbtn[data-tip]:hover::before{content:"";position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--line);z-index:281;pointer-events:none}
+  @media(hover:none){.statbtn[data-tip]:hover::after,.statbtn[data-tip]:hover::before{display:none}}
+  .helpbtn{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;flex:0 0 auto;line-height:1}
+  .helpbtn:hover{border-color:var(--lime);color:var(--lime)}
+  .glossover{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:18px}
+  .glosscard{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.5);width:min(440px,94vw);max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
+  .glosshd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);font-size:15px}
+  .glossx{background:none;border:0;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+  .glossbody{padding:8px 10px;overflow:auto}
+  .glossrow{display:flex;gap:10px;align-items:flex-start;padding:8px 8px;border-radius:9px}
+  .glossrow:hover{background:var(--surface2)}
+  .glosschip{flex:0 0 auto;font-size:12px;font-weight:600;border-radius:7px;padding:3px 9px;min-width:96px;text-align:center}
+  .glosschip.pos{background:color-mix(in srgb,var(--pos) 16%,transparent);color:var(--pos)}
+  .glosschip.neg{background:color-mix(in srgb,var(--neg) 16%,transparent);color:var(--neg)}
+  .glossdesc{font-size:13px;color:var(--chalk);line-height:1.4;padding-top:2px}
   .statbtn:active{transform:scale(.97)}
   .statbtn.pos{background:color-mix(in srgb,var(--pos) 8%,var(--surface));border-color:color-mix(in srgb,var(--pos) 24%,var(--line))}
   .statbtn.neg{background:color-mix(in srgb,var(--neg) 8%,var(--surface));border-color:color-mix(in srgb,var(--neg) 24%,var(--line))}
@@ -505,7 +521,7 @@
         </div>
       </section>
       <section class="card">
-        <h2 data-i18n="h_tag">Tag an action</h2>
+        <h2 style="display:flex;align-items:center;justify-content:space-between"><span data-i18n="h_tag">Tag an action</span> <button id="tagHelpBtn" class="helpbtn" title="What does each tag mean?" aria-label="Tag glossary">?</button></h2>
         <div class="modeswrow" id="enterField" role="button" tabindex="0">
           <div><div class="modeswttl" data-i18n="field_label">Mobile mode</div><div class="modeswsub" data-i18n="field_sub">Big buttons for pitchside tagging</div></div>
           <span class="modesw" aria-hidden="true"><span class="modesw-track"><span class="modesw-knob"></span></span></span>
@@ -934,7 +950,7 @@ const K_ROSTER="gp_roster_v2",K_MATCHES="gp_matches_v2",K_EVENTS="gp_events_v2",
 const I18N={
  en:{app_title:"Youth football analysis",mode:"EZ Analyze",newmatch:"+ Match",untitled:"(untitled match)",vs:"vs",
   newtraining:"+ Training",train_tag:"Training",sess_training:"Training session",
-  new_session:"+ New",new_team:"+ Team",new_team_prompt:"Name this team:",team_created:"Team created.",h_teams:"Teams & access (admin)",teams_note:"Pick a team, then grant or revoke each user\u2019s access. Users can also create their own teams from the top bar.",lbl_team:"Team",team_delete:"Delete",team_owner:"Owner",team_revoke:"Revoke",team_grant:"Grant",team_has:"has access",team_del_confirm:"Delete this team and ALL its players, matches and tags? This cannot be undone.",team_deleted:"Team deleted.",team_rename:"Rename",team_rename_prompt:"New team name:",team_renamed:"Team renamed.",wiz_title:"New session",wiz_sub:"What do you want to record?",sess_match:"Match",sess_training_short:"Training",wiz_notes:"Notes / comments",wiz_notes_ph:"Anything to remember about this session…",wiz_create:"Create & start",cancel:"Cancel",back:"Back",lbl_match_notes:"Notes / comments",
+  new_session:"+ New",new_team:"+ Team",new_team_prompt:"Name this team:",team_created:"Team created.",gloss_title:"What each tag means",h_teams:"Teams &amp; access (admin)",teams_note:"Pick a team, then grant or revoke each user\u2019s access. Users can also create their own teams from the top bar.",lbl_team:"Team",team_delete:"Delete",team_owner:"Owner",team_revoke:"Revoke",team_grant:"Grant",team_has:"has access",team_del_confirm:"Delete this team and ALL its players, matches and tags? This cannot be undone.",team_deleted:"Team deleted.",team_rename:"Rename",team_rename_prompt:"New team name:",team_renamed:"Team renamed.",wiz_title:"New session",wiz_sub:"What do you want to record?",sess_match:"Match",sess_training_short:"Training",wiz_notes:"Notes / comments",wiz_notes_ph:"Anything to remember about this session…",wiz_create:"Create & start",cancel:"Cancel",back:"Back",lbl_match_notes:"Notes / comments",
   wiz_match_sub:"Quarters, opponent, score",wiz_train_sub:"Finishing & duels",lbl_quarters:"Quarters",lbl_video_opt:"Video link (optional)",
   lbl_datetime:"Date & time",lbl_minper:"Min / quarter",lbl_time:"Time",wiz_total:"Total play time: {n} min ({q}×{m})",lbl_format:"Format (e.g. 7v7)",
   field_mode:"Field mode (big buttons)",field_label:"Mobile mode",field_sub:"Big buttons for pitchside tagging",field_hint:"Tap a player, then tap an action.",
@@ -1006,7 +1022,7 @@ const I18N={
   s_pass_complete:"Pass completed",s_pass_incomplete:"Pass incomplete",s_att_won:"Attacking duel won",s_att_lost:"Attacking duel lost",s_def_won:"Defensive duel won",s_def_lost:"Defensive duel lost",s_interception:"Interception",s_block:"Block",s_assist:"Assist",s_into_box:"Entry into the box",s_key_pass:"Key pass",s_shot:"Shot",s_shot_on:"Shot on target",s_score:"Goal",seek_hint:"Click to replay this moment",field_need_players:"Add players in the Team tab first, then open Mobile mode.",theme_auto:"Auto",reset_appearance:"Reset to default",reset_appearance_done:"Appearance reset.",confirm_remove_player:"Remove {name} from the team?",confirm_del_match:"Delete this match and all its tags? This cannot be undone.",er_title:"No players yet",er_sub:"Add players above, or start with a sample squad you can rename.",add_sample:"Add a sample squad",sample_added:"Sample players added — edit names above.",s_recovery:"Ball recovery",s_gk_save:"Save",s_gk_conceded:"Goal conceded"},
  th:{app_title:"วิเคราะห์ฟุตบอลเยาวชน",mode:"EZ Analyze",newmatch:"+ แมตช์",untitled:"(แมตช์ยังไม่ตั้งชื่อ)",vs:"พบ",
   newtraining:"+ เทรนนิ่ง",train_tag:"เทรนนิ่ง",sess_training:"เซสชันเทรนนิ่ง",
-  new_session:"+ ใหม่",new_team:"+ ทีม",new_team_prompt:"ตั้งชื่อทีม:",team_created:"สร้างทีมแล้ว",h_teams:"ทีม & สิทธิ์เข้าถึง (แอดมิน)",teams_note:"เลือกทีม แล้วให้/ยกเลิกสิทธิ์ผู้ใช้แต่ละคน ผู้ใช้สร้างทีมของตัวเองได้จากแถบบน",lbl_team:"ทีม",team_delete:"ลบ",team_owner:"เจ้าของ",team_revoke:"ยกเลิกสิทธิ์",team_grant:"ให้สิทธิ์",team_has:"เข้าถึงได้",team_del_confirm:"ลบทีมนี้พร้อมผู้เล่น/แมตช์/แท็กทั้งหมด? ย้อนกลับไม่ได้",team_deleted:"ลบทีมแล้ว",team_rename:"เปลี่ยนชื่อ",team_rename_prompt:"ชื่อทีมใหม่:",team_renamed:"เปลี่ยนชื่อแล้ว",wiz_title:"สร้างเซสชันใหม่",wiz_sub:"อยากเก็บข้อมูลแบบไหน?",sess_match:"แมตช์",sess_training_short:"เทรนนิ่ง",wiz_notes:"โน้ต / คอมเมนต์",wiz_notes_ph:"สิ่งที่อยากจำเกี่ยวกับเซสชันนี้…",wiz_create:"สร้าง & เริ่ม",cancel:"ยกเลิก",back:"ย้อนกลับ",lbl_match_notes:"โน้ต / คอมเมนต์",
+  new_session:"+ ใหม่",new_team:"+ ทีม",new_team_prompt:"ตั้งชื่อทีม:",team_created:"สร้างทีมแล้ว",gloss_title:"ความหมายของแต่ละแท็ก",h_teams:"ทีม & สิทธิ์เข้าถึง (แอดมิน)",teams_note:"เลือกทีม แล้วให้/ยกเลิกสิทธิ์ผู้ใช้แต่ละคน ผู้ใช้สร้างทีมของตัวเองได้จากแถบบน",lbl_team:"ทีม",team_delete:"ลบ",team_owner:"เจ้าของ",team_revoke:"ยกเลิกสิทธิ์",team_grant:"ให้สิทธิ์",team_has:"เข้าถึงได้",team_del_confirm:"ลบทีมนี้พร้อมผู้เล่น/แมตช์/แท็กทั้งหมด? ย้อนกลับไม่ได้",team_deleted:"ลบทีมแล้ว",team_rename:"เปลี่ยนชื่อ",team_rename_prompt:"ชื่อทีมใหม่:",team_renamed:"เปลี่ยนชื่อแล้ว",wiz_title:"สร้างเซสชันใหม่",wiz_sub:"อยากเก็บข้อมูลแบบไหน?",sess_match:"แมตช์",sess_training_short:"เทรนนิ่ง",wiz_notes:"โน้ต / คอมเมนต์",wiz_notes_ph:"สิ่งที่อยากจำเกี่ยวกับเซสชันนี้…",wiz_create:"สร้าง & เริ่ม",cancel:"ยกเลิก",back:"ย้อนกลับ",lbl_match_notes:"โน้ต / คอมเมนต์",
   wiz_match_sub:"ควอเตอร์ คู่แข่ง สกอร์",wiz_train_sub:"จบสกอร์ & ดวล",lbl_quarters:"ควอเตอร์",lbl_video_opt:"ลิงก์วิดีโอ (ไม่บังคับ)",
   lbl_datetime:"วันที่ & เวลา",lbl_minper:"นาที / ควอเตอร์",lbl_time:"เวลา",wiz_total:"เวลารวมที่เล่น: {n} นาที ({q}×{m})",lbl_format:"รูปแบบ (เช่น 7v7)",
   field_mode:"โหมดข้างสนาม (ปุ่มใหญ่)",field_label:"โหมดมือถือ",field_sub:"ปุ่มใหญ่ แท็กข้างสนามสะดวก",field_hint:"แตะเลือกนักเตะ แล้วแตะการกระทำ",
@@ -1081,6 +1097,51 @@ let settings={theme:"dark",accent:"#C9F25E",lang:"th",kbhints:true,supaUrl:"",su
 const t=k=>(I18N[settings.lang]&&I18N[settings.lang][k])||I18N.en[k]||k;
 const tf=(k,vars)=>{let s=t(k);for(const x in vars)s=s.replace("{"+x+"}",vars[x]);return s;};
 const slabel=k=>t("s_"+(S(k).key));
+const STAT_DESC={
+  pass_complete:{th:"จ่ายบอลถึงเพื่อนสำเร็จ",en:"Pass reached a teammate"},
+  pass_incomplete:{th:"จ่ายพลาด/เสียการครองบอล",en:"Pass failed, lost possession"},
+  att_won:{th:"ชนะดวล 1v1 เกมรุก (เลี้ยงผ่านคู่แข่งได้)",en:"Won an attacking 1v1 (beat opponent)"},
+  att_lost:{th:"แพ้ดวล 1v1 เกมรุก (โดนแย่งบอล)",en:"Lost an attacking 1v1"},
+  def_won:{th:"ชนะดวลรับ — แย่ง/สกัดคนที่กำลังเลี้ยงบอล",en:"Won a defensive duel vs the dribbler"},
+  def_lost:{th:"แพ้ดวลรับ — โดนเลี้ยงผ่าน",en:"Lost a defensive duel (beaten)"},
+  interception:{th:"ตัดบอลจังหวะที่คู่แข่งจ่ายผ่าน",en:"Cut out an opponent's pass"},
+  block:{th:"บล็อกการยิงหรือการจ่าย",en:"Blocked a shot or pass"},
+  into_box:{th:"พา/ส่งบอลเข้าเขตโทษ",en:"Got the ball into the box"},
+  key_pass:{th:"จ่ายให้เพื่อนได้ยิงทันที",en:"Pass that set up a shot"},
+  assist:{th:"จ่ายให้เพื่อนทำประตู",en:"Pass that led to a goal"},
+  shot:{th:"ยิงไม่เข้ากรอบ (พลาด/โดนบล็อก)",en:"Shot off target or blocked"},
+  shot_on:{th:"ยิงเข้ากรอบ แต่ไม่เป็นประตู (โดนเซฟ)",en:"Shot on target, not a goal"},
+  score:{th:"ยิงเป็นประตู",en:"Scored a goal"},
+  recovery:{th:"เก็บบอลหลุด/บอลสอง (ไม่ใช่การดวลตัวต่อตัว)",en:"Recovered a loose ball"},
+  gk_save:{th:"ผู้รักษาประตูเซฟลูกยิง",en:"Goalkeeper made a save"},
+  gk_conceded:{th:"ผู้รักษาประตูเสียประตู",en:"Goalkeeper conceded"},
+  fin_on:{th:"ยิงเข้ากรอบ (แบบฝึก)",en:"On target (drill)"},
+  fin_off:{th:"ยิงไม่เข้ากรอบ (แบบฝึก)",en:"Off target (drill)"},
+  pass_ok:{th:"ส่งสำเร็จ (แบบฝึก)",en:"Pass completed (drill)"},
+  pass_no:{th:"ส่งไม่สำเร็จ (แบบฝึก)",en:"Pass lost (drill)"},
+  d1_att:{th:"ชนะ 1v1 ฝั่งบุก",en:"Won 1v1 as attacker"},
+  d1_att_l:{th:"แพ้ 1v1 ฝั่งบุก",en:"Lost 1v1 as attacker"},
+  d1_def:{th:"ชนะ 1v1 ฝั่งรับ",en:"Won 1v1 as defender"},
+  d1_def_l:{th:"แพ้ 1v1 ฝั่งรับ",en:"Lost 1v1 as defender"},
+  d2_att:{th:"ชนะ 2v1 ฝั่งบุก",en:"Won 2v1 as attacker"},
+  d2_att_l:{th:"แพ้ 2v1 ฝั่งบุก",en:"Lost 2v1 as attacker"},
+  d2_def:{th:"ชนะ 2v1 ฝั่งรับ",en:"Won 2v1 as defender"},
+  d2_def_l:{th:"แพ้ 2v1 ฝั่งรับ",en:"Lost 2v1 as defender"}
+};
+const statDesc=k=>{const d=STAT_DESC[k];return d?(settings&&settings.lang==="en"?d.en:d.th):"";};
+function openGlossary(){
+  const ex=$("glossary");if(ex)ex.remove();
+  const m=curMatch();const isTrain=m&&m.kind==="training";
+  const list=isTrain?trainButtons(m.exercise||"finishing",false).concat(GK_STATS):STATS.concat(GK_STATS);
+  const ov=document.createElement("div");ov.id="glossary";ov.className="glossover";
+  ov.innerHTML=`<div class="glosscard"><div class="glosshd"><b>${t("gloss_title")}</b><button class="glossx" id="glossClose">×</button></div><div class="glossbody">`+
+    list.map(s=>`<div class="glossrow"><span class="glosschip ${s.pol}">${slabel(s.key)}</span><span class="glossdesc">${statDesc(s.key)}</span></div>`).join("")+
+    `</div></div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  $("glossClose").onclick=close;ov.addEventListener("mousedown",e=>{if(e.target===ov)close();});
+}
+$("tagHelpBtn")&&($("tagHelpBtn").onclick=openGlossary);
 function applyStaticI18n(){
   document.body.classList.toggle("lang-th",settings.lang==="th");
   document.documentElement.lang=settings.lang;
@@ -1101,7 +1162,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-b";
+const BUILD="06-29-c";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -1404,7 +1465,7 @@ function renderStatBtns(){
   const m=curMatch();
   const isTrain=m&&m.kind==="training";
   renderPeriodBar();
-  const btn=s=>`<button class="statbtn ${s.pol}" data-key="${s.key}"><span class="lab">${slabel(s.key)}</span><span class="kb">${s.kb}</span><span class="cnt">${activeId?countFor(activeId,s.key):0}</span></button>`;
+  const btn=s=>`<button class="statbtn ${s.pol}" data-key="${s.key}" data-tip="${statDesc(s.key)}" aria-label="${slabel(s.key)} — ${statDesc(s.key)}"><span class="lab">${slabel(s.key)}</span><span class="kb">${s.kb}</span><span class="cnt">${activeId?countFor(activeId,s.key):0}</span></button>`;
   const grp=(list,pol,lab)=>{const items=list.filter(s=>s.pol===pol);if(!items.length)return"";
     return `<div class="statgroup"><div class="grouplab ${pol}">${lab}</div><div class="statgrid">${items.map(btn).join("")}</div></div>`;};
   if(isTrain){
