@@ -120,6 +120,19 @@
   .glosschip{flex:0 0 auto;font-size:12px;font-weight:600;border-radius:7px;padding:3px 9px;min-width:96px;text-align:center}
   .glosschip.pos{background:color-mix(in srgb,var(--pos) 16%,transparent);color:var(--pos)}
   .glosschip.neg{background:color-mix(in srgb,var(--neg) 16%,transparent);color:var(--neg)}
+  .printover{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:18px}
+  .printcard{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.5);width:min(460px,94vw);max-height:86vh;display:flex;flex-direction:column;overflow:hidden}
+  .printhd{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);font-size:15px}
+  .printbody{padding:12px 16px;overflow:auto}
+  .printfoot{display:flex;gap:10px;justify-content:flex-end;padding:12px 16px;border-top:1px solid var(--line)}
+  .prgroup{margin-bottom:14px}
+  .prlab{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .prchk{display:flex;align-items:center;gap:10px;padding:7px 6px;border-radius:9px;cursor:pointer;font-size:14px}
+  .prchk:hover{background:var(--surface2)}
+  .prchk input{width:17px;height:17px;accent-color:var(--lime);cursor:pointer}
+  .prplayers{max-height:190px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:4px 6px}
+  .prmini{font-size:11px;border:1px solid var(--line);background:var(--surface2);color:var(--muted);border-radius:999px;padding:2px 10px;cursor:pointer}
+  .prmini:hover{color:var(--chalk)}
   .glossdesc{font-size:13px;color:var(--chalk);line-height:1.4;padding-top:2px}
   .statbtn:active{transform:scale(.97)}
   .statbtn.pos{background:color-mix(in srgb,var(--pos) 8%,var(--surface));border-color:color-mix(in srgb,var(--pos) 24%,var(--line))}
@@ -419,11 +432,33 @@
   .lbbar{flex:1;background:var(--surface2);border-radius:5px;height:16px;overflow:hidden}
   .lbfill{height:100%;background:var(--lime);border-radius:5px;min-width:2px}
   .lbval{font-family:var(--mono);font-size:12px;color:var(--chalk);width:48px;text-align:right}
+  #printArea{display:none}
   @media print{
     body{background:#fff}
     .tabs,.matchbar,.gear,.appbtns,.noprint,#undobtn{display:none!important}
     .view{display:none!important}.view.on{display:block!important}
     .card{break-inside:avoid;border-color:#ccc}
+    /* composed checklist print */
+    body.pdoc-print > *{display:none!important}
+    body.pdoc-print #printArea{display:block!important}
+    #printArea{--bg:#fff;--surface:#fff;--surface2:#f3f5f1;--chalk:#141414;--muted:#4a4a4a;--faint:#777;--line:#cfcfcf;--lime:#2e7d12;--pos:#2e7d12;--neg:#c0392b;--accent-ink:#2e7d12;color:#141414}
+    #printArea, #printArea *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    @page{margin:13mm}
+    #printArea .psec{page-break-inside:auto;margin-bottom:16px}
+    #printArea .pagebreak{page-break-before:always}
+    #printArea .psec-title{font-size:14px;font-weight:800;color:#141414;border-bottom:2px solid #2e7d12;padding-bottom:4px;margin:0 0 10px}
+    #printArea table{width:100%;border-collapse:collapse;font-size:10px}
+    #printArea th,#printArea td{border:1px solid #d2d2d2;padding:3px 5px}
+    #printArea th{background:#eef3ea}
+    #printArea .card{box-shadow:none;border:0;padding:0;background:none;margin:0}
+    #printArea .kpis{display:flex;flex-wrap:wrap;gap:8px}
+    #printArea .kpi{border:1px solid #d2d2d2;border-radius:8px;padding:6px 10px;min-width:90px}
+    #printArea .devcard{border:1px solid #d2d2d2;border-left:3px solid #c9971a;background:#faf7ef}
+    #printArea .devchip{border:1px solid #2e7d12}
+    #printArea .pcover{text-align:center;padding:48px 0 28px;border-bottom:3px solid #2e7d12;margin-bottom:22px}
+    #printArea .pcover h1{margin:10px 0 2px;font-size:24px;color:#141414}
+    #printArea .pc-sub{color:#555;font-size:13px}
+    #printArea .pc-logo{font-weight:900;font-size:30px;color:#2e7d12;letter-spacing:2px}
   }
   /* ===== Thai typography tuning (Thai runs longer than English) ===== */
   body.lang-th .grouplab,body.lang-th .replabel,body.lang-th .wizfield label,body.lang-th .wizkicker,body.lang-th .appbar .sub,body.lang-th .lbl{letter-spacing:normal;text-transform:none}
@@ -879,6 +914,7 @@
 
 <div id="toast" class="toast"></div>
 
+<div id="printArea"></div>
 <script>
 /* app icons (EA logo) — favicon, home-screen icon, manifest */
 const ICON180='data:image/png;base64,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';
@@ -996,7 +1032,7 @@ const I18N={
   cmp_mode:"Compare",cmp_players:"Players",cmp_matches:"Matches",cmp_across:"One player, across matches",
   rep_pick_metrics:"Metrics (radar axes)",rep_pick_players:"Players",rep_pick_matches:"Matches",rep_team_avg:"Show team average",rep_scope:"Data",rep_scope_match:"This match",rep_scope_all:"All matches",
   rep_team_average:"Team average",rep_radar_note:"Each spoke is scaled to the highest value among those compared. Raw numbers are in the table.",rep_need2:"Pick at least two to compare.",rep_need3metrics:"Pick at least three metrics.",
-  met_pass_pct:"Pass %",met_att_pct:"Att duel %",met_def_pct:"Def duel %",met_conv_pct:"Conversion %",met_ontarget_pct:"On-target %",col_shot:"Shots",col_ontarget:"On target",lbl_foot:"Foot",foot_left:"Left",foot_right:"Right",foot_both:"Both",foot_unset:"Foot?",dash_strongfoot:"Strong foot",dash_weakfoot:"Weak foot",h_gk_tags:"Goalkeeper",gk_open_report:"For full goalkeeper detail and coaching tips, open the Goalkeepers report tab.",met_goals:"Goals",met_shots:"Shots",met_into_box:"Into box",met_key_passes:"Key passes",met_recoveries:"Recoveries",met_passes:"Passes",met_involve:"Involvements",
+  met_pass_pct:"Pass %",met_att_pct:"Att duel %",met_def_pct:"Def duel %",met_conv_pct:"Conversion %",met_ontarget_pct:"On-target %",col_shot:"Shots",col_ontarget:"On target",lbl_foot:"Foot",foot_left:"Left",foot_right:"Right",foot_both:"Both",foot_unset:"Foot?",dash_strongfoot:"Strong foot",dash_weakfoot:"Weak foot",h_gk_tags:"Goalkeeper",gk_open_report:"For full goalkeeper detail and coaching tips, open the Goalkeepers report tab.",print_title:"Print / PDF — choose what to include",print_include:"Include",print_cover:"Cover page",print_stats:"Team stats table",print_players:"Players (for player & development reports)",print_all:"All",print_none:"None",print_go:"Print",print_report:"Report",met_goals:"Goals",met_shots:"Shots",met_into_box:"Into box",met_key_passes:"Key passes",met_recoveries:"Recoveries",met_passes:"Passes",met_involve:"Involvements",
   cmp_view:"View",view_radar:"Radar",view_bars:"Bars",view_board:"Leaderboard",board_metric:"Metric",board_note:"Ranks every player by one metric.",
   reselect:"Re-select your video file:",reselect_note:"(local files can't be reloaded automatically)",
   capture_for:"Capture time for the next tag",synced:"Synced to video",manual_clock:"Manual clock",start:"Start",pause:"Pause",reset:"Reset",
@@ -1049,7 +1085,7 @@ const I18N={
   field_mode:"โหมดข้างสนาม (ปุ่มใหญ่)",field_label:"โหมดมือถือ",field_sub:"ปุ่มใหญ่ แท็กข้างสนามสะดวก",field_hint:"แตะเลือกนักเตะ แล้วแตะการกระทำ",
   lbl_exercise:"แบบฝึก",ex_finishing:"จบสกอร์",ex_passing:"การส่งบอล",ex_ssg:"SSG เกมย่อย",ex_1v1:"ดวล 1v1",ex_2v1:"ดวล 2v1",
   lbl_train_details:"รายละเอียดเทรนนิ่ง",train_details_ph:"แบบฝึก จุดเน้น โน้ตของเซสชันนี้…",
-  s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_pass_ok:"ส่งสำเร็จ",s_pass_no:"ส่งไม่สำเร็จ",s_foul:"ฟาวล์",s_ssg_press:"พยายามแย่งบอล",s_ssg_win:"แย่งบอลสำเร็จ",s_ssg_cpress:"counter press สำเร็จ",s_ssg_winbox:"แย่งบอลหน้าประตู",s_ssg_pass:"ส่งบอลสำเร็จ",s_ssg_dribble:"เลี้ยงผ่าน",s_ssg_turnover:"เสียบอล (turnover)",s_ssg_lossbox:"เสียบอลหน้าประตูตัวเอง",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
+  s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_pass_ok:"ส่งสำเร็จ",s_pass_no:"ส่งไม่สำเร็จ",s_foul:"ฟาวล์",s_ssg_press:"พยายามแย่งบอล",s_ssg_win:"แย่งบอลสำเร็จ",s_ssg_cpress:"แย่งบอลคืนทันที",s_ssg_winbox:"แย่งบอลหน้าประตู",s_ssg_pass:"ส่งบอลสำเร็จ",s_ssg_dribble:"เลี้ยงผ่าน",s_ssg_turnover:"ทำเสียบอล",s_ssg_lossbox:"เสียบอลหน้าประตูตัวเอง",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
   s_d1_att_l:"1v1 แพ้เกมรุก",s_d1_def_l:"1v1 แพ้เกมรับ",s_d2_att_l:"2v1 แพ้เกมรุก",s_d2_def_l:"2v1 แพ้เกมรับ",
   h_train_summary:"สรุปเทรนนิ่ง",col_on:"เข้า",col_off:"ไม่เข้า",col_acc:"แม่น %",col_d1a:"1v1 รุก",col_d1d:"1v1 รับ",col_d2a:"2v1 รุก",col_d2d:"2v1 รับ",
   tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_settings:"ตั้งค่า",
@@ -1068,7 +1104,7 @@ const I18N={
   cmp_mode:"เปรียบเทียบ",cmp_players:"ผู้เล่น",cmp_matches:"แมตช์",cmp_across:"คนเดียว ข้ามหลายแมตช์",
   rep_pick_metrics:"ตัวชี้วัด (แกนเรดาร์)",rep_pick_players:"ผู้เล่น",rep_pick_matches:"แมตช์",rep_team_avg:"แสดงค่าเฉลี่ยทีม",rep_scope:"ข้อมูล",rep_scope_match:"แมตช์นี้",rep_scope_all:"ทุกแมตช์",
   rep_team_average:"ค่าเฉลี่ยทีม",rep_radar_note:"แต่ละแกนปรับตามค่าสูงสุดในกลุ่มที่เทียบ · ตัวเลขจริงดูในตารางด้านล่าง",rep_need2:"เลือกอย่างน้อยสองรายการเพื่อเทียบ",rep_need3metrics:"เลือกตัวชี้วัดอย่างน้อยสามตัว",
-  met_pass_pct:"จ่าย %",met_att_pct:"เกมรุก %",met_def_pct:"เกมรับ %",met_conv_pct:"เป็นประตู %",met_ontarget_pct:"เข้ากรอบ %",col_shot:"ยิงรวม",col_ontarget:"เข้ากรอบ",lbl_foot:"เท้า",foot_left:"ซ้าย",foot_right:"ขวา",foot_both:"สองเท้า",foot_unset:"เท้า?",dash_strongfoot:"เท้าถนัด",dash_weakfoot:"เท้าไม่ถนัด",h_gk_tags:"ผู้รักษาประตู",gk_open_report:"ดูรายละเอียด GK และคำแนะนำเต็มๆ ได้ที่แท็บรายงานผู้รักษาประตู",met_goals:"ประตู",met_shots:"ยิง",met_into_box:"เข้ากรอบ",met_key_passes:"คีย์พาส",met_recoveries:"แย่งบอลคืน",met_passes:"จ่ายสำเร็จ",met_involve:"มีส่วนร่วม",
+  met_pass_pct:"จ่าย %",met_att_pct:"เกมรุก %",met_def_pct:"เกมรับ %",met_conv_pct:"เป็นประตู %",met_ontarget_pct:"เข้ากรอบ %",col_shot:"ยิงรวม",col_ontarget:"เข้ากรอบ",lbl_foot:"เท้า",foot_left:"ซ้าย",foot_right:"ขวา",foot_both:"สองเท้า",foot_unset:"เท้า?",dash_strongfoot:"เท้าถนัด",dash_weakfoot:"เท้าไม่ถนัด",h_gk_tags:"ผู้รักษาประตู",gk_open_report:"ดูรายละเอียด GK และคำแนะนำเต็มๆ ได้ที่แท็บรายงานผู้รักษาประตู",print_title:"พิมพ์ / PDF — เลือกสิ่งที่จะใส่",print_include:"ใส่อะไรบ้าง",print_cover:"หน้าปก",print_stats:"ตารางสถิติทีม",print_players:"ผู้เล่น (ใช้กับรายงานรายคนและพัฒนาการ)",print_all:"ทั้งหมด",print_none:"ไม่เลือก",print_go:"พิมพ์",print_report:"รายงาน",met_goals:"ประตู",met_shots:"ยิง",met_into_box:"เข้ากรอบ",met_key_passes:"คีย์พาส",met_recoveries:"แย่งบอลคืน",met_passes:"จ่ายสำเร็จ",met_involve:"มีส่วนร่วม",
   cmp_view:"มุมมอง",view_radar:"เรดาร์",view_bars:"กราฟแท่ง",view_board:"จัดอันดับ",board_metric:"ตัวชี้วัด",board_note:"จัดอันดับผู้เล่นทุกคนตามตัวชี้วัดเดียว",
   reselect:"เลือกไฟล์วิดีโออีกครั้ง:",reselect_note:"(ไฟล์ในเครื่องโหลดเองอัตโนมัติไม่ได้)",
   capture_for:"เวลาที่จะบันทึกในแท็กถัดไป",synced:"ซิงค์กับวิดีโอ",manual_clock:"นาฬิกาจับเวลาเอง",start:"เริ่ม",pause:"หยุด",reset:"รีเซ็ต",
@@ -1201,7 +1237,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-j";
+const BUILD="06-29-k";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -2391,13 +2427,13 @@ function playerInsights(c,gk){
     if(pp<60)develop.push({title:L("การจ่ายบอล","Passing"),tag:pp+"%",
       why:L("จ่ายพลาดบ่อย อาจมาจากการตัดสินใจภายใต้แรงกดดัน น้ำหนัก/ทิศทางการส่ง หรือไม่ได้มองสนามก่อนรับบอล",
             "Frequent misplaced passes — could be decision-making under pressure, pass weight/direction, or not scanning before receiving."),
-      work:L("ฝึกจ่ายบอลสั้นแม่นยำ, สแกนสนามก่อนรับบอล, เลือกจังหวะส่ง vs ครองบอล",
+      work:L("ฝึกจ่ายบอลสั้นแม่นยำ, สแกนสนามก่อนรับบอล, เลือกว่าจะจ่ายหรือครองบอลต่อ",
              "Short passing accuracy drills, scan before receiving, choosing when to pass vs hold.")});
     else if(pp>=80)strengths.push(L("จ่ายบอลแม่นยำ ("+pp+"%)","Accurate passing ("+pp+"%)"));}
   // Attacking duels / 1v1
   if(ad>=4){const ap=pct(c.att_won,ad);
     if(ap<45)develop.push({title:L("ดวลเกมรุก / 1v1","Attacking duels / 1v1"),tag:ap+"%",
-      why:L("ชนะ 1v1 เกมรุกน้อย อาจมาจากการควบคุมบอลระยะประชิด การเปลี่ยนจังหวะ/ความเร็ว หรือการตัดสินใจเลี้ยง vs จ่าย",
+      why:L("ชนะ 1v1 เกมรุกน้อย อาจมาจากการควบคุมบอลระยะประชิด การเปลี่ยนจังหวะ/ความเร็ว หรือการตัดสินใจว่าจะเลี้ยงหรือจ่าย",
             "Low 1v1 success — could be close control, change of pace, or the decision to dribble vs pass."),
       work:L("ฝึก 1v1, เลี้ยงเปลี่ยนทิศ/หลอก, การใช้จังหวะเร่ง",
              "1v1 drills, change-of-direction dribbling and feints, explosive acceleration.")});
@@ -2563,7 +2599,60 @@ function renderGKReport(){
   const ps=$("repPlayer");if(ps)ps.onchange=()=>{repState.player=ps.value;renderGKReport();};
 }
 $("repType").querySelectorAll("button").forEach(b=>b.onclick=()=>{repState.type=b.dataset.rep;renderReports();});
-$("repPrint").onclick=()=>{try{window.print();}catch(e){}};
+function captureRep(){const tmp=document.createElement("div");tmp.innerHTML=$("rep-body").innerHTML;tmp.querySelectorAll(".noprint,select,button,.csel").forEach(n=>n.remove());return tmp.innerHTML;}
+function psec(title,html,brk){return `<section class="psec${brk?" pagebreak":""}"><div class="psec-title">${title}</div>${html}</section>`;}
+function buildPrintDoc(opts){
+  const saveType=repState.type,savePlayer=repState.player;let out="";
+  if(opts.cover){const team=(cloud.teams.find(x=>x.id===cloud.orgId)||{}).name||"EZ Analyze";const m=curMatch();const sub=m?(m.kind==="training"?t("train_tag"):((m.opponent||"")+(m.date?" · "+m.date:""))):new Date().toLocaleDateString();out+=`<div class="pcover"><div class="pc-logo">EZ ANALYZE</div><h1>${team}</h1><div class="pc-sub">${t("print_report")} · ${sub}</div></div>`;}
+  if(opts.match){renderMatchReport();out+=psec(t("rep_match"),captureRep(),!!out);}
+  if(opts.stats){renderStatsTable();const tbl=$("statstable")?$("statstable").outerHTML:"";out+=psec(t("print_stats"),`<div style="overflow:auto">${tbl}</div>`,true);}
+  if(opts.players)opts.playerIds.forEach(pid=>{repState.player=pid;renderPlayerReport();out+=psec(t("rep_player")+" — "+(P(pid)?P(pid).name:""),captureRep(),true);});
+  if(opts.develop)opts.playerIds.forEach(pid=>{repState.player=pid;renderDevelopReport();out+=psec(t("rep_develop")+" — "+(P(pid)?P(pid).name:""),captureRep(),true);});
+  if(opts.gk)ordered().filter(isGK).forEach(g=>{repState.player=g.id;renderGKReport();out+=psec(t("rep_gk")+" — "+g.name,captureRep(),true);});
+  repState.type=saveType;repState.player=savePlayer;renderReports();
+  return out||`<div class="pcover"><div class="pc-logo">EZ ANALYZE</div></div>`;
+}
+function doChecklistPrint(opts){
+  $("printArea").innerHTML=buildPrintDoc(opts);
+  document.body.classList.add("pdoc-print");
+  const cleanup=()=>{document.body.classList.remove("pdoc-print");$("printArea").innerHTML="";window.removeEventListener("afterprint",cleanup);};
+  window.addEventListener("afterprint",cleanup);
+  setTimeout(()=>{try{window.print();}catch(e){}setTimeout(cleanup,1500);},60);
+}
+function openPrintModal(){
+  const ex=$("printModal");if(ex)ex.remove();
+  const ov=document.createElement("div");ov.id="printModal";ov.className="printover";
+  const chk=(id,lab,on)=>`<label class="prchk"><input type="checkbox" id="${id}" ${on?"checked":""}><span>${lab}</span></label>`;
+  const players=ordered();
+  ov.innerHTML=`<div class="printcard">
+    <div class="printhd"><b>${t("print_title")}</b><button class="glossx" id="prClose">×</button></div>
+    <div class="printbody">
+      <div class="prgroup"><div class="prlab">${t("print_include")}</div>
+        ${chk("pr_cover",t("print_cover"),true)}
+        ${chk("pr_match",t("rep_match"),true)}
+        ${chk("pr_stats",t("print_stats"),true)}
+        ${chk("pr_players",t("rep_player"),false)}
+        ${chk("pr_develop",t("rep_develop"),false)}
+        ${chk("pr_gk",t("rep_gk"),false)}
+      </div>
+      <div class="prgroup"><div class="prlab">${t("print_players")} <button class="prmini" id="prAll">${t("print_all")}</button><button class="prmini" id="prNone">${t("print_none")}</button></div>
+        <div class="prplayers">${players.map(p=>chk("pp_"+p.id,(p.no?"#"+p.no+" ":"")+p.name,true)).join("")}</div>
+      </div>
+    </div>
+    <div class="printfoot"><button class="iconbtn" id="prCancel">${t("cancel")}</button><button class="btnlime" id="prGo">${t("print_go")}</button></div>
+  </div>`;
+  document.body.appendChild(ov);
+  const close=()=>ov.remove();
+  ov.addEventListener("mousedown",e=>{if(e.target===ov)close();});
+  $("prClose").onclick=close;$("prCancel").onclick=close;
+  $("prAll").onclick=()=>players.forEach(p=>{const b=$("pp_"+p.id);if(b)b.checked=true;});
+  $("prNone").onclick=()=>players.forEach(p=>{const b=$("pp_"+p.id);if(b)b.checked=false;});
+  $("prGo").onclick=()=>{
+    const opts={cover:$("pr_cover").checked,match:$("pr_match").checked,stats:$("pr_stats").checked,players:$("pr_players").checked,develop:$("pr_develop").checked,gk:$("pr_gk").checked,playerIds:players.filter(p=>{const b=$("pp_"+p.id);return b&&b.checked;}).map(p=>p.id)};
+    close();doChecklistPrint(opts);
+  };
+}
+$("repPrint").onclick=()=>openPrintModal();
 
 /* ===== QA agents + Review Queue ===== */
 let qaFlags=[],qaFilter="all",qaDismissed=[],qaShowDismissed=false,qaRan=false;
