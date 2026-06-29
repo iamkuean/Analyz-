@@ -315,8 +315,16 @@
   .playeredit{display:flex;gap:7px;align-items:center;margin-bottom:7px;flex-wrap:wrap}
   .playeredit input{background:var(--surface2);border:1px solid var(--line);color:var(--chalk);border-radius:8px;padding:7px 9px;font-size:13px}
   .playeredit .pno{width:54px;font-family:var(--mono);text-align:center}
-  .playeredit .pname{flex:1;min-width:120px}
+  .playeredit .pname{flex:1;min-width:110px}
   .playeredit .ppos{width:120px}
+  .playeredit .pfoot{width:112px}
+  .playeredit .csel{flex:0 0 112px;width:112px;min-width:0}
+  .foldcard summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .foldcard summary::-webkit-details-marker{display:none}
+  .foldcard summary h2{margin:0}
+  .foldcard summary::after{content:"\25BE";color:var(--muted);font-size:13px;transition:transform .2s}
+  .foldcard[open] summary::after{transform:rotate(180deg)}
+  .foldcard .foldbody{margin-top:14px}
   textarea{width:100%;min-height:120px;background:var(--surface2);border:1px solid var(--line);color:var(--chalk);border-radius:9px;padding:10px;font-family:var(--mono);font-size:12px;margin-top:8px}
 
   /* ===== theming ===== */
@@ -702,8 +710,9 @@
         <button class="btnlime" id="addplayer" data-i18n="add">Add</button>
       </div>
     </section>
-    <section class="card">
-      <h2 data-i18n="h_thismatch">This match</h2>
+    <details class="card foldcard" id="matchCard" open>
+      <summary><h2 data-i18n="h_thismatch">This match</h2></summary>
+      <div class="foldbody">
       <div class="setup-row"><label data-i18n="lbl_date">Date</label><input id="m_date" type="date" style="width:auto"></div>
       <div class="setup-row"><label data-i18n="lbl_time">Time</label><input id="m_time" type="time" style="width:auto"></div>
       <div class="setup-row"><label data-i18n="lbl_opp">Opponent</label><input id="m_opp" style="width:auto;flex:1" data-i18n-ph="opp_ph" placeholder="Opponent name"></div>
@@ -713,11 +722,16 @@
       <div class="setup-row"><label data-i18n="lbl_periods">Periods (e.g. 4 quarters)</label><input id="m_periods" type="number" min="1" max="12" style="width:auto"></div>
       <div class="setup-row"><label data-i18n="lbl_minper">Min / quarter</label><input id="m_minper" type="number" min="1" max="60" style="width:auto"></div>
       <div class="setup-row" style="align-items:flex-start"><label data-i18n="lbl_match_notes">Notes / comments</label><textarea id="m_notes" style="min-height:54px"></textarea></div>
-      <h2 style="margin-top:14px" data-i18n="h_subs">Substitutions</h2>
+      <button class="dangerbtn" id="delmatch" style="margin-top:12px" data-i18n="del_match">Delete this match</button>
+      </div>
+    </details>
+    <details class="card foldcard" id="subsCard">
+      <summary><h2 data-i18n="h_subs">Minutes played</h2></summary>
+      <div class="foldbody">
       <div id="subs"></div>
       <p class="note" data-i18n="subs_note">Leave "off at" empty if the player stayed on the whole match.</p>
-      <button class="dangerbtn" id="delmatch" style="margin-top:12px" data-i18n="del_match">Delete this match</button>
-    </section>
+      </div>
+    </details>
     <section class="card">
       <h2 data-i18n="h_veo">Veo / external data</h2>
       <div class="runbtns">
@@ -1267,7 +1281,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-s";
+const BUILD="06-29-t";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -2774,6 +2788,9 @@ function renderTeam(){
 }
 function renderSubs(){
   const m=curMatch();if(!m)return;
+  const sc=$("subsCard");
+  if(m.kind==="training"){if(sc)sc.style.display="none";renderVeoCompare();return;}
+  if(sc)sc.style.display="";
   // one-time migration: old "off at" minute ≈ minutes played
   if(m.subs&&Object.keys(m.subs).length){minsByMatch[m.id]=minsByMatch[m.id]||{};Object.keys(m.subs).forEach(pid=>{if(minsByMatch[m.id][pid]==null&&m.subs[pid]!=null)minsByMatch[m.id][pid]=m.subs[pid];});store.set(K_MINS,minsByMatch);delete m.subs;saveAll();}
   const mm=minsByMatch[m.id]||{};const full=matchMinutes(m);
