@@ -108,6 +108,7 @@
   .statbtn[data-tip]:hover::before{content:"";position:absolute;left:50%;bottom:calc(100% + 2px);transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--line);z-index:281;pointer-events:none}
   @media(hover:none){.statbtn[data-tip]:hover::after,.statbtn[data-tip]:hover::before{display:none}}
   .helpbtn{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;flex:0 0 auto;line-height:1}
+  .grouplab.gk{color:var(--lime)}
   .helpbtn:hover{border-color:var(--lime);color:var(--lime)}
   .glossover{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:18px}
   .glosscard{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.5);width:min(440px,94vw);max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
@@ -995,7 +996,7 @@ const I18N={
   cmp_mode:"Compare",cmp_players:"Players",cmp_matches:"Matches",cmp_across:"One player, across matches",
   rep_pick_metrics:"Metrics (radar axes)",rep_pick_players:"Players",rep_pick_matches:"Matches",rep_team_avg:"Show team average",rep_scope:"Data",rep_scope_match:"This match",rep_scope_all:"All matches",
   rep_team_average:"Team average",rep_radar_note:"Each spoke is scaled to the highest value among those compared. Raw numbers are in the table.",rep_need2:"Pick at least two to compare.",rep_need3metrics:"Pick at least three metrics.",
-  met_pass_pct:"Pass %",met_att_pct:"Att duel %",met_def_pct:"Def duel %",met_conv_pct:"Conversion %",met_ontarget_pct:"On-target %",col_shot:"Shots",col_ontarget:"On target",lbl_foot:"Foot",foot_left:"Left",foot_right:"Right",foot_both:"Both",foot_unset:"Foot?",dash_strongfoot:"Strong foot",dash_weakfoot:"Weak foot",met_goals:"Goals",met_shots:"Shots",met_into_box:"Into box",met_key_passes:"Key passes",met_recoveries:"Recoveries",met_passes:"Passes",met_involve:"Involvements",
+  met_pass_pct:"Pass %",met_att_pct:"Att duel %",met_def_pct:"Def duel %",met_conv_pct:"Conversion %",met_ontarget_pct:"On-target %",col_shot:"Shots",col_ontarget:"On target",lbl_foot:"Foot",foot_left:"Left",foot_right:"Right",foot_both:"Both",foot_unset:"Foot?",dash_strongfoot:"Strong foot",dash_weakfoot:"Weak foot",h_gk_tags:"Goalkeeper",met_goals:"Goals",met_shots:"Shots",met_into_box:"Into box",met_key_passes:"Key passes",met_recoveries:"Recoveries",met_passes:"Passes",met_involve:"Involvements",
   cmp_view:"View",view_radar:"Radar",view_bars:"Bars",view_board:"Leaderboard",board_metric:"Metric",board_note:"Ranks every player by one metric.",
   reselect:"Re-select your video file:",reselect_note:"(local files can't be reloaded automatically)",
   capture_for:"Capture time for the next tag",synced:"Synced to video",manual_clock:"Manual clock",start:"Start",pause:"Pause",reset:"Reset",
@@ -1067,7 +1068,7 @@ const I18N={
   cmp_mode:"เปรียบเทียบ",cmp_players:"ผู้เล่น",cmp_matches:"แมตช์",cmp_across:"คนเดียว ข้ามหลายแมตช์",
   rep_pick_metrics:"ตัวชี้วัด (แกนเรดาร์)",rep_pick_players:"ผู้เล่น",rep_pick_matches:"แมตช์",rep_team_avg:"แสดงค่าเฉลี่ยทีม",rep_scope:"ข้อมูล",rep_scope_match:"แมตช์นี้",rep_scope_all:"ทุกแมตช์",
   rep_team_average:"ค่าเฉลี่ยทีม",rep_radar_note:"แต่ละแกนปรับตามค่าสูงสุดในกลุ่มที่เทียบ · ตัวเลขจริงดูในตารางด้านล่าง",rep_need2:"เลือกอย่างน้อยสองรายการเพื่อเทียบ",rep_need3metrics:"เลือกตัวชี้วัดอย่างน้อยสามตัว",
-  met_pass_pct:"จ่าย %",met_att_pct:"เกมรุก %",met_def_pct:"เกมรับ %",met_conv_pct:"เป็นประตู %",met_ontarget_pct:"เข้ากรอบ %",col_shot:"ยิงรวม",col_ontarget:"เข้ากรอบ",lbl_foot:"เท้า",foot_left:"ซ้าย",foot_right:"ขวา",foot_both:"สองเท้า",foot_unset:"เท้า?",dash_strongfoot:"เท้าถนัด",dash_weakfoot:"เท้าไม่ถนัด",met_goals:"ประตู",met_shots:"ยิง",met_into_box:"เข้ากรอบ",met_key_passes:"คีย์พาส",met_recoveries:"แย่งบอลคืน",met_passes:"จ่ายสำเร็จ",met_involve:"มีส่วนร่วม",
+  met_pass_pct:"จ่าย %",met_att_pct:"เกมรุก %",met_def_pct:"เกมรับ %",met_conv_pct:"เป็นประตู %",met_ontarget_pct:"เข้ากรอบ %",col_shot:"ยิงรวม",col_ontarget:"เข้ากรอบ",lbl_foot:"เท้า",foot_left:"ซ้าย",foot_right:"ขวา",foot_both:"สองเท้า",foot_unset:"เท้า?",dash_strongfoot:"เท้าถนัด",dash_weakfoot:"เท้าไม่ถนัด",h_gk_tags:"ผู้รักษาประตู",met_goals:"ประตู",met_shots:"ยิง",met_into_box:"เข้ากรอบ",met_key_passes:"คีย์พาส",met_recoveries:"แย่งบอลคืน",met_passes:"จ่ายสำเร็จ",met_involve:"มีส่วนร่วม",
   cmp_view:"มุมมอง",view_radar:"เรดาร์",view_bars:"กราฟแท่ง",view_board:"จัดอันดับ",board_metric:"ตัวชี้วัด",board_note:"จัดอันดับผู้เล่นทุกคนตามตัวชี้วัดเดียว",
   reselect:"เลือกไฟล์วิดีโออีกครั้ง:",reselect_note:"(ไฟล์ในเครื่องโหลดเองอัตโนมัติไม่ได้)",
   capture_for:"เวลาที่จะบันทึกในแท็กถัดไป",synced:"ซิงค์กับวิดีโอ",manual_clock:"นาฬิกาจับเวลาเอง",start:"เริ่ม",pause:"หยุด",reset:"รีเซ็ต",
@@ -1200,7 +1201,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-h";
+const BUILD="06-29-i";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -1507,6 +1508,8 @@ function renderStatBtns(){
   const btn=s=>`<button class="statbtn ${s.pol}" data-key="${s.key}" data-tip="${statDesc(s.key)}" aria-label="${slabel(s.key)} — ${statDesc(s.key)}"><span class="lab">${slabel(s.key)}</span><span class="kb">${s.kb}</span><span class="cnt">${activeId?countFor(activeId,s.key):0}</span></button>`;
   const grp=(list,pol,lab)=>{const items=list.filter(s=>s.pol===pol);if(!items.length)return"";
     return `<div class="statgroup"><div class="grouplab ${pol}">${lab}</div><div class="statgrid">${items.map(btn).join("")}</div></div>`;};
+  const grpAll=(list,lab,cls)=>{if(!list.length)return"";
+    return `<div class="statgroup"><div class="grouplab ${cls||""}">${lab}</div><div class="statgrid">${list.map(btn).join("")}</div></div>`;};
   if(isTrain){
     const ex=m.exercise||"finishing";
     $("exerciseBar").style.display="";
@@ -1516,8 +1519,11 @@ function renderStatBtns(){
     $("statbtns").innerHTML=grp(list,"pos",t("pos_label"))+grp(list,"neg",t("neg_label"));
   }else{
     $("exerciseBar").style.display="none";
-    const list=isGK(P(activeId))?ALLSTATS.filter(s=>STATS.includes(s)||GK_STATS.includes(s)):STATS;
-    $("statbtns").innerHTML=grp(list,"pos",t("pos_label"))+grp(list,"neg",t("neg_label"));
+    if(isGK(P(activeId))){
+      $("statbtns").innerHTML=grpAll(GK_STATS,t("h_gk_tags"),"gk")+grp(STATS,"pos",t("pos_label"))+grp(STATS,"neg",t("neg_label"));
+    }else{
+      $("statbtns").innerHTML=grp(STATS,"pos",t("pos_label"))+grp(STATS,"neg",t("neg_label"));
+    }
   }
   $("statbtns").querySelectorAll(".statbtn").forEach(b=>b.onclick=()=>addEvent(b.dataset.key));
   renderFootBar();
@@ -2491,22 +2497,53 @@ function renderReports(){
   else if(repState.type==="gk")renderGKReport();
   else renderCompare();
 }
+function gkInsights(c,faced,clean,apps){
+  const L=(th,en)=>settings.lang==="en"?en:th;
+  const pct=(a,b)=>b?Math.round(a/b*100):0;
+  const strengths=[],develop=[];
+  if(faced>=4){const sv=pct(c.gk_save,faced);
+    if(sv<55)develop.push({title:L("การเซฟ","Shot-stopping"),tag:sv+"%",why:L("เปอร์เซ็นต์เซฟยังต่ำ อาจมาจากตำแหน่งยืน การอ่านจังหวะยิง หรือฟุตเวิร์ก","Low save % — could be positioning, reading the shot, or footwork."),work:L("ฝึกตำแหน่งยืนตามมุมยิง, รีแอคชัน, การทรงตัวก่อนเซฟ (set position)","Angle/positioning work, reaction saves, set position before the shot.")});
+    else if(sv>=70)strengths.push(L("มือเซฟดี ("+sv+"%)","Reliable shot-stopper ("+sv+"%)"));}
+  const dist=c.gk_dist+c.gk_dist_no;
+  if(dist>=5){const dp=pct(c.gk_dist,dist);
+    if(dp<60)develop.push({title:L("การแจกบอล","Distribution"),tag:dp+"%",why:L("จ่ายออกจากประตูเสียบ่อย อาจเป็นการตัดสินใจ น้ำหนักบอล หรือความนิ่งเมื่อโดนกดดัน","Gives the ball away often — decision-making, weight of pass, or composure under pressure."),work:L("ฝึกแจกบอลใต้แรงกดดัน, เลือกจังหวะเล่นสั้น/ยาว, มองก่อนรับ","Distribution under pressure, short vs long decisions, scan before receiving.")});
+    else if(dp>=80)strengths.push(L("แจกบอลแม่นยำ ("+dp+"%)","Composed distribution ("+dp+"%)"));}
+  if(c.gk_error>=2)develop.push({title:L("ลดความผิดพลาด","Cut out errors"),tag:String(c.gk_error),why:L("จับวืด/ผิดพลาดหลายครั้ง มักมาจากสมาธิ การจับบอล หรือการตัดสินใจออกบอล","Several handling errors — usually concentration, catching technique, or decisions to come out."),work:L("ฝึกจับบอลให้กระชับ, สื่อสารกับแนวรับ, ตัดสินใจออก/อยู่เส้นให้ชัด","Clean catching drills, talk to defenders, clearer come-out vs stay decisions.")});
+  if(c.gk_claim>=3)strengths.push(L("ออกมาเก็บบอล/คุมกรอบเขตโทษดี","Commands the box well (claims crosses)"));
+  if(c.gk_1v1>=2)strengths.push(L("เซฟตัวต่อตัว (1v1) ได้ดี","Strong in 1v1 situations"));
+  if(apps>=3&&clean>=Math.ceil(apps/2))strengths.push(L("คลีนชีตสม่ำเสมอ ("+clean+"/"+apps+")","Consistent clean sheets ("+clean+"/"+apps+")"));
+  return {strengths,develop};
+}
 function renderGKReport(){
   const gks=ordered().filter(p=>isGK(p));
   let body;
-  if(!gks.length){body=`<div class="muted">${t("gk_none")}</div>`;}
-  else{
-    const rt2=(a,b)=>b?Math.round(a/b*100)+"%":"—";
-    const head=`<tr><th>#</th><th class="name" style="text-align:left">${t("col_player")}</th><th>${t("col_played")}</th><th>${t("s_gk_save")}</th><th>${t("col_conc")}</th><th>${t("col_savepct")}</th><th>${t("col_clean")}</th><th>${t("s_gk_1v1")}</th><th>${t("s_gk_catch")}</th><th>${t("s_gk_punch")}</th><th>${t("s_gk_claim")}</th><th>${t("col_distpct")}</th><th>${t("s_gk_error")}</th></tr>`;
-    const rows=gks.map(g=>{
-      const c=playerCountsAll(g.id);
-      const mp=matchesPlayedBy(g.id).filter(m=>m.kind!=="training");
-      const clean=mp.filter(m=>playerCountsInMatch(m.id,g.id).gk_conceded===0).length;
-      return `<tr><td class="no">${g.no||"–"}</td><td class="name">${g.name}</td><td class="num">${mp.length}</td><td class="num">${c.gk_save}</td><td class="num">${c.gk_conceded}</td><td class="num">${rt2(c.gk_save,c.gk_save+c.gk_conceded)}</td><td class="num">${clean}</td><td class="num">${c.gk_1v1}</td><td class="num">${c.gk_catch}</td><td class="num">${c.gk_punch}</td><td class="num">${c.gk_claim}</td><td class="num">${rt2(c.gk_dist,c.gk_dist+c.gk_dist_no)}</td><td class="num">${c.gk_error}</td></tr>`;
-    }).join("");
-    body=`<div style="overflow:auto"><table>${head}${rows}</table></div><p class="note" style="margin-top:8px">${t("gk_note")}</p>`;
+  if(!gks.length){
+    body=`<section class="card"><div class="muted">${t("gk_none")}</div></section>`;
+    $("rep-body").innerHTML=body;return;
   }
-  $("rep-body").innerHTML=`<section class="card">${body}</section>`;
+  if(!repState.player||!gks.some(g=>g.id===repState.player))repState.player=gks[0].id;
+  const sel=`<select id="repPlayer">`+gks.map(g=>`<option value="${g.id}" ${g.id===repState.player?"selected":""}>#${g.no||"–"} ${g.name}</option>`).join("")+`</select>`;
+  const g=P(repState.player),c=playerCountsAll(repState.player);
+  const rt2=(a,b)=>b?Math.round(a/b*100)+"%":"—";
+  const mp=matchesPlayedBy(repState.player).filter(m=>m.kind!=="training");
+  const clean=mp.filter(m=>playerCountsInMatch(m.id,repState.player).gk_conceded===0).length;
+  const faced=c.gk_save+c.gk_conceded;
+  const kpi=(v,l)=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  const kpis=kpi(mp.length,t("col_played"))+kpi(c.gk_save,t("s_gk_save"))+kpi(c.gk_conceded,t("col_conc"))+kpi(rt2(c.gk_save,faced),t("col_savepct"))+kpi(clean,t("col_clean"))+kpi(c.gk_1v1,t("s_gk_1v1"))+kpi(c.gk_claim,t("s_gk_claim"))+kpi(rt2(c.gk_dist,c.gk_dist+c.gk_dist_no),t("col_distpct"))+kpi(c.gk_error,t("s_gk_error"));
+  // per-match
+  const mrows=mp.map(m=>{const mc=playerCountsInMatch(m.id,repState.player);return `<tr><td class="name">${matchName(m)}</td><td class="num">${mc.gk_save}</td><td class="num">${mc.gk_conceded}</td><td class="num">${rt2(mc.gk_save,mc.gk_save+mc.gk_conceded)}</td><td class="num">${mc.gk_conceded===0?"✓":""}</td></tr>`;}).join("");
+  const mtbl=mp.length?`<div style="overflow:auto"><table><tr><th style="text-align:left">${t("rep_per_match")}</th><th>${t("s_gk_save")}</th><th>${t("col_conc")}</th><th>${t("col_savepct")}</th><th>${t("col_clean")}</th></tr>${mrows}</table></div>`:"";
+  const ins=gkInsights(c,faced,clean,mp.length);
+  const total=Object.values(c).reduce((a,b)=>a+b,0);
+  let insHTML="";
+  if(total>=5){
+    const str=ins.strengths.length?`<div class="devsec"><div class="devhead pos">★ ${t("dev_strengths")}</div>${ins.strengths.map(s=>`<div class="devchip">${s}</div>`).join("")}</div>`:"";
+    const dev=ins.develop.length?ins.develop.map(d=>`<div class="devcard"><div class="devtitle">${d.title}${d.tag?`<span class="devtag">${d.tag}</span>`:""}</div><div class="devwhy"><b>${t("dev_why")}:</b> ${d.why}</div><div class="devwork"><b>${t("dev_work")}:</b> ${d.work}</div></div>`).join(""):`<div class="muted">${t("dev_allround")}</div>`;
+    insHTML=str+`<div class="devsec"><div class="devhead">${t("dev_develop")}</div>${dev}</div>`;
+  }else{insHTML=`<div class="muted" style="margin-top:8px">${t("dev_lowdata")}</div>`;}
+  const head=`<div class="dashhead"><h2 style="margin:0">${hasPhoto(g)?`<img src="${g.photo}" style="width:26px;height:26px;border-radius:50%;vertical-align:middle;margin-right:6px">`:""}#${g.no||"–"} ${g.name} · GK</h2></div>`;
+  $("rep-body").innerHTML=`<section class="card noprint"><div class="replabel">${t("rep_choose_player")}</div>${sel}</section><section class="card">${head}<div class="kpis" style="margin-top:8px">${kpis}</div>${mtbl}${insHTML}<p class="note" style="margin-top:8px">${t("gk_note")}</p></section>`;
+  const ps=$("repPlayer");if(ps)ps.onchange=()=>{repState.player=ps.value;renderGKReport();};
 }
 $("repType").querySelectorAll("button").forEach(b=>b.onclick=()=>{repState.type=b.dataset.rep;renderReports();});
 $("repPrint").onclick=()=>{try{window.print();}catch(e){}};
