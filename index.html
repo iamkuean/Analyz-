@@ -1015,12 +1015,13 @@ const TRAIN_DEFS=[
   {key:"ssg_turnover",color:NEG,kb:"T",pol:"neg"},
   {key:"ssg_lossbox", color:NEG,kb:"L",pol:"neg"},
 ];
-const EXERCISES=["finishing","passing","d1","d2","ssg"];
-const EX_LABELS={finishing:"ex_finishing",passing:"ex_passing",d1:"ex_1v1",d2:"ex_2v1",ssg:"ex_ssg"};
+const EXERCISES=["fd","passing","ssg"];
+const EX_LABELS={fd:"ex_fd",finishing:"ex_finishing",passing:"ex_passing",d1:"ex_1v1",d2:"ex_2v1",ssg:"ex_ssg"};
 const exLabel=e=>t(EX_LABELS[e]||"ex_finishing");
 const ALLSTATS=STATS.concat(GK_STATS).concat(TRAIN_DEFS);
 const SDEF=k=>ALLSTATS.find(s=>s.key===k);
 function trainButtons(ex,isGk){
+  if(ex==="fd")return isGk?GK_STATS.slice():[SDEF("shot"),SDEF("shot_on"),SDEF("score"),SDEF("d1_att"),SDEF("d1_att_l"),SDEF("d1_def"),SDEF("d1_def_l"),SDEF("d2_att"),SDEF("d2_att_l"),SDEF("d2_def"),SDEF("d2_def_l"),SDEF("foul")];
   if(ex==="finishing")return isGk?GK_STATS.slice():[SDEF("shot"),SDEF("shot_on"),SDEF("score")];
   if(ex==="passing")return [SDEF("pass_ok"),SDEF("pass_no")];
   if(ex==="d1")return [SDEF("d1_att"),SDEF("d1_att_l"),SDEF("d1_def"),SDEF("d1_def_l"),SDEF("foul")];
@@ -1040,7 +1041,7 @@ const I18N={
   wiz_match_sub:"Quarters, opponent, score",wiz_train_sub:"Finishing & duels",lbl_quarters:"Quarters",lbl_video_opt:"Video link (optional)",
   lbl_datetime:"Date & time",lbl_minper:"Min / quarter",lbl_time:"Time",wiz_total:"Total play time: {n} min ({q}×{m})",lbl_format:"Format (e.g. 7v7)",
   field_mode:"Field mode (big buttons)",field_label:"Mobile mode",field_sub:"Big buttons for pitchside tagging",field_hint:"Tap a player, then tap an action.",
-  lbl_exercise:"Exercise",ex_finishing:"Finishing",ex_passing:"Passing",ex_ssg:"SSG (game)",ex_1v1:"1v1 duel",ex_2v1:"2v1 duel",
+  lbl_exercise:"Exercise",ex_fd:"Finishing / 1v1 / 2v1",ex_finishing:"Finishing",ex_passing:"Passing",ex_ssg:"SSG (game)",ex_1v1:"1v1 duel",ex_2v1:"2v1 duel",
   lbl_train_details:"Training details",train_details_ph:"Drills, focus, notes for this session…",
   s_fin_on:"On target",s_fin_off:"Off target",s_pass_ok:"Pass completed",s_pass_no:"Pass lost",s_foul:"Foul",s_ssg_press:"Press attempt",s_ssg_win:"Ball won",s_ssg_cpress:"Counter-press win",s_ssg_winbox:"Win in final third",s_ssg_pass:"Pass completed",s_ssg_dribble:"Dribble past",s_ssg_turnover:"Turnover (lost ball)",s_ssg_lossbox:"Lost ball near own goal",s_d1_att:"1v1 attack won",s_d1_def:"1v1 defence won",s_d2_att:"2v1 attack won",s_d2_def:"2v1 defence won",
   s_d1_att_l:"1v1 attack lost",s_d1_def_l:"1v1 defence lost",s_d2_att_l:"2v1 attack lost",s_d2_def_l:"2v1 defence lost",
@@ -1112,7 +1113,7 @@ const I18N={
   wiz_match_sub:"ควอเตอร์ คู่แข่ง สกอร์",wiz_train_sub:"จบสกอร์ & ดวล",lbl_quarters:"ควอเตอร์",lbl_video_opt:"ลิงก์วิดีโอ (ไม่บังคับ)",
   lbl_datetime:"วันที่ & เวลา",lbl_minper:"นาที / ควอเตอร์",lbl_time:"เวลา",wiz_total:"เวลารวมที่เล่น: {n} นาที ({q}×{m})",lbl_format:"รูปแบบ (เช่น 7v7)",
   field_mode:"โหมดข้างสนาม (ปุ่มใหญ่)",field_label:"โหมดมือถือ",field_sub:"ปุ่มใหญ่ แท็กข้างสนามสะดวก",field_hint:"แตะเลือกนักเตะ แล้วแตะการกระทำ",
-  lbl_exercise:"แบบฝึก",ex_finishing:"จบสกอร์",ex_passing:"การส่งบอล",ex_ssg:"SSG เกมย่อย",ex_1v1:"ดวล 1v1",ex_2v1:"ดวล 2v1",
+  lbl_exercise:"แบบฝึก",ex_fd:"จบสกอร์ / 1v1 / 2v1",ex_finishing:"จบสกอร์",ex_passing:"การส่งบอล",ex_ssg:"SSG เกมย่อย",ex_1v1:"ดวล 1v1",ex_2v1:"ดวล 2v1",
   lbl_train_details:"รายละเอียดเทรนนิ่ง",train_details_ph:"แบบฝึก จุดเน้น โน้ตของเซสชันนี้…",
   s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_pass_ok:"ส่งสำเร็จ",s_pass_no:"ส่งไม่สำเร็จ",s_foul:"ฟาวล์",s_ssg_press:"พยายามแย่งบอล",s_ssg_win:"แย่งบอลสำเร็จ",s_ssg_cpress:"แย่งบอลคืนทันที",s_ssg_winbox:"แย่งบอลหน้าประตู",s_ssg_pass:"ส่งบอลสำเร็จ",s_ssg_dribble:"เลี้ยงผ่าน",s_ssg_turnover:"ทำเสียบอล",s_ssg_lossbox:"เสียบอลหน้าประตูตัวเอง",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
   s_d1_att_l:"1v1 แพ้เกมรุก",s_d1_def_l:"1v1 แพ้เกมรับ",s_d2_att_l:"2v1 แพ้เกมรุก",s_d2_def_l:"2v1 แพ้เกมรับ",
@@ -1260,13 +1261,13 @@ function relocalizeAll(){applyStaticI18n();renderMatchBar();renderRoster();rende
 let roster=[],matches=[],eventsByMatch={},currentMatchId=null,veoByMatch={},minsByMatch={},footByPlayer={};
 const K_VEO="gp_veo_v1";const K_MINS="gp_mins_v1";const K_FOOT="gp_foot_v1";let tagFoot="R";
 const preferredFoot=pid=>footByPlayer[pid]||"";
-const footExercise=()=>{const m=curMatch();return !!(m&&m.kind==="training"&&(m.exercise==="finishing"||m.exercise==="passing"));};
+const footExercise=()=>{const m=curMatch();return !!(m&&m.kind==="training"&&(m.exercise==="finishing"||m.exercise==="fd"||m.exercise==="passing"));};
 function footClass(e){const pf=preferredFoot(e.player_id);if(!e.foot)return "unknown";if(pf==="B")return "strong";if(!pf)return "unknown";return e.foot===pf?"strong":"weak";}
 let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen=false;
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-r";
+const BUILD="06-29-s";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -2124,10 +2125,10 @@ function renderTrainDash(m){
     const sT=C("shot")+C("shot_on")+C("score"),sO=C("shot_on")+C("score");
     $("kpis").innerHTML=kpi(sT,t("met_shots"))+kpi(sO,t("col_ontarget"))+kpi(C("score"),t("met_goals"))+kpi(ratio(sO,sT),t("met_ontarget_pct"))+kpi(ratio(C("score"),sT),t("met_conv_pct"))+kpi(C("gk_save"),t("col_save"))+kpi(ratio(d1w,d1t),t("ex_1v1"))+kpi(ratio(d2w,d2t),t("ex_2v1"));
   }
-  if(m.exercise==="finishing"||m.exercise==="passing"){
+  if(m.exercise==="finishing"||m.exercise==="fd"||m.exercise==="passing"){
     const fa=(keys,cls)=>evs().filter(e=>keys.includes(e.stat_key)&&footClass(e)===cls).length;
     let extra="";
-    if(m.exercise==="finishing"){
+    if(m.exercise==="finishing"||m.exercise==="fd"){
       const ks=["shot","shot_on","score"];
       const ss=fa(ks,"strong"),ws=fa(ks,"weak"),sg=fa(["score"],"strong"),wg=fa(["score"],"weak");
       if(ss+ws>0)extra=kpi(ss+" · "+ratio(sg,ss),t("dash_strongfoot"))+kpi(ws+" · "+ratio(wg,ws),t("dash_weakfoot"));
