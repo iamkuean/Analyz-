@@ -878,6 +878,15 @@
       <button class="dangerbtn" id="resetAll" style="margin-top:10px" data-i18n="reset_all">Reset all data</button>
       <p class="note" data-i18n="reset_note">Clears the roster, matches, and all tags on this device.</p>
     </section>
+    <section class="card" id="exportCard">
+      <h2 data-i18n="h_export">Export for Develop+</h2>
+      <div class="runbtns">
+        <button class="runbtn" id="expDevJSON" data-i18n="exp_json">Export data (JSON)</button>
+        <button class="runbtn" id="expDevCSV" data-i18n="exp_csv">Export summary (CSV)</button>
+      </div>
+      <p class="note" data-i18n="exp_note">A standardized export of players, sessions, events, and per-player aggregates — for backup and for the upcoming Develop+ app. Uses Supabase player IDs so athletes line up across apps.</p>
+      <div id="expMsg" class="note"></div>
+    </section>
   </div>
 </div>
 
@@ -1084,7 +1093,7 @@ const I18N={
   s_fin_on:"On target",s_fin_off:"Off target",s_pass_ok:"Pass completed",s_pass_no:"Pass lost",s_foul:"Foul",s_ssg_press:"Press attempt",s_ssg_win:"Ball won",s_ssg_cpress:"Counter-press win",s_ssg_winbox:"Win in final third",s_ssg_pass:"Pass completed",s_ssg_dribble:"Dribble past",s_ssg_turnover:"Turnover (lost ball)",s_ssg_lossbox:"Lost ball near own goal",s_d1_att:"1v1 attack won",s_d1_def:"1v1 defence won",s_d2_att:"2v1 attack won",s_d2_def:"2v1 defence won",
   s_d1_att_l:"1v1 attack lost",s_d1_def_l:"1v1 defence lost",s_d2_att_l:"2v1 attack lost",s_d2_def_l:"2v1 defence lost",
   h_train_summary:"Training summary",col_on:"On",col_off:"Off",col_acc:"Acc %",col_d1a:"1v1 atk",col_d1d:"1v1 def",col_d2a:"2v1 atk",col_d2d:"2v1 def",
-  tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_match:"Match",lbl_level:"Type",lvl_comp:"Competitive",lvl_friendly:"Friendly",h_lineup:"Lineup & minutes",h_training_setup:"Training settings",rename_match_title:"Edit match name / opponent",rename_train_title:"Edit training topic",rename_ph_topic:"e.g. Finishing in the box, Wing attacks",rename_ph_opp:"Opponent name",topic_recent:"Recent topics",btn_save:"Save",btn_cancel:"Cancel",in_squad:"Played this match",change_photo:"Change photo",photo_updated:"Photo updated",photo_fail:"Could not read that image",train_rep_hint:"Compare training vs match per player in Reports → Development → pick a player.",sync_fail_warn:"⚠️ Some tags/edits did not save to the cloud — re-run supabase_fix_events.sql",tab_settings:"Settings",
+  tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_match:"Match",lbl_level:"Type",lvl_comp:"Competitive",lvl_friendly:"Friendly",h_lineup:"Lineup & minutes",h_training_setup:"Training settings",rename_match_title:"Edit match name / opponent",h_export:"Export for Develop+",exp_json:"Export data (JSON)",exp_csv:"Export summary (CSV)",exp_note:"A standardized export of players, sessions, events, and per-player aggregates — for backup and for the upcoming Develop+ app. Uses Supabase player IDs so athletes line up across apps.",exp_done:"Exported.",rename_train_title:"Edit training topic",rename_ph_topic:"e.g. Finishing in the box, Wing attacks",rename_ph_opp:"Opponent name",topic_recent:"Recent topics",btn_save:"Save",btn_cancel:"Cancel",in_squad:"Played this match",change_photo:"Change photo",photo_updated:"Photo updated",photo_fail:"Could not read that image",train_rep_hint:"Compare training vs match per player in Reports → Development → pick a player.",sync_fail_warn:"⚠️ Some tags/edits did not save to the cloud — re-run supabase_fix_events.sql",tab_settings:"Settings",
   h_video:"Match video",load:"Load",open:"Open ↗",upload:"Upload video file",url_ph:"Paste a video link (YouTube, Facebook, Veo…)",
   upload_hint:"or use a local file — best playback & full sync",
   empty_video:"Paste a video link or upload a video file.<br>You can still tag using the clock below.",
@@ -1156,7 +1165,7 @@ const I18N={
   s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_pass_ok:"ส่งสำเร็จ",s_pass_no:"ส่งไม่สำเร็จ",s_foul:"ฟาวล์",s_ssg_press:"พยายามแย่งบอล",s_ssg_win:"แย่งบอลสำเร็จ",s_ssg_cpress:"แย่งบอลคืนทันที",s_ssg_winbox:"แย่งบอลหน้าประตู",s_ssg_pass:"ส่งบอลสำเร็จ",s_ssg_dribble:"เลี้ยงผ่าน",s_ssg_turnover:"ทำเสียบอล",s_ssg_lossbox:"เสียบอลหน้าประตูตัวเอง",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
   s_d1_att_l:"1v1 แพ้เกมรุก",s_d1_def_l:"1v1 แพ้เกมรับ",s_d2_att_l:"2v1 แพ้เกมรุก",s_d2_def_l:"2v1 แพ้เกมรับ",
   h_train_summary:"สรุปเทรนนิ่ง",col_on:"เข้า",col_off:"ไม่เข้า",col_acc:"แม่น %",col_d1a:"1v1 รุก",col_d1d:"1v1 รับ",col_d2a:"2v1 รุก",col_d2d:"2v1 รับ",
-  tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_match:"แมตช์",lbl_level:"ประเภท",lvl_comp:"แข่งขัน",lvl_friendly:"อุ่นเครื่อง",h_lineup:"ตัวผู้เล่น & เวลาลงเล่น",h_training_setup:"ตั้งค่าการฝึกซ้อม",rename_match_title:"แก้ชื่อแมตช์ / คู่แข่ง",rename_train_title:"แก้หัวข้อการฝึกซ้อม",rename_ph_topic:"เช่น จบสกอร์ในกรอบ, เกมรุกริมเส้น",rename_ph_opp:"ชื่อคู่แข่ง",topic_recent:"หัวข้อที่ใช้ล่าสุด",btn_save:"บันทึก",btn_cancel:"ยกเลิก",in_squad:"ลงเล่นแมตช์นี้",change_photo:"เปลี่ยนรูป",photo_updated:"อัปเดตรูปแล้ว",photo_fail:"อ่านไฟล์รูปไม่สำเร็จ",train_rep_hint:"ดูเปรียบเทียบ ซ้อม ↔ เกมจริง รายคน ได้ที่ รายงาน → พัฒนาการ → เลือกผู้เล่น",sync_fail_warn:"⚠️ บางแท็ก/การแก้ไข ยังไม่ถูกบันทึกขึ้นคลาวด์ — กรุณารัน supabase_fix_events.sql อีกครั้ง",tab_settings:"ตั้งค่า",
+  tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_match:"แมตช์",lbl_level:"ประเภท",lvl_comp:"แข่งขัน",lvl_friendly:"อุ่นเครื่อง",h_lineup:"ตัวผู้เล่น & เวลาลงเล่น",h_training_setup:"ตั้งค่าการฝึกซ้อม",rename_match_title:"แก้ชื่อแมตช์ / คู่แข่ง",h_export:"Export สำหรับ Develop+",exp_json:"ส่งออกข้อมูล (JSON)",exp_csv:"ส่งออกสรุป (CSV)",exp_note:"ไฟล์มาตรฐานรวมผู้เล่น เซสชัน อีเวนต์ และสรุปรายคน — ใช้สำรองข้อมูล และเตรียมส่งให้แอป Develop+ ในอนาคต ใช้รหัสผู้เล่นจาก Supabase เพื่อให้ข้อมูลนักกีฬาตรงกันข้ามแอป",exp_done:"ส่งออกแล้ว",rename_train_title:"แก้หัวข้อการฝึกซ้อม",rename_ph_topic:"เช่น จบสกอร์ในกรอบ, เกมรุกริมเส้น",rename_ph_opp:"ชื่อคู่แข่ง",topic_recent:"หัวข้อที่ใช้ล่าสุด",btn_save:"บันทึก",btn_cancel:"ยกเลิก",in_squad:"ลงเล่นแมตช์นี้",change_photo:"เปลี่ยนรูป",photo_updated:"อัปเดตรูปแล้ว",photo_fail:"อ่านไฟล์รูปไม่สำเร็จ",train_rep_hint:"ดูเปรียบเทียบ ซ้อม ↔ เกมจริง รายคน ได้ที่ รายงาน → พัฒนาการ → เลือกผู้เล่น",sync_fail_warn:"⚠️ บางแท็ก/การแก้ไข ยังไม่ถูกบันทึกขึ้นคลาวด์ — กรุณารัน supabase_fix_events.sql อีกครั้ง",tab_settings:"ตั้งค่า",
   h_video:"วิดีโอแมตช์",load:"โหลด",open:"เปิด ↗",upload:"อัปโหลดไฟล์วิดีโอ",url_ph:"วางลิงก์วิดีโอ (YouTube, Facebook, Veo…)",
   upload_hint:"หรือใช้ไฟล์ในเครื่อง — เล่นชัวร์ที่สุดและซิงค์เต็มรูปแบบ",
   empty_video:"วางลิงก์วิดีโอ หรืออัปโหลดไฟล์วิดีโอ<br>ระหว่างนี้ติดแท็กด้วยนาฬิกาด้านล่างได้",
@@ -1305,7 +1314,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-ab";
+const BUILD="06-29-ac";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -2267,6 +2276,59 @@ $("expCSV").onclick=()=>{
   download("match_events.csv",[head,...lines].join("\n"),"text/csv");
 };
 $("expJSON").onclick=()=>download("match_events.json",JSON.stringify({match:curMatch(),events:evs()},null,2),"application/json");
+
+/* ===== standardized export for Develop+ (and backup) ===== */
+function _ymd(){return new Date().toISOString().slice(0,10);}
+function _csv(v){v=(v==null?"":String(v));return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function buildDevelopExport(){
+  const N=v=>v||0;
+  const teamMeta={id:cloud.teamId||null,name:(cloud.teams.find(x=>x.id===cloud.orgId)||{}).name||"",season:cloud.seasonId||null};
+  const players=roster.map(p=>({id:p.id,name:p.name,no:(p.no??null),position:isGK(p)?"goalkeeper":(p.position||"field"),foot:footByPlayer[p.id]||null,has_photo:!!hasPhoto(p)}));
+  const sessions=matches.map(m=>({id:m.id,kind:m.kind==="training"?"training":"match",date:m.date||null,time:m.time||null,
+    exercise:m.kind==="training"?(m.exercise||null):null,topic:m.kind==="training"?(m.details||null):null,
+    opponent:m.kind==="training"?null:(m.opponent||null),level:m.kind==="training"?null:matchLevel(m),
+    format:m.format||null,periods:m.periods||null,min_per:m.minPer||null,
+    our_goals:m.kind==="training"?null:N(m.our_goals),
+    squad:squadByMatch[m.id]||null,minutes:minsByMatch[m.id]||{}}));
+  const events=[];
+  matches.forEach(m=>evsOfMatch(m.id).forEach(e=>events.push({session_id:m.id,player_id:e.player_id,stat_key:e.stat_key,foot:e.foot||null,ts:N(e.video_ts)})));
+  const by_player={};
+  roster.forEach(p=>{
+    const matchEvs=[],trainByEx={};
+    matches.forEach(m=>{const pe=evsOfMatch(m.id).filter(e=>e.player_id===p.id);if(!pe.length)return;
+      if(m.kind==="training"){const ex=m.exercise||"fd";trainByEx[ex]=(trainByEx[ex]||[]).concat(pe);}else matchEvs.push.apply(matchEvs,pe);});
+    const mc=countsFromEvents(matchEvs);
+    const match={shots:sTot(mc),on_target:sOn(mc),goals:N(mc.score),assists:N(mc.assist),
+      pass_pct:pctv(N(mc.pass_complete),N(mc.pass_complete)+N(mc.pass_incomplete)),
+      att_pct:pctv(N(mc.att_won),N(mc.att_won)+N(mc.att_lost)),
+      def_pct:pctv(N(mc.def_won),N(mc.def_won)+N(mc.def_lost)),
+      recoveries:N(mc.recovery),interceptions:N(mc.interception),blocks:N(mc.block),
+      key_passes:N(mc.key_pass),into_box:N(mc.into_box),fouls:N(mc.foul),minutes:minutesPlayedAll(p.id)};
+    const gk=isGK(p)?{saves:N(mc.gk_save),conceded:N(mc.gk_conceded),save_pct:pctv(N(mc.gk_save),N(mc.gk_save)+N(mc.gk_conceded)),
+      catches:N(mc.gk_catch),claims:N(mc.gk_claim),distribution_pct:pctv(N(mc.gk_dist),N(mc.gk_dist)+N(mc.gk_dist_no)),errors:N(mc.gk_error)}:null;
+    const training={};
+    Object.keys(trainByEx).forEach(ex=>{const c=countsFromEvents(trainByEx[ex]);
+      training[ex]= ex==="passing"?{pass_ok:N(c.pass_ok),pass_no:N(c.pass_no),acc_pct:pctv(N(c.pass_ok),N(c.pass_ok)+N(c.pass_no))}
+        : ex==="ssg"?{win:N(c.ssg_win),counter_press:N(c.ssg_cpress),win_box:N(c.ssg_winbox),passes:N(c.ssg_pass),dribbles:N(c.ssg_dribble),turnovers:N(c.ssg_turnover),loss_box:N(c.ssg_lossbox)}
+        : {shots:sTot(c),on_target:sOn(c),goals:N(c.score),conv_pct:pctv(N(c.score),sTot(c)),d1_won:N(c.d1_att)+N(c.d1_def),d1_lost:N(c.d1_att_l)+N(c.d1_def_l),d2_won:N(c.d2_att)+N(c.d2_def),d2_lost:N(c.d2_att_l)+N(c.d2_def_l),fouls:N(c.foul)};});
+    by_player[p.id]={match,gk,training};
+  });
+  return {schema_version:"1.0",source_app:"analyz+",app_build:BUILD,exported_at:new Date().toISOString(),
+    athlete_id_scheme:"supabase_player_id",team:teamMeta,players,sessions,events,aggregates:{by_player}};
+}
+function exportDevelopJSON(){download("analyz_export_"+_ymd()+".json",JSON.stringify(buildDevelopExport(),null,2),"application/json");const e=$("expMsg");if(e){e.textContent=t("exp_done");e.style.color="var(--pos)";}}
+function exportDevelopCSV(){
+  const d=buildDevelopExport();
+  const cols=["player_id","name","position","foot","minutes","match_shots","match_on_target","match_goals","match_assists","match_pass_pct","match_att_pct","match_def_pct","match_recoveries","match_interceptions","match_blocks","match_key_passes","match_into_box","match_fouls","gk_saves","gk_conceded","gk_save_pct","train_pass_acc_pct","train_fin_shots","train_fin_goals","train_fin_conv_pct","train_ssg_win"];
+  const blank=v=>v==null?"":v;
+  const rows=d.players.map(p=>{const a=d.aggregates.by_player[p.id]||{};const m=a.match||{};const g=a.gk||{};const tr=a.training||{};const ps=tr.passing||{};const fn=tr.fd||tr.finishing||{};const sg=tr.ssg||{};
+    return [p.id,p.name,p.position,p.foot||"",blank(m.minutes),m.shots,m.on_target,m.goals,m.assists,m.pass_pct,m.att_pct,m.def_pct,m.recoveries,m.interceptions,m.blocks,m.key_passes,m.into_box,m.fouls,
+      blank(g.saves),blank(g.conceded),blank(g.save_pct),blank(ps.acc_pct),blank(fn.shots),blank(fn.goals),blank(fn.conv_pct),blank(sg.win)].map(_csv).join(",");});
+  download("analyz_summary_"+_ymd()+".csv","\ufeff"+cols.join(",")+"\n"+rows.join("\n"),"text/csv");
+  const e=$("expMsg");if(e){e.textContent=t("exp_done");e.style.color="var(--pos)";}
+}
+$("expDevJSON")&&($("expDevJSON").onclick=exportDevelopJSON);
+$("expDevCSV")&&($("expDevCSV").onclick=exportDevelopCSV);
 
 /* ---- dashboard ---- */
 const cnt=k=>evs().filter(e=>e.stat_key===k&&inP(e)).length;                 // team total for a stat
