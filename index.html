@@ -468,18 +468,18 @@
     /* composed checklist print */
     body.pdoc-print > *{display:none!important}
     body.pdoc-print #printArea{display:block!important}
-    #printArea{--bg:#fff;--surface:#fff;--surface2:#f3f5f1;--chalk:#141414;--muted:#3f3f3f;--faint:#666;--line:#cfcfcf;--lime:#2e7d12;--pos:#2e7d12;--neg:#c0392b;--accent-ink:#2e7d12;--accent-fg:#10240a;color:#141414;font-size:13px;line-height:1.55}
+    #printArea{--bg:#fff;--surface:#fff;--surface2:#f3f5f1;--chalk:#141414;--muted:#2c2c2c;--faint:#3a3a3a;--line:#cfcfcf;--lime:#2e7d12;--pos:#2e7d12;--neg:#c0392b;--accent-ink:#2e7d12;--accent-fg:#10240a;color:#141414;font-size:13px;line-height:1.55}
     #printArea, #printArea *{-webkit-print-color-adjust:exact;print-color-adjust:exact;overflow:visible !important}
     @page{margin:13mm}
     #printArea .psec{margin:0 0 18px}
     #printArea .pagebreak{page-break-before:always}
     #printArea .psec-title{font-size:16px;font-weight:800;color:#141414;border-bottom:2px solid #2e7d12;padding-bottom:6px;margin:0 0 12px}
     #printArea table{width:100%;border-collapse:collapse;font-size:12px;table-layout:auto;line-height:1.35}
-    #printArea th,#printArea td{border:1px solid #cccccc;padding:6px 8px;text-align:center}
-    #printArea th{background:#e9f1e2;color:#1f3d12;font-weight:700;font-size:11.5px}
+    #printArea th,#printArea td{border:1px solid #b6b6b6;padding:6px 8px;text-align:center;color:#111}
+    #printArea th{background:#dcecca;color:#16320c;font-weight:800;font-size:11.5px}
     #printArea td.name,#printArea th.name,#printArea td:first-child,#printArea th:first-child{text-align:left}
     #printArea td.num,#printArea .num{font-variant-numeric:tabular-nums;font-weight:600}
-    #printArea tr:nth-child(even) td{background:#f5f8f1}
+    #printArea tr:nth-child(even) td{background:#eef3e7}
     #printArea tr{page-break-inside:avoid}
     #printArea .totalrow td{font-weight:800;background:#eaf2e4 !important;border-top:2px solid #2e7d12}
     #printArea .card{box-shadow:none;border:0;padding:0;background:none;margin:0}
@@ -487,19 +487,19 @@
     #printArea .dashhead h2{font-size:18px;color:#141414}
     #printArea .dashscore,#printArea .replabel{font-size:12px}
     #printArea .kpis{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 14px}
-    #printArea .kpi{border:1px solid #cfcfcf;border-radius:10px;padding:8px 14px;min-width:92px;background:#fafcf8}
-    #printArea .kpi .v{font-size:20px;font-weight:800;color:#1f3d12;font-variant-numeric:tabular-nums}
-    #printArea .kpi .l{font-size:11.5px;color:#444}
+    #printArea .kpi{border:1px solid #b9c4ab;border-radius:10px;padding:8px 14px;min-width:92px;background:#f4f8ee}
+    #printArea .kpi .v{font-size:20px;font-weight:800;color:#16320c;font-variant-numeric:tabular-nums}
+    #printArea .kpi .l{font-size:11.5px;color:#2c2c2c}
     #printArea .devsec{margin:12px 0}
     #printArea .devhead{font-size:13px;font-weight:800;margin:0 0 8px}
     #printArea .devcard{border:1px solid #e0ddcf;border-left:3px solid #c9971a;background:#faf7ef;border-radius:8px;padding:9px 12px;margin:0 0 9px;page-break-inside:avoid;font-size:12.5px}
     #printArea .devchip{display:inline-block;border:1px solid #2e7d12;color:#1f3d12;border-radius:999px;padding:4px 12px;margin:0 6px 6px 0;font-size:12px}
     #printArea .trend{display:flex;align-items:flex-end;gap:3px;height:46px;margin:8px 0}
     #printArea .trend .b{background:#2e7d12;width:11px;border-radius:2px 2px 0 0}
-    #printArea .note,#printArea .muted{color:#555;font-size:11.5px}
+    #printArea .note,#printArea .muted{color:#333;font-size:11.5px}
     #printArea .pcover{text-align:center;padding:54px 0 30px;margin-bottom:24px;border-bottom:3px solid #2e7d12}
     #printArea .pcover h1{margin:14px 0 4px;font-size:27px;color:#141414;font-weight:800}
-    #printArea .pc-sub{color:#444;font-size:14px}
+    #printArea .pc-sub{color:#2c2c2c;font-size:14px}
     #printArea .pcover svg{width:120px;height:auto;margin:0 auto}
   }
   /* ===== Thai typography tuning (Thai runs longer than English) ===== */
@@ -1078,7 +1078,7 @@ const I18N={
   s_fin_on:"On target",s_fin_off:"Off target",s_pass_ok:"Pass completed",s_pass_no:"Pass lost",s_foul:"Foul",s_ssg_press:"Press attempt",s_ssg_win:"Ball won",s_ssg_cpress:"Counter-press win",s_ssg_winbox:"Win in final third",s_ssg_pass:"Pass completed",s_ssg_dribble:"Dribble past",s_ssg_turnover:"Turnover (lost ball)",s_ssg_lossbox:"Lost ball near own goal",s_d1_att:"1v1 attack won",s_d1_def:"1v1 defence won",s_d2_att:"2v1 attack won",s_d2_def:"2v1 defence won",
   s_d1_att_l:"1v1 attack lost",s_d1_def_l:"1v1 defence lost",s_d2_att_l:"2v1 attack lost",s_d2_def_l:"2v1 defence lost",
   h_train_summary:"Training summary",col_on:"On",col_off:"Off",col_acc:"Acc %",col_d1a:"1v1 atk",col_d1d:"1v1 def",col_d2a:"2v1 atk",col_d2d:"2v1 def",
-  tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_match:"Match",lbl_level:"Type",lvl_comp:"Competitive",lvl_friendly:"Friendly",h_lineup:"Lineup & minutes",in_squad:"Played this match",change_photo:"Change photo",photo_updated:"Photo updated",photo_fail:"Could not read that image",tab_settings:"Settings",
+  tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_match:"Match",lbl_level:"Type",lvl_comp:"Competitive",lvl_friendly:"Friendly",h_lineup:"Lineup & minutes",in_squad:"Played this match",change_photo:"Change photo",photo_updated:"Photo updated",photo_fail:"Could not read that image",train_rep_hint:"Compare training vs match per player in Reports → Development → pick a player.",tab_settings:"Settings",
   h_video:"Match video",load:"Load",open:"Open ↗",upload:"Upload video file",url_ph:"Paste a video link (YouTube, Facebook, Veo…)",
   upload_hint:"or use a local file — best playback & full sync",
   empty_video:"Paste a video link or upload a video file.<br>You can still tag using the clock below.",
@@ -1150,7 +1150,7 @@ const I18N={
   s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_pass_ok:"ส่งสำเร็จ",s_pass_no:"ส่งไม่สำเร็จ",s_foul:"ฟาวล์",s_ssg_press:"พยายามแย่งบอล",s_ssg_win:"แย่งบอลสำเร็จ",s_ssg_cpress:"แย่งบอลคืนทันที",s_ssg_winbox:"แย่งบอลหน้าประตู",s_ssg_pass:"ส่งบอลสำเร็จ",s_ssg_dribble:"เลี้ยงผ่าน",s_ssg_turnover:"ทำเสียบอล",s_ssg_lossbox:"เสียบอลหน้าประตูตัวเอง",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
   s_d1_att_l:"1v1 แพ้เกมรุก",s_d1_def_l:"1v1 แพ้เกมรับ",s_d2_att_l:"2v1 แพ้เกมรุก",s_d2_def_l:"2v1 แพ้เกมรับ",
   h_train_summary:"สรุปเทรนนิ่ง",col_on:"เข้า",col_off:"ไม่เข้า",col_acc:"แม่น %",col_d1a:"1v1 รุก",col_d1d:"1v1 รับ",col_d2a:"2v1 รุก",col_d2d:"2v1 รับ",
-  tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_match:"แมตช์",lbl_level:"ประเภท",lvl_comp:"แข่งขัน",lvl_friendly:"อุ่นเครื่อง",h_lineup:"ตัวผู้เล่น & เวลาลงเล่น",in_squad:"ลงเล่นแมตช์นี้",change_photo:"เปลี่ยนรูป",photo_updated:"อัปเดตรูปแล้ว",photo_fail:"อ่านไฟล์รูปไม่สำเร็จ",tab_settings:"ตั้งค่า",
+  tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_match:"แมตช์",lbl_level:"ประเภท",lvl_comp:"แข่งขัน",lvl_friendly:"อุ่นเครื่อง",h_lineup:"ตัวผู้เล่น & เวลาลงเล่น",in_squad:"ลงเล่นแมตช์นี้",change_photo:"เปลี่ยนรูป",photo_updated:"อัปเดตรูปแล้ว",photo_fail:"อ่านไฟล์รูปไม่สำเร็จ",train_rep_hint:"ดูเปรียบเทียบ ซ้อม ↔ เกมจริง รายคน ได้ที่ รายงาน → พัฒนาการ → เลือกผู้เล่น",tab_settings:"ตั้งค่า",
   h_video:"วิดีโอแมตช์",load:"โหลด",open:"เปิด ↗",upload:"อัปโหลดไฟล์วิดีโอ",url_ph:"วางลิงก์วิดีโอ (YouTube, Facebook, Veo…)",
   upload_hint:"หรือใช้ไฟล์ในเครื่อง — เล่นชัวร์ที่สุดและซิงค์เต็มรูปแบบ",
   empty_video:"วางลิงก์วิดีโอ หรืออัปโหลดไฟล์วิดีโอ<br>ระหว่างนี้ติดแท็กด้วยนาฬิกาด้านล่างได้",
@@ -1299,7 +1299,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-x";
+const BUILD="06-29-y";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -2153,31 +2153,40 @@ function renderTrainDash(m){
     $("statstable").innerHTML=head+rows;
     return;
   }
-  if(m.exercise==="passing"){
-    $("kpis").innerHTML=kpi(C("pass_ok"),t("s_pass_ok"))+kpi(C("pass_no"),t("s_pass_no"))+kpi(ratio(C("pass_ok"),C("pass_ok")+C("pass_no")),t("col_acc"));
-  }else{
-    const sT=C("shot")+C("shot_on")+C("score"),sO=C("shot_on")+C("score");
-    $("kpis").innerHTML=kpi(sT,t("met_shots"))+kpi(sO,t("col_ontarget"))+kpi(C("score"),t("met_goals"))+kpi(ratio(sO,sT),t("met_ontarget_pct"))+kpi(ratio(C("score"),sT),t("met_conv_pct"))+kpi(C("gk_save"),t("col_save"))+kpi(ratio(d1w,d1t),t("ex_1v1"))+kpi(ratio(d2w,d2t),t("ex_2v1"));
-  }
-  if(m.exercise==="finishing"||m.exercise==="fd"||m.exercise==="passing"){
+  const footExtra=(isPass)=>{
     const fa=(keys,cls)=>evs().filter(e=>keys.includes(e.stat_key)&&footClass(e)===cls).length;
-    let extra="";
-    if(m.exercise==="finishing"||m.exercise==="fd"){
-      const ks=["shot","shot_on","score"];
-      const ss=fa(ks,"strong"),ws=fa(ks,"weak"),sg=fa(["score"],"strong"),wg=fa(["score"],"weak");
-      if(ss+ws>0)extra=kpi(ss+" · "+ratio(sg,ss),t("dash_strongfoot"))+kpi(ws+" · "+ratio(wg,ws),t("dash_weakfoot"));
-    }else{
-      const so=fa(["pass_ok"],"strong"),sn=fa(["pass_no"],"strong"),wo=fa(["pass_ok"],"weak"),wn=fa(["pass_no"],"weak");
-      if(so+sn+wo+wn>0)extra=kpi(ratio(so,so+sn),t("dash_strongfoot"))+kpi(ratio(wo,wo+wn),t("dash_weakfoot"));
-    }
-    if(extra)$("kpis").innerHTML+=extra;
-  }
+    if(isPass){const so=fa(["pass_ok"],"strong"),sn=fa(["pass_no"],"strong"),wo=fa(["pass_ok"],"weak"),wn=fa(["pass_no"],"weak");
+      return (so+sn+wo+wn>0)?kpi(ratio(so,so+sn),t("dash_strongfoot"))+kpi(ratio(wo,wo+wn),t("dash_weakfoot")):"";}
+    const ks=["shot","shot_on","score"];const ss=fa(ks,"strong"),ws=fa(ks,"weak"),sg=fa(["score"],"strong"),wg=fa(["score"],"weak");
+    return (ss+ws>0)?kpi(ss+" · "+ratio(sg,ss),t("dash_strongfoot"))+kpi(ws+" · "+ratio(wg,ws),t("dash_weakfoot")):"";
+  };
   $("tops").innerHTML="";
-  const head=`<tr><th>#</th><th class='name' style='text-align:left'>${t("col_player")}</th><th>${t("col_shot")}</th><th>${t("col_ontarget")}</th><th>${t("met_goals")}</th><th>${t("col_acc")}</th><th>${t("col_save")}</th><th>${t("col_conc")}</th><th>${t("col_savepct")}</th><th>${t("col_d1a")}</th><th>${t("col_d1d")}</th><th>${t("col_d2a")}</th><th>${t("col_d2d")}</th></tr>`;
+  if(m.exercise==="passing"){
+    $("kpis").innerHTML=kpi(C("pass_ok"),t("s_pass_ok"))+kpi(C("pass_no"),t("s_pass_no"))+kpi(ratio(C("pass_ok"),C("pass_ok")+C("pass_no")),t("col_acc"))+footExtra(true);
+    const head=`<tr><th>#</th><th class='name' style='text-align:left'>${t("col_player")}</th><th>${slabel("pass_ok")}</th><th>${slabel("pass_no")}</th><th>${t("col_acc")}</th></tr>`;
+    let rows=ordered().map(p=>{const c=k=>countFor(p.id,k);return `<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}</td><td class="num">${c("pass_ok")}</td><td class="num">${c("pass_no")}</td><td class="num">${ratio(c("pass_ok"),c("pass_ok")+c("pass_no"))}</td></tr>`;}).join("");
+    rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td><td class="num">${C("pass_ok")}</td><td class="num">${C("pass_no")}</td><td class="num">${ratio(C("pass_ok"),C("pass_ok")+C("pass_no"))}</td></tr>`;
+    $("statstable").innerHTML=head+rows;return;
+  }
+  // finishing (legacy) or fd (finishing + 1v1 + 2v1)
+  const isFd=m.exercise==="fd";
+  const gkOn=(C("gk_save")+C("gk_conceded")+C("gk_1v1")+C("gk_catch")+C("gk_claim"))>0;
+  const sT=C("shot")+C("shot_on")+C("score"),sO=C("shot_on")+C("score");
+  let kp=kpi(sT,t("met_shots"))+kpi(sO,t("col_ontarget"))+kpi(C("score"),t("met_goals"))+kpi(ratio(sO,sT),t("met_ontarget_pct"))+kpi(ratio(C("score"),sT),t("met_conv_pct"));
+  if(isFd)kp+=kpi(ratio(d1w,d1t),t("ex_1v1"))+kpi(ratio(d2w,d2t),t("ex_2v1"))+kpi(C("foul"),t("s_foul"));
+  if(gkOn)kp+=kpi(C("gk_save"),t("col_save"))+kpi(ratio(C("gk_save"),C("gk_save")+C("gk_conceded")),t("col_savepct"));
+  kp+=footExtra(false);
+  $("kpis").innerHTML=kp;
   const wl=(w,l)=>`${w}-${l}`;
-  let rows=ordered().map(p=>{const c=k=>countFor(p.id,k);const sT=c("shot")+c("shot_on")+c("score"),sO=c("shot_on")+c("score");return `<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td><td class="num">${sT}</td><td class="num">${sO}</td><td class="num">${c("score")}</td><td class="num">${ratio(sO,sT)}</td><td class="num">${c("gk_save")}</td><td class="num">${c("gk_conceded")}</td><td class="num">${ratio(c("gk_save"),c("gk_save")+c("gk_conceded"))}</td><td class="num">${wl(c("d1_att"),c("d1_att_l"))}</td><td class="num">${wl(c("d1_def"),c("d1_def_l"))}</td><td class="num">${wl(c("d2_att"),c("d2_att_l"))}</td><td class="num">${wl(c("d2_def"),c("d2_def_l"))}</td></tr>`;}).join("");
-  const T=k=>C(k);const TsT=T("shot")+T("shot_on")+T("score"),TsO=T("shot_on")+T("score");
-  rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td><td class="num">${TsT}</td><td class="num">${TsO}</td><td class="num">${T("score")}</td><td class="num">${ratio(TsO,TsT)}</td><td class="num">${T("gk_save")}</td><td class="num">${T("gk_conceded")}</td><td class="num">${ratio(T("gk_save"),T("gk_save")+T("gk_conceded"))}</td><td class="num">${wl(T("d1_att"),T("d1_att_l"))}</td><td class="num">${wl(T("d1_def"),T("d1_def_l"))}</td><td class="num">${wl(T("d2_att"),T("d2_att_l"))}</td><td class="num">${wl(T("d2_def"),T("d2_def_l"))}</td></tr>`;
+  const duelH=isFd?`<th>${t("col_d1a")}</th><th>${t("col_d1d")}</th><th>${t("col_d2a")}</th><th>${t("col_d2d")}</th><th>${slabel("foul")}</th>`:"";
+  const gkH=gkOn?`<th>${t("col_save")}</th><th>${t("col_conc")}</th><th>${t("col_savepct")}</th>`:"";
+  const head=`<tr><th>#</th><th class='name' style='text-align:left'>${t("col_player")}</th><th>${t("col_shot")}</th><th>${t("col_ontarget")}</th><th>${t("met_goals")}</th><th>${t("met_conv_pct")}</th>${duelH}${gkH}</tr>`;
+  const rowFor=(idc,name,gk)=>{const c=idc;const psT=c("shot")+c("shot_on")+c("score"),psO=c("shot_on")+c("score");
+    const duel=isFd?`<td class="num">${wl(c("d1_att"),c("d1_att_l"))}</td><td class="num">${wl(c("d1_def"),c("d1_def_l"))}</td><td class="num">${wl(c("d2_att"),c("d2_att_l"))}</td><td class="num">${wl(c("d2_def"),c("d2_def_l"))}</td><td class="num">${c("foul")}</td>`:"";
+    const gkc=gkOn?`<td class="num">${c("gk_save")}</td><td class="num">${c("gk_conceded")}</td><td class="num">${ratio(c("gk_save"),c("gk_save")+c("gk_conceded"))}</td>`:"";
+    return `<td class="num">${psT}</td><td class="num">${psO}</td><td class="num">${c("score")}</td><td class="num">${ratio(c("score"),psT)}</td>${duel}${gkc}`;};
+  let rows=ordered().map(p=>`<tr><td class="no">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td>${rowFor(k=>countFor(p.id,k))}</tr>`).join("");
+  rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td>${rowFor(k=>C(k))}</tr>`;
   $("statstable").innerHTML=head+rows;
 }
 function renderStatsTable(){
@@ -2426,7 +2435,35 @@ function bindCompare(){
 }
 
 function renderMatchReport(){
-  const m=curMatch();const c=teamCountsInMatch(currentMatchId);
+  const m=curMatch();
+  if(m&&m.kind==="training"){
+    const evsM=evsOfMatch(m.id);const C=k=>evsM.filter(e=>e.stat_key===k).length;const cf=(pid,k)=>evsM.filter(e=>e.player_id===pid&&e.stat_key===k).length;
+    const ratio=(a,b)=>b?Math.round(a/b*100)+"%":"—";const kpi=(v,l)=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+    let kpis="",head="",rows="";
+    if(m.exercise==="ssg"){
+      const keys=["ssg_win","ssg_cpress","ssg_winbox","ssg_pass","ssg_dribble","ssg_turnover","ssg_lossbox","foul"];
+      kpis=kpi(C("ssg_win"),slabel("ssg_win"))+kpi(C("ssg_cpress"),slabel("ssg_cpress"))+kpi(C("ssg_winbox"),slabel("ssg_winbox"))+kpi(C("ssg_turnover")+C("ssg_lossbox"),slabel("ssg_turnover"));
+      head=`<tr><th>#</th><th style="text-align:left">${t("col_player")}</th>`+keys.map(k=>`<th>${slabel(k)}</th>`).join("")+`</tr>`;
+      rows=ordered().map(p=>`<tr><td class="num">${p.no||"–"}</td><td class="name">${p.name}</td>`+keys.map(k=>`<td class="num">${cf(p.id,k)}</td>`).join("")+`</tr>`).join("");
+      rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td>`+keys.map(k=>`<td class="num">${C(k)}</td>`).join("")+`</tr>`;
+    }else if(m.exercise==="passing"){
+      kpis=kpi(C("pass_ok"),slabel("pass_ok"))+kpi(C("pass_no"),slabel("pass_no"))+kpi(ratio(C("pass_ok"),C("pass_ok")+C("pass_no")),t("col_acc"));
+      head=`<tr><th>#</th><th style="text-align:left">${t("col_player")}</th><th>${slabel("pass_ok")}</th><th>${slabel("pass_no")}</th><th>${t("col_acc")}</th></tr>`;
+      rows=ordered().map(p=>`<tr><td class="num">${p.no||"–"}</td><td class="name">${p.name}</td><td class="num">${cf(p.id,"pass_ok")}</td><td class="num">${cf(p.id,"pass_no")}</td><td class="num">${ratio(cf(p.id,"pass_ok"),cf(p.id,"pass_ok")+cf(p.id,"pass_no"))}</td></tr>`).join("");
+      rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td><td class="num">${C("pass_ok")}</td><td class="num">${C("pass_no")}</td><td class="num">${ratio(C("pass_ok"),C("pass_ok")+C("pass_no"))}</td></tr>`;
+    }else{
+      const isFd=m.exercise==="fd";const sT=C("shot")+C("shot_on")+C("score"),sO=C("shot_on")+C("score");
+      kpis=kpi(sT,t("met_shots"))+kpi(sO,t("col_ontarget"))+kpi(C("score"),t("met_goals"))+kpi(ratio(C("score"),sT),t("met_conv_pct"))+(isFd?kpi(C("foul"),slabel("foul")):"");
+      const dH=isFd?`<th>${t("ex_1v1")}</th><th>${t("ex_2v1")}</th>`:"";
+      head=`<tr><th>#</th><th style="text-align:left">${t("col_player")}</th><th>${t("col_shot")}</th><th>${t("col_ontarget")}</th><th>${t("met_goals")}</th><th>${t("met_conv_pct")}</th>${dH}</tr>`;
+      const rf=cf2=>{const c=k=>cf2(k);const psT=c("shot")+c("shot_on")+c("score"),psO=c("shot_on")+c("score");const d=isFd?`<td class="num">${(c("d1_att")+c("d1_def"))}-${(c("d1_att_l")+c("d1_def_l"))}</td><td class="num">${(c("d2_att")+c("d2_def"))}-${(c("d2_att_l")+c("d2_def_l"))}</td>`:"";return `<td class="num">${psT}</td><td class="num">${psO}</td><td class="num">${c("score")}</td><td class="num">${ratio(c("score"),psT)}</td>${d}`;};
+      rows=ordered().map(p=>`<tr><td class="num">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td>${rf(k=>cf(p.id,k))}</tr>`).join("");
+      rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td>${rf(k=>C(k))}</tr>`;
+    }
+    $("rep-body").innerHTML=`<section class="card"><div class="dashhead"><h2 style="margin:0">${t("train_tag")}</h2><div class="dashscore">${(m.date?m.date+" · ":"")}${m.exercise?exLabel(m.exercise):""}</div></div><div class="kpis">${kpis}</div><div class="replabel">${t("h_perplayer")}</div><div style="overflow-x:auto"><table>${head}${rows}</table></div><p class="note">${t("train_rep_hint")}</p></section>`;
+    return;
+  }
+  const c=teamCountsInMatch(currentMatchId);
   const score=`${c.score}–${c.gk_conceded}`;
   const kpi=(v,l)=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;
   const kpis=kpi(c.score,t("dash_goals"))+kpi(sTot(c),t("dash_shots"))+kpi(rt(sOn(c),sTot(c)),t("met_ontarget_pct"))+kpi(rt(c.pass_complete,c.pass_complete+c.pass_incomplete),t("met_pass_pct"))+kpi(c.into_box,t("dash_intobox"))+kpi(rt(c.att_won,c.att_won+c.att_lost),t("met_att_pct"))+kpi(rt(c.def_won,c.def_won+c.def_lost),t("met_def_pct"))+kpi(c.recovery,t("dash_recoveries"))+kpi(rt(c.gk_save,c.gk_save+c.gk_conceded),t("dash_savepct"));
