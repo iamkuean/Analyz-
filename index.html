@@ -671,6 +671,7 @@
           <button data-rep="match" data-i18n="rep_match">Match report</button>
           <button data-rep="player" data-i18n="rep_player">Player report</button>
           <button data-rep="develop" data-i18n="rep_develop">Development</button>
+          <button data-rep="train" data-i18n="rep_train">Training</button>
           <button data-rep="gk" data-i18n="rep_gk">Goalkeepers</button>
           <button data-rep="compare" data-i18n="rep_compare">Compare</button>
         </div>
@@ -1093,7 +1094,7 @@ const I18N={
   s_fin_on:"On target",s_fin_off:"Off target",s_pass_ok:"Pass completed",s_pass_no:"Pass lost",s_foul:"Foul",s_ssg_press:"Press attempt",s_ssg_win:"Ball won",s_ssg_cpress:"Counter-press win",s_ssg_winbox:"Win in final third",s_ssg_pass:"Pass completed",s_ssg_dribble:"Dribble past",s_ssg_turnover:"Turnover (lost ball)",s_ssg_lossbox:"Lost ball near own goal",s_d1_att:"1v1 attack won",s_d1_def:"1v1 defence won",s_d2_att:"2v1 attack won",s_d2_def:"2v1 defence won",
   s_d1_att_l:"1v1 attack lost",s_d1_def_l:"1v1 defence lost",s_d2_att_l:"2v1 attack lost",s_d2_def_l:"2v1 defence lost",
   h_train_summary:"Training summary",col_on:"On",col_off:"Off",col_acc:"Acc %",col_d1a:"1v1 atk",col_d1d:"1v1 def",col_d2a:"2v1 atk",col_d2d:"2v1 def",
-  tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_match:"Match",lbl_level:"Type",lvl_comp:"Competitive",lvl_friendly:"Friendly",h_lineup:"Lineup & minutes",h_training_setup:"Training settings",rename_match_title:"Edit match name / opponent",h_export:"Export for Develop+",exp_json:"Export data (JSON)",exp_csv:"Export summary (CSV)",exp_note:"A standardized export of players, sessions, events, and per-player aggregates — for backup and for the upcoming Develop+ app. Uses Supabase player IDs so athletes line up across apps.",exp_done:"Exported.",rename_train_title:"Edit training topic",rename_ph_topic:"e.g. Finishing in the box, Wing attacks",rename_ph_opp:"Opponent name",topic_recent:"Recent topics",btn_save:"Save",btn_cancel:"Cancel",in_squad:"Played this match",change_photo:"Change photo",photo_updated:"Photo updated",photo_fail:"Could not read that image",train_rep_hint:"Compare training vs match per player in Reports → Development → pick a player.",sync_fail_warn:"⚠️ Some tags/edits did not save to the cloud — re-run supabase_fix_events.sql",tab_settings:"Settings",
+  tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_match:"Match",tab_training:"Training",lbl_level:"Type",lvl_comp:"Competitive",lvl_friendly:"Friendly",h_lineup:"Lineup & minutes",h_training_setup:"Training settings",h_attendance:"Who trained this session",in_training:"Trained this session",attend_note:"Tick the players who took part in this training session.",rep_train:"Training",train_rep_empty:"No training sessions yet. Create a training session and tag a few actions.",train_rep_sessions:"{n} session(s)",rename_match_title:"Edit match name / opponent",h_export:"Export for Develop+",exp_json:"Export data (JSON)",exp_csv:"Export summary (CSV)",exp_note:"A standardized export of players, sessions, events, and per-player aggregates — for backup and for the upcoming Develop+ app. Uses Supabase player IDs so athletes line up across apps.",exp_done:"Exported.",rename_train_title:"Edit training topic",rename_ph_topic:"e.g. Finishing in the box, Wing attacks",rename_ph_opp:"Opponent name",topic_recent:"Recent topics",btn_save:"Save",btn_cancel:"Cancel",in_squad:"Played this match",change_photo:"Change photo",photo_updated:"Photo updated",photo_fail:"Could not read that image",train_rep_hint:"Compare training vs match per player in Reports → Development → pick a player.",sync_fail_warn:"⚠️ Some tags/edits did not save to the cloud — re-run supabase_fix_events.sql",tab_settings:"Settings",
   h_video:"Match video",load:"Load",open:"Open ↗",upload:"Upload video file",url_ph:"Paste a video link (YouTube, Facebook, Veo…)",
   upload_hint:"or use a local file — best playback & full sync",
   empty_video:"Paste a video link or upload a video file.<br>You can still tag using the clock below.",
@@ -1165,7 +1166,7 @@ const I18N={
   s_fin_on:"ยิงเข้ากรอบ",s_fin_off:"ยิงไม่เข้ากรอบ",s_pass_ok:"ส่งสำเร็จ",s_pass_no:"ส่งไม่สำเร็จ",s_foul:"ฟาวล์",s_ssg_press:"พยายามแย่งบอล",s_ssg_win:"แย่งบอลสำเร็จ",s_ssg_cpress:"แย่งบอลคืนทันที",s_ssg_winbox:"แย่งบอลหน้าประตู",s_ssg_pass:"ส่งบอลสำเร็จ",s_ssg_dribble:"เลี้ยงผ่าน",s_ssg_turnover:"ทำเสียบอล",s_ssg_lossbox:"เสียบอลหน้าประตูตัวเอง",s_d1_att:"1v1 ชนะเกมรุก",s_d1_def:"1v1 ชนะเกมรับ",s_d2_att:"2v1 ชนะเกมรุก",s_d2_def:"2v1 ชนะเกมรับ",
   s_d1_att_l:"1v1 แพ้เกมรุก",s_d1_def_l:"1v1 แพ้เกมรับ",s_d2_att_l:"2v1 แพ้เกมรุก",s_d2_def_l:"2v1 แพ้เกมรับ",
   h_train_summary:"สรุปเทรนนิ่ง",col_on:"เข้า",col_off:"ไม่เข้า",col_acc:"แม่น %",col_d1a:"1v1 รุก",col_d1d:"1v1 รับ",col_d2a:"2v1 รุก",col_d2d:"2v1 รับ",
-  tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_match:"แมตช์",lbl_level:"ประเภท",lvl_comp:"แข่งขัน",lvl_friendly:"อุ่นเครื่อง",h_lineup:"ตัวผู้เล่น & เวลาลงเล่น",h_training_setup:"ตั้งค่าการฝึกซ้อม",rename_match_title:"แก้ชื่อแมตช์ / คู่แข่ง",h_export:"Export สำหรับ Develop+",exp_json:"ส่งออกข้อมูล (JSON)",exp_csv:"ส่งออกสรุป (CSV)",exp_note:"ไฟล์มาตรฐานรวมผู้เล่น เซสชัน อีเวนต์ และสรุปรายคน — ใช้สำรองข้อมูล และเตรียมส่งให้แอป Develop+ ในอนาคต ใช้รหัสผู้เล่นจาก Supabase เพื่อให้ข้อมูลนักกีฬาตรงกันข้ามแอป",exp_done:"ส่งออกแล้ว",rename_train_title:"แก้หัวข้อการฝึกซ้อม",rename_ph_topic:"เช่น จบสกอร์ในกรอบ, เกมรุกริมเส้น",rename_ph_opp:"ชื่อคู่แข่ง",topic_recent:"หัวข้อที่ใช้ล่าสุด",btn_save:"บันทึก",btn_cancel:"ยกเลิก",in_squad:"ลงเล่นแมตช์นี้",change_photo:"เปลี่ยนรูป",photo_updated:"อัปเดตรูปแล้ว",photo_fail:"อ่านไฟล์รูปไม่สำเร็จ",train_rep_hint:"ดูเปรียบเทียบ ซ้อม ↔ เกมจริง รายคน ได้ที่ รายงาน → พัฒนาการ → เลือกผู้เล่น",sync_fail_warn:"⚠️ บางแท็ก/การแก้ไข ยังไม่ถูกบันทึกขึ้นคลาวด์ — กรุณารัน supabase_fix_events.sql อีกครั้ง",tab_settings:"ตั้งค่า",
+  tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_match:"แมตช์",tab_training:"ฝึกซ้อม",lbl_level:"ประเภท",lvl_comp:"แข่งขัน",lvl_friendly:"อุ่นเครื่อง",h_lineup:"ตัวผู้เล่น & เวลาลงเล่น",h_training_setup:"ตั้งค่าการฝึกซ้อม",h_attendance:"ผู้เล่นที่เข้าซ้อม session นี้",in_training:"เข้าซ้อม session นี้",attend_note:"เลือกผู้เล่นที่เข้าร่วมการฝึกซ้อมครั้งนี้",rep_train:"ฝึกซ้อม",train_rep_empty:"ยังไม่มีเซสชันฝึกซ้อม — สร้างเซสชันซ้อมแล้วแท็กสักหน่อย",train_rep_sessions:"{n} เซสชัน",rename_match_title:"แก้ชื่อแมตช์ / คู่แข่ง",h_export:"Export สำหรับ Develop+",exp_json:"ส่งออกข้อมูล (JSON)",exp_csv:"ส่งออกสรุป (CSV)",exp_note:"ไฟล์มาตรฐานรวมผู้เล่น เซสชัน อีเวนต์ และสรุปรายคน — ใช้สำรองข้อมูล และเตรียมส่งให้แอป Develop+ ในอนาคต ใช้รหัสผู้เล่นจาก Supabase เพื่อให้ข้อมูลนักกีฬาตรงกันข้ามแอป",exp_done:"ส่งออกแล้ว",rename_train_title:"แก้หัวข้อการฝึกซ้อม",rename_ph_topic:"เช่น จบสกอร์ในกรอบ, เกมรุกริมเส้น",rename_ph_opp:"ชื่อคู่แข่ง",topic_recent:"หัวข้อที่ใช้ล่าสุด",btn_save:"บันทึก",btn_cancel:"ยกเลิก",in_squad:"ลงเล่นแมตช์นี้",change_photo:"เปลี่ยนรูป",photo_updated:"อัปเดตรูปแล้ว",photo_fail:"อ่านไฟล์รูปไม่สำเร็จ",train_rep_hint:"ดูเปรียบเทียบ ซ้อม ↔ เกมจริง รายคน ได้ที่ รายงาน → พัฒนาการ → เลือกผู้เล่น",sync_fail_warn:"⚠️ บางแท็ก/การแก้ไข ยังไม่ถูกบันทึกขึ้นคลาวด์ — กรุณารัน supabase_fix_events.sql อีกครั้ง",tab_settings:"ตั้งค่า",
   h_video:"วิดีโอแมตช์",load:"โหลด",open:"เปิด ↗",upload:"อัปโหลดไฟล์วิดีโอ",url_ph:"วางลิงก์วิดีโอ (YouTube, Facebook, Veo…)",
   upload_hint:"หรือใช้ไฟล์ในเครื่อง — เล่นชัวร์ที่สุดและซิงค์เต็มรูปแบบ",
   empty_video:"วางลิงก์วิดีโอ หรืออัปโหลดไฟล์วิดีโอ<br>ระหว่างนี้ติดแท็กด้วยนาฬิกาด้านล่างได้",
@@ -1303,7 +1304,7 @@ function applyTheme(){const tm=settings.theme||"dark";const eff=tm==="auto"?((wi
 if(window.matchMedia){try{matchMedia("(prefers-color-scheme: light)").addEventListener("change",()=>{if((settings.theme||"dark")==="auto")applyTheme();});}catch(e){}}
 function applyAccent(){document.documentElement.style.setProperty("--lime",settings.accent);}
 function applyKbHints(){document.querySelectorAll(".kbhint").forEach(el=>el.dataset.forceHidden=settings.kbhints?"":"1");document.querySelectorAll(".kbhint").forEach(el=>{if(!settings.kbhints)el.style.display="none";else if(el.id!=="videohint")el.style.display="";});document.body.classList.toggle("nokb",!settings.kbhints);}
-function relocalizeAll(){applyStaticI18n();renderMatchBar();renderRoster();renderStatBtns();renderLog();renderSubs&&renderSubs();paintClock();paintSaveStatus();if($("v-stats").classList.contains("on")){renderDashboard();renderStatsTable();}if($("v-reports").classList.contains("on"))renderReports();if($("v-checks").classList.contains("on")){if(qaRan)runAllChecks();else renderQueue();}if($("v-team").classList.contains("on"))renderTeam();if($("v-match")&&$("v-match").classList.contains("on"))renderMatch();}
+function relocalizeAll(){applyStaticI18n();renderMatchBar();renderRoster();renderStatBtns();renderLog();renderSubs&&renderSubs();paintClock();paintSaveStatus();if($("v-stats").classList.contains("on")){renderDashboard();renderStatsTable();}if($("v-reports").classList.contains("on"))renderReports();if($("v-checks").classList.contains("on")){if(qaRan)runAllChecks();else renderQueue();}if($("v-team").classList.contains("on"))renderTeam();if($("v-match")&&$("v-match").classList.contains("on"))renderMatch();updateMatchTabLabel();}
 
 let roster=[],matches=[],eventsByMatch={},currentMatchId=null,veoByMatch={},minsByMatch={},footByPlayer={};
 const K_VEO="gp_veo_v1";const K_MINS="gp_mins_v1";const K_FOOT="gp_foot_v1";const K_SQUAD="gp_squad_v1";const K_LEVEL="gp_level_v1";const K_TOPICS="gp_topics_v1";let tagFoot="R";let squadByMatch={},levelByMatch={},trainTopics=[];
@@ -1314,7 +1315,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-ac";
+const BUILD="06-29-ad";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -1421,7 +1422,9 @@ function renderMatchBar(){
     }
     return `<option value="${m.id}" ${m.id===currentMatchId?"selected":""}>${label}</option>`;
   }).join("");
+  updateMatchTabLabel();
 }
+function updateMatchTabLabel(){const b=document.querySelector('.tab[data-v="match"]');if(!b)return;const m=curMatch();b.textContent=t(m&&m.kind==="training"?"tab_training":"tab_match");}
 const escA=s=>String(s==null?"":s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 function rememberTopic(s){s=(s||"").trim();if(!s)return;trainTopics=[s].concat(trainTopics.filter(x=>x!==s)).slice(0,40);store.set(K_TOPICS,trainTopics);}
 function openRenameModal(){
@@ -2593,6 +2596,42 @@ function renderMatchReport(){
     <div class="replabel">${t("h_perplayer")}</div><div style="overflow-x:auto">${tbl}</div>
   </section>`;
 }
+function renderTrainingReport(){
+  const tm=matches.filter(m=>m.kind==="training");
+  if(!tm.length){$("rep-body").innerHTML=`<section class="card"><div class="muted">${t("train_rep_empty")}</div></section>`;return;}
+  const ratio=(a,b)=>b?Math.round(a/b*100)+"%":"—";const kpi=(v,l)=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`;const wl=(w,l)=>`${w}-${l}`;
+  const exData={};tm.forEach(m=>{const ex=m.exercise||"fd";if(!exData[ex])exData[ex]={evs:[],n:0};exData[ex].evs=exData[ex].evs.concat(evsOfMatch(m.id));exData[ex].n++;});
+  const order=["fd","finishing","passing","ssg"];
+  const keys=Object.keys(exData).sort((a,b)=>order.indexOf(a)-order.indexOf(b));
+  let html="";
+  keys.forEach(ex=>{
+    const all=exData[ex].evs;const C=k=>all.filter(e=>e.stat_key===k).length;const cf=(pid,k)=>all.filter(e=>e.player_id===pid&&e.stat_key===k).length;
+    let kpis="",head="",rows="";
+    if(ex==="passing"){
+      kpis=kpi(C("pass_ok"),slabel("pass_ok"))+kpi(C("pass_no"),slabel("pass_no"))+kpi(ratio(C("pass_ok"),C("pass_ok")+C("pass_no")),t("col_acc"));
+      head=`<tr><th>#</th><th style="text-align:left">${t("col_player")}</th><th>${slabel("pass_ok")}</th><th>${slabel("pass_no")}</th><th>${t("col_acc")}</th></tr>`;
+      rows=ordered().map(p=>(cf(p.id,"pass_ok")+cf(p.id,"pass_no")===0)?"":`<tr><td class="num">${p.no||"–"}</td><td class="name">${p.name}</td><td class="num">${cf(p.id,"pass_ok")}</td><td class="num">${cf(p.id,"pass_no")}</td><td class="num">${ratio(cf(p.id,"pass_ok"),cf(p.id,"pass_ok")+cf(p.id,"pass_no"))}</td></tr>`).join("");
+      rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td><td class="num">${C("pass_ok")}</td><td class="num">${C("pass_no")}</td><td class="num">${ratio(C("pass_ok"),C("pass_ok")+C("pass_no"))}</td></tr>`;
+    }else if(ex==="ssg"){
+      const ks=["ssg_win","ssg_cpress","ssg_winbox","ssg_pass","ssg_dribble","ssg_turnover","ssg_lossbox","foul"];
+      kpis=kpi(C("ssg_win"),slabel("ssg_win"))+kpi(C("ssg_cpress"),slabel("ssg_cpress"))+kpi(C("ssg_winbox"),slabel("ssg_winbox"))+kpi(C("ssg_turnover")+C("ssg_lossbox"),slabel("ssg_turnover"));
+      head=`<tr><th>#</th><th style="text-align:left">${t("col_player")}</th>`+ks.map(k=>`<th>${slabel(k)}</th>`).join("")+`</tr>`;
+      rows=ordered().map(p=>ks.every(k=>cf(p.id,k)===0)?"":`<tr><td class="num">${p.no||"–"}</td><td class="name">${p.name}</td>`+ks.map(k=>`<td class="num">${cf(p.id,k)}</td>`).join("")+`</tr>`).join("");
+      rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td>`+ks.map(k=>`<td class="num">${C(k)}</td>`).join("")+`</tr>`;
+    }else{
+      const isFd=(ex==="fd");const sT=C("shot")+C("shot_on")+C("score"),sO=C("shot_on")+C("score");
+      kpis=kpi(sT,t("met_shots"))+kpi(sO,t("col_ontarget"))+kpi(C("score"),t("met_goals"))+kpi(ratio(C("score"),sT),t("met_conv_pct"))+(isFd?kpi(C("foul"),slabel("foul")):"");
+      const dH=isFd?`<th>${t("ex_1v1")}</th><th>${t("ex_2v1")}</th>`:"";
+      head=`<tr><th>#</th><th style="text-align:left">${t("col_player")}</th><th>${t("col_shot")}</th><th>${t("col_ontarget")}</th><th>${t("met_goals")}</th><th>${t("met_conv_pct")}</th>${dH}</tr>`;
+      const rf=cc=>{const c=k=>cc(k);const psT=c("shot")+c("shot_on")+c("score"),psO=c("shot_on")+c("score");const d=isFd?`<td class="num">${wl(c("d1_att")+c("d1_def"),c("d1_att_l")+c("d1_def_l"))}</td><td class="num">${wl(c("d2_att")+c("d2_def"),c("d2_att_l")+c("d2_def_l"))}</td>`:"";return `<td class="num">${psT}</td><td class="num">${psO}</td><td class="num">${c("score")}</td><td class="num">${ratio(c("score"),psT)}</td>${d}`;};
+      rows=ordered().map(p=>{const c=k=>cf(p.id,k);if(c("shot")+c("shot_on")+c("score")+c("d1_att")+c("d2_att")===0)return "";return `<tr><td class="num">${p.no||"–"}</td><td class="name">${p.name}${isGK(p)?' <span class="gktag">GK</span>':""}</td>${rf(c)}</tr>`;}).join("");
+      rows+=`<tr class="totalrow"><td></td><td class="name">${t("team_total")}</td>${rf(k=>C(k))}</tr>`;
+    }
+    html+=`<section class="card" style="margin-bottom:14px"><div class="dashhead"><h2 style="margin:0">${exLabel(ex)}</h2><div class="dashscore">${tf("train_rep_sessions",{n:exData[ex].n})}</div></div><div class="kpis">${kpis}</div><div style="overflow-x:auto"><table>${head}${rows}</table></div></section>`;
+  });
+  html+=`<p class="note">${t("train_rep_hint")}</p>`;
+  $("rep-body").innerHTML=html;
+}
 function renderPlayerReport(){
   if(!repState.player||!P(repState.player))repState.player=(ordered()[0]||{}).id;
   const sel=`<select id="repPlayer">`+ordered().map(p=>`<option value="${p.id}" ${p.id===repState.player?"selected":""}>#${p.no||"–"} ${p.name}</option>`).join("")+`</select>`;
@@ -2755,6 +2794,7 @@ function renderReports(){
   if(repState.type==="match")renderMatchReport();
   else if(repState.type==="player")renderPlayerReport();
   else if(repState.type==="develop")renderDevelopReport();
+  else if(repState.type==="train")renderTrainingReport();
   else if(repState.type==="gk")renderGKReport();
   else renderCompare();
 }
@@ -2968,15 +3008,18 @@ function renderMatch(){
 }
 function renderSubs(){
   const m=curMatch();if(!m)return;
-  const sc=$("subsCard");
-  if(m.kind==="training"){if(sc)sc.style.display="none";renderVeoCompare();return;}
-  if(sc)sc.style.display="";
+  const sc=$("subsCard");if(sc)sc.style.display="";
+  const isTrain=m.kind==="training";
+  const hd=sc&&sc.querySelector("summary h2");if(hd)hd.textContent=t(isTrain?"h_attendance":"h_lineup");
+  const nt=sc&&sc.querySelector(".note");if(nt)nt.textContent=t(isTrain?"attend_note":"subs_note");
   // one-time migration: old "off at" minute ≈ minutes played
   if(m.subs&&Object.keys(m.subs).length){minsByMatch[m.id]=minsByMatch[m.id]||{};Object.keys(m.subs).forEach(pid=>{if(minsByMatch[m.id][pid]==null&&m.subs[pid]!=null)minsByMatch[m.id][pid]=m.subs[pid];});store.set(K_MINS,minsByMatch);delete m.subs;saveAll();}
   const mm=minsByMatch[m.id]||{};const full=matchMinutes(m);
   const sq=squadByMatch[m.id];const inSq=pid=>sq===undefined?true:sq.includes(pid);
   $("subs").innerHTML=ordered().map(p=>{const on=inSq(p.id);
-    return `<div class="subline${on?"":" off"}"><input type="checkbox" class="sqchk" data-sq="${p.id}" ${on?"checked":""} title="${t("in_squad")}"><span class="n">${p.no||"–"}</span><span class="nm2">${p.name}${isGK(p)?" · GK":""}</span><input type="number" min="0" max="${full}" data-min="${p.id}" value="${mm[p.id]??""}" placeholder="${full}" ${on?"":"disabled"}> ${t("min")}</div>`;}).join("");
+    const head=`<input type="checkbox" class="sqchk" data-sq="${p.id}" ${on?"checked":""} title="${t(isTrain?"in_training":"in_squad")}"><span class="n">${p.no||"–"}</span><span class="nm2">${p.name}${isGK(p)?" · GK":""}</span>`;
+    const mins=isTrain?"":`<input type="number" min="0" max="${full}" data-min="${p.id}" value="${mm[p.id]??""}" placeholder="${full}" ${on?"":"disabled"}> ${t("min")}`;
+    return `<div class="subline${on?"":" off"}">${head}${mins}</div>`;}).join("");
   $("subs").querySelectorAll("[data-min]").forEach(i=>i.onchange=()=>{const v=i.value.trim();minsByMatch[m.id]=minsByMatch[m.id]||{};if(v===""||+v>=full)delete minsByMatch[m.id][i.dataset.min];else minsByMatch[m.id][i.dataset.min]=Math.max(0,parseInt(v,10));store.set(K_MINS,minsByMatch);});
   $("subs").querySelectorAll("[data-sq]").forEach(c=>c.onchange=()=>{const pid=c.dataset.sq;let cur=squadByMatch[m.id];if(cur===undefined)cur=ordered().map(p=>p.id);cur=cur.slice();if(c.checked){if(!cur.includes(pid))cur.push(pid);}else{cur=cur.filter(x=>x!==pid);}squadByMatch[m.id]=cur;store.set(K_SQUAD,squadByMatch);renderSubs();});
   renderVeoCompare();
