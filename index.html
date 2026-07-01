@@ -81,6 +81,10 @@
   .btnlime{background:var(--lime);color:#11200a;border:0;border-radius:9px;padding:0 16px;font-weight:600;font-size:14px;cursor:pointer}
   .videobox{position:relative;width:100%;aspect-ratio:16/9;background:#0a110e;border-radius:9px;overflow:hidden;border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
   .videobox iframe{width:100%;height:100%;border:0}
+  .partchip{font-size:12px;padding:4px 10px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
+  .partchip.on{background:var(--lime);color:#0d1a08;border-color:var(--lime);font-weight:600}
+  .partchip.add{border-style:dashed}
+  .partbadge{font-size:10px;font-weight:700;padding:1px 5px;border-radius:5px;background:var(--chip,#1b2a17);color:var(--muted);margin-right:2px}
   .empty{color:var(--faint);font-size:14px;text-align:center;padding:0 20px}
   .clock{display:flex;align-items:center;gap:12px;margin-top:12px;flex-wrap:wrap}
   .clockface{font-family:var(--mono);font-size:28px;font-weight:600;background:var(--surface2);border:1px solid var(--line);border-radius:9px;padding:6px 14px;min-width:110px;text-align:center}
@@ -609,6 +613,7 @@
     <div class="grid">
       <section class="card">
         <h2 data-i18n="h_video">Match video</h2>
+        <div class="urlrow" id="partBar" style="flex-wrap:wrap;gap:6px;display:none"></div>
         <div class="urlrow"><input id="url" data-i18n-ph="url_ph" placeholder="Paste a YouTube link…" inputmode="url"><button class="btnlime" id="load" data-i18n="load">Load</button><a id="openyt" class="cb" target="_blank" rel="noopener" style="display:none;align-items:center" data-i18n="open">Open ↗</a></div>
         <div class="urlrow" style="margin-top:-4px;align-items:center"><label class="cb" style="cursor:pointer"><span data-i18n="upload">Upload video file</span><input id="vidfile" type="file" accept="video/*" hidden></label><span class="hint" data-i18n="upload_hint">or use a local file — best playback &amp; full sync</span></div>
         <span id="vidname" class="hint"></span>
@@ -1133,7 +1138,7 @@ const I18N={
   s_d1_att_l:"1v1 attack lost",s_d1_def_l:"1v1 defence lost",s_d2_att_l:"2v1 attack lost",s_d2_def_l:"2v1 defence lost",
   h_train_summary:"Training summary",col_on:"On",col_off:"Off",col_acc:"Acc %",col_d1a:"1v1 atk",col_d1d:"1v1 def",col_d2a:"2v1 atk",col_d2d:"2v1 def",
   tab_tag:"Tag",tab_stats:"Stats",tab_checks:"Checks",tab_team:"Team",tab_match:"Match",tab_training:"Training",lbl_level:"Type",lvl_comp:"Competitive",lvl_friendly:"Friendly",h_lineup:"Lineup & minutes",h_training_setup:"Training settings",h_attendance:"Who trained this session",in_training:"Trained this session",attend_note:"Tick the players who took part in this training session.",no_attendees:"No players selected for this session yet — pick them in the Training tab (Who trained this session).",rep_train:"Training",train_rep_empty:"No training sessions yet. Create a training session and tag a few actions.",train_rep_sessions:"{n} session(s)",rename_match_title:"Edit match name / opponent",h_export:"Export for Develop+",exp_json:"Export data (JSON)",exp_csv:"Export summary (CSV)",exp_note:"A standardized export of players, sessions, events, and per-player aggregates — for backup and for the upcoming Develop+ app. Uses Supabase player IDs so athletes line up across apps.",exp_done:"Exported.",rename_train_title:"Edit training topic",rename_ph_topic:"e.g. Finishing in the box, Wing attacks",rename_ph_opp:"Opponent name",topic_recent:"Recent topics",btn_save:"Save",btn_cancel:"Cancel",in_squad:"Played this match",change_photo:"Change photo",photo_updated:"Photo updated",remove_photo:"Remove photo",photo_removed:"Photo removed",tr_range:"Date range",tr_clear:"Clear",tr_none_range:"No training sessions in this date range.",f_veo_extra:"Manual tag \u201c{stat}\u201d for #{no} has no matching Veo record.",photo_fail:"Could not read that image",train_rep_hint:"Compare training vs match per player in Reports → Development → pick a player.",sync_fail_warn:"⚠️ Some tags/edits did not save to the cloud — re-run supabase_fix_events.sql",tab_settings:"Settings",
-  h_video:"Match video",load:"Load",open:"Open ↗",upload:"Upload video file",url_ph:"Paste a video link (YouTube, Facebook, Veo…)",
+  h_video:"Match video",load:"Load",lbl_part:"Part",add_part:"Add part",open:"Open ↗",upload:"Upload video file",url_ph:"Paste a video link (YouTube, Facebook, Veo…)",
   upload_hint:"or use a local file — best playback & full sync",
   empty_video:"Paste a video link or upload a video file.<br>You can still tag using the clock below.",
   video_hint:"If the video doesn't play here, tap <b>Open ↗</b> to watch it in a new tab, then press <b>Start</b> when you play, and tag along.",
@@ -1205,7 +1210,7 @@ const I18N={
   s_d1_att_l:"1v1 แพ้เกมรุก",s_d1_def_l:"1v1 แพ้เกมรับ",s_d2_att_l:"2v1 แพ้เกมรุก",s_d2_def_l:"2v1 แพ้เกมรับ",
   h_train_summary:"สรุปเทรนนิ่ง",col_on:"เข้า",col_off:"ไม่เข้า",col_acc:"แม่น %",col_d1a:"1v1 รุก",col_d1d:"1v1 รับ",col_d2a:"2v1 รุก",col_d2d:"2v1 รับ",
   tab_tag:"ติดแท็ก",tab_stats:"สถิติ",tab_checks:"ตรวจสอบ",tab_team:"ทีม",tab_match:"แมตช์",tab_training:"ฝึกซ้อม",lbl_level:"ประเภท",lvl_comp:"แข่งขัน",lvl_friendly:"อุ่นเครื่อง",h_lineup:"ตัวผู้เล่น & เวลาลงเล่น",h_training_setup:"ตั้งค่าการฝึกซ้อม",h_attendance:"ผู้เล่นที่เข้าซ้อม session นี้",in_training:"เข้าซ้อม session นี้",attend_note:"เลือกผู้เล่นที่เข้าร่วมการฝึกซ้อมครั้งนี้",no_attendees:"ยังไม่ได้เลือกผู้เล่นที่เข้าซ้อม — ไปเลือกที่แท็บฝึกซ้อม (ผู้เล่นที่เข้าซ้อม session นี้)",rep_train:"ฝึกซ้อม",train_rep_empty:"ยังไม่มีเซสชันฝึกซ้อม — สร้างเซสชันซ้อมแล้วแท็กสักหน่อย",train_rep_sessions:"{n} เซสชัน",rename_match_title:"แก้ชื่อแมตช์ / คู่แข่ง",h_export:"Export สำหรับ Develop+",exp_json:"ส่งออกข้อมูล (JSON)",exp_csv:"ส่งออกสรุป (CSV)",exp_note:"ไฟล์มาตรฐานรวมผู้เล่น เซสชัน อีเวนต์ และสรุปรายคน — ใช้สำรองข้อมูล และเตรียมส่งให้แอป Develop+ ในอนาคต ใช้รหัสผู้เล่นจาก Supabase เพื่อให้ข้อมูลนักกีฬาตรงกันข้ามแอป",exp_done:"ส่งออกแล้ว",rename_train_title:"แก้หัวข้อการฝึกซ้อม",rename_ph_topic:"เช่น จบสกอร์ในกรอบ, เกมรุกริมเส้น",rename_ph_opp:"ชื่อคู่แข่ง",topic_recent:"หัวข้อที่ใช้ล่าสุด",btn_save:"บันทึก",btn_cancel:"ยกเลิก",in_squad:"ลงเล่นแมตช์นี้",change_photo:"เปลี่ยนรูป",photo_updated:"อัปเดตรูปแล้ว",remove_photo:"ลบรูป",photo_removed:"ลบรูปแล้ว",tr_range:"ช่วงวันที่",tr_clear:"ล้าง",tr_none_range:"ไม่มีเซสชันซ้อมในช่วงวันที่นี้",f_veo_extra:"แท็กมือ \u201c{stat}\u201d ของเบอร์ {no} ไม่มีข้อมูล Veo ที่ตรงกัน",photo_fail:"อ่านไฟล์รูปไม่สำเร็จ",train_rep_hint:"ดูเปรียบเทียบ ซ้อม ↔ เกมจริง รายคน ได้ที่ รายงาน → พัฒนาการ → เลือกผู้เล่น",sync_fail_warn:"⚠️ บางแท็ก/การแก้ไข ยังไม่ถูกบันทึกขึ้นคลาวด์ — กรุณารัน supabase_fix_events.sql อีกครั้ง",tab_settings:"ตั้งค่า",
-  h_video:"วิดีโอแมตช์",load:"โหลด",open:"เปิด ↗",upload:"อัปโหลดไฟล์วิดีโอ",url_ph:"วางลิงก์วิดีโอ (YouTube, Facebook, Veo…)",
+  h_video:"วิดีโอแมตช์",load:"โหลด",lbl_part:"พาร์ท",add_part:"เพิ่มพาร์ท",open:"เปิด ↗",upload:"อัปโหลดไฟล์วิดีโอ",url_ph:"วางลิงก์วิดีโอ (YouTube, Facebook, Veo…)",
   upload_hint:"หรือใช้ไฟล์ในเครื่อง — เล่นชัวร์ที่สุดและซิงค์เต็มรูปแบบ",
   empty_video:"วางลิงก์วิดีโอ หรืออัปโหลดไฟล์วิดีโอ<br>ระหว่างนี้ติดแท็กด้วยนาฬิกาด้านล่างได้",
   video_hint:"ถ้าวิดีโอไม่เล่นตรงนี้ กด <b>เปิด ↗</b> เพื่อดูในแท็บใหม่ แล้วกด <b>เริ่ม</b> ตอนเล่นคลิป และติดแท็กตามได้เลย",
@@ -1355,7 +1360,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-an";
+const BUILD="06-29-ao";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -1560,16 +1565,41 @@ $("wizCreate").onclick=async()=>{
 function switchMatch(){
   flush();undoStack=[];
   editingId=null;clearLocal();clearYT();$("vidname").textContent="";
-  const m=curMatch();$("url").value=m&&m.video_url||"";
+  activePart=0;pendingSeek=null;
+  const m=curMatch();const vids=matchVideos(m);
+  $("url").value=vids[activePart]?vids[activePart].url||"":"";
   // training session UI
   const isTrain=m&&m.kind==="training";
   $("trainDetailsWrap").style.display=isTrain?"":"none";
   if(isTrain)$("trainDetails").value=m.details||"";
-  if(m&&m.video_url)loadVideo(m.video_url);
+  renderPartBar();
+  if(vids[activePart]&&vids[activePart].url)loadVideo(vids[activePart].url);
   else{setOpenLink("");$("videobox").innerHTML='<div class="empty">'+(m&&m.video_file?(t("reselect")+' <b>'+m.video_file+'</b><br>'+t("reselect_note")):t("empty_video"))+'</div>';}
   renderRoster();renderStatBtns();renderLog();renderMatchBar();
   if($("v-match")&&$("v-match").classList.contains("on"))renderMatch();
 }
+// a match can have several video "parts" (e.g. a game uploaded to YouTube in chunks).
+// each tag remembers which part it belongs to, so highlights jump to the right clip + time.
+function matchVideos(m){if(m&&Array.isArray(m.videos)&&m.videos.length)return m.videos;if(m&&m.video_url)return [{url:m.video_url,label:"Part 1"}];return [];}
+function ensureVideosArray(m){if(!Array.isArray(m.videos))m.videos=matchVideos(m).slice();return m.videos;}
+let activePart=0,pendingSeek=null;
+function renderPartBar(){
+  const bar=$("partBar");if(!bar)return;
+  const m=curMatch();if(!m){bar.style.display="none";return;}
+  const vids=matchVideos(m);
+  if(!vids.length){bar.style.display="none";return;}
+  bar.style.display="";
+  let html=`<span class="lbl" style="align-self:center">${t("lbl_part")}</span>`;
+  vids.forEach((v,i)=>{html+=`<button class="partchip${i===activePart?" on":""}" data-part="${i}">${v.label||("Part "+(i+1))}${v.url?"":" ·"}</button>`;});
+  html+=`<button class="partchip add" data-addpart="1">＋ ${t("add_part")}</button>`;
+  bar.innerHTML=html;
+  bar.querySelectorAll("[data-part]").forEach(b=>b.onclick=()=>selectPart(+b.dataset.part));
+  const ab=bar.querySelector("[data-addpart]");if(ab)ab.onclick=()=>addPart();
+}
+function loadPartVideo(i){const vids=matchVideos(curMatch());$("url").value=vids[i]&&vids[i].url||"";if(vids[i]&&vids[i].url)loadVideo(vids[i].url);else{clearYT();clearLocal();setOpenLink("");$("videobox").innerHTML='<div class="empty">'+t("empty_video")+'</div>';paintClock();}}
+function selectPart(i){const vids=matchVideos(curMatch());if(!vids[i])return;activePart=i;renderPartBar();loadPartVideo(i);}
+function addPart(){const m=curMatch();if(!m)return;const vids=ensureVideosArray(m);vids.push({url:"",label:"Part "+(vids.length+1)});m.video_url=vids[0].url||"";activePart=vids.length-1;saveAll();cw.meta(m);renderPartBar();loadPartVideo(activePart);$("url")&&$("url").focus&&$("url").focus();}
+function seekEventTo(part,sec){const vids=matchVideos(curMatch());if(part!==activePart&&vids[part]){activePart=part;renderPartBar();if(vids[part].url){pendingSeek=sec;loadPartVideo(part);return;}}seekTo(sec);}
 const tdEl=document.getElementById("trainDetails");
 if(tdEl)tdEl.onchange=()=>{const m=curMatch();if(m){m.details=tdEl.value;saveAll();renderMatchBar();}};
 
@@ -1641,7 +1671,7 @@ function mountYouTube(id){
       videoId:id,
       playerVars:{playsinline:1,rel:0,modestbranding:1},
       events:{
-        onReady:()=>{settled=true;ytReady=true;$("videohint").style.display="none";paintClock();},
+        onReady:()=>{settled=true;ytReady=true;$("videohint").style.display="none";paintClock();if(pendingSeek!=null){const s=pendingSeek;pendingSeek=null;setTimeout(()=>{try{seekTo(s);}catch(e){}},250);}},
         onStateChange:e=>{setRunUI(e.data===1);},          // 1 = playing
         onError:()=>{settled=true;ytReady=false;ytOpenMsg(tf("vid_open_provider",{p:"YouTube"}));}  // owner blocked embedding, etc.
       }
@@ -1675,7 +1705,7 @@ function loadLocalFile(file){
 }
 $("vidfile").onchange=e=>{const f=e.target.files[0];if(f)loadLocalFile(f);e.target.value="";};
 function cleanVideoUrl(u){const m=(u||"").match(/src=["']([^"']+)["']/i);return (m?m[1]:u).trim();}
-$("load").onclick=()=>{const u=cleanVideoUrl($("url").value.trim());$("url").value=u;const m=curMatch();if(m){m.video_url=u;saveAll();cw.match(m);}loadVideo(u);};
+$("load").onclick=()=>{const u=cleanVideoUrl($("url").value.trim());$("url").value=u;const m=curMatch();if(m){const vids=ensureVideosArray(m);if(!vids.length){vids.push({url:u,label:"Part 1"});activePart=0;}else vids[activePart]=Object.assign({},vids[activePart],{url:u});m.video_url=vids[0].url||"";saveAll();cw.match(m);cw.meta(m);renderPartBar();}loadVideo(u);};
 function seekTo(sec){
   if(localReady&&videoEl){try{videoEl.currentTime=sec;videoEl.play&&videoEl.play();return;}catch(e){}}
   if(ytReady&&ytPlayer){try{ytPlayer.seekTo(sec,true);ytPlayer.playVideo&&ytPlayer.playVideo();return;}catch(e){}}
@@ -2029,7 +2059,7 @@ async function cloudPull(){
 }
 async function cloudPullEvents(matchId){
   const {data:ev}=await cloud.sb.from("events").select("*").eq("match_id",matchId).order("created_at");
-  const cloudEv=(ev||[]).map(e=>({id:uid("e"),dbid:e.id,player_id:e.player_id,stat_key:e.event_type,video_ts:Number(e.video_ts)||0,foot:e.foot||undefined,source:e.source,status:e.status,created:Date.parse(e.created_at)||Date.now()}));
+  const cloudEv=(ev||[]).map(e=>({id:uid("e"),dbid:e.id,player_id:e.player_id,stat_key:e.event_type,video_ts:Number(e.video_ts)||0,video_part:Number(e.video_part)||0,foot:e.foot||undefined,source:e.source,status:e.status,created:Date.parse(e.created_at)||Date.now()}));
   // preserve locally-tagged events that never confirmed a cloud id (so a re-pull can't silently drop them)
   const local=eventsByMatch[matchId]||[];const pending=local.filter(e=>!e.dbid);
   eventsByMatch[matchId]=cloudEv.concat(pending);
@@ -2066,7 +2096,7 @@ function metaOf(m){
     details:m.kind==="training"?(m.details||null):null,
     format:m.format||null,periods:m.periods||null,minPer:m.minPer||null,
     time:m.time||null,notes:m.notes||null,
-    level:levelByMatch[m.id]||null,
+    level:levelByMatch[m.id]||null,videos:(m.videos&&m.videos.length?m.videos:null),
     squad:squadByMatch[m.id]!==undefined?squadByMatch[m.id]:null,
     minutes:minsByMatch[m.id]||null};
 }
@@ -2081,14 +2111,16 @@ function applyMeta(m,meta){
   if(meta.time!=null)m.time=meta.time;
   if(meta.notes!=null)m.notes=meta.notes;
   if(meta.level!=null)levelByMatch[m.id]=meta.level;
+  if(Array.isArray(meta.videos)&&meta.videos.length){m.videos=meta.videos;if(!m.video_url)m.video_url=meta.videos[0].url||"";}
   if(Array.isArray(meta.squad))squadByMatch[m.id]=meta.squad;
   if(meta.minutes&&typeof meta.minutes==="object")minsByMatch[m.id]=meta.minutes;
 }
 const cw={
-  addEvent(e){if(!cloud.active)return;cloud.sb.from("events").insert({org_id:cloud.orgId,match_id:currentMatchId,player_id:e.player_id,event_type:e.stat_key,video_ts:e.video_ts,minute:minuteOf(e),foot:e.foot||null,source:"manual"}).select("id").single().then(r=>{if(r&&r.error){e.unsynced=true;warnSync(r.error);}else if(r&&r.data){e.dbid=r.data.id;e.unsynced=false;}},err=>{e.unsynced=true;warnSync(err);});},
+  addEvent(e){if(!cloud.active)return;cloud.sb.from("events").insert({org_id:cloud.orgId,match_id:currentMatchId,player_id:e.player_id,event_type:e.stat_key,video_ts:e.video_ts,minute:minuteOf(e),foot:e.foot||null,source:"manual"}).select("id").single().then(r=>{if(r&&r.error){e.unsynced=true;warnSync(r.error);}else if(r&&r.data){e.dbid=r.data.id;e.unsynced=false;if(e.video_part)cw.setPart(e);}},err=>{e.unsynced=true;warnSync(err);});},
   delEvent(e){if(!cloud.active||!e||!e.dbid)return;cloud.sb.from("events").delete().eq("id",e.dbid).then(()=>{},()=>{});},
   updEvent(e){if(!cloud.active||!e||!e.dbid)return;cloud.sb.from("events").update({player_id:e.player_id,event_type:e.stat_key,video_ts:e.video_ts,minute:minuteOf(e),foot:e.foot||null}).eq("id",e.dbid).then(()=>{},()=>{});},
   match(m){if(!cloud.active||!m)return;cloud.sb.from("matches").update({match_date:m.date||null,opponent_name:m.opponent||null,goals_for:m.our_goals||0,video_url:m.video_url||null}).eq("id",m.id).then(()=>{},()=>{});},
+  setPart(e){if(!cloud.active||!e||!e.dbid)return;cloud.sb.from("events").update({video_part:e.video_part||0}).eq("id",e.dbid).then(()=>{},()=>{});},
   meta(m){if(!cloud.active||!m)return;cloud.sb.from("matches").update({meta:metaOf(m)}).eq("id",m.id).then(()=>{},()=>{});},
   delMatch(id){if(!cloud.active)return;cloud.sb.from("matches").delete().eq("id",id).then(()=>{},()=>{});},
   photo(playerId,dataUrl){if(!cloud.active)return;cloud.sb.from("players").update({photo_url:dataUrl}).eq("id",playerId).then(()=>{},()=>{});},
@@ -2215,7 +2247,7 @@ function addEvent(k){
   if(!activeId)return;
   pushUndo();
   const ts=Math.round(captureTime()*10)/10, per=curPeriod();
-  const e={id:uid("e"),player_id:activeId,stat_key:k,video_ts:ts,period:per,source:"manual",status:"unverified",created:Date.now()};
+  const e={id:uid("e"),player_id:activeId,stat_key:k,video_ts:ts,period:per,video_part:activePart,source:"manual",status:"unverified",created:Date.now()};
   if(footExercise())e.foot=tagFoot;
   evs().push(e);cw.addEvent(e);
   renderStatBtns();renderLog();markDirty();
@@ -2234,13 +2266,14 @@ function delEvent(id){
 function renderLog(){
   const a=evs();$("logcount").textContent=a.length;refreshUndo();
   if(!a.length){$("log").innerHTML='<div class="muted">'+t("no_tags")+'</div>';return;}
+  const multi=matchVideos(curMatch()).length>1;
   $("log").innerHTML=[...a].sort((x,y)=>y.created-x.created).map(e=>{
     if(e.id===editingId)return editForm(e);
     const p=P(e.player_id),s=S(e.stat_key);
-    return `<div class="logrow" data-seek="${e.video_ts}" title="${t("seek_hint")}"><span class="rep">▶</span><button class="t" data-seek="${e.video_ts}">${fmt(e.video_ts)}</button><span class="pn" style="color:${s.color}">${p?(p.no||"–"):"?"}</span><span class="nm">${p?p.name:"unknown"}</span><span class="badge" style="background:${s.color}22;color:${s.color}">${slabel(e.stat_key)}</span><button class="rowbtn" data-edit="${e.id}">✎</button><button class="rowbtn del" data-del="${e.id}">×</button></div>`;
+    return `<div class="logrow" data-seek="${e.video_ts}" data-part="${e.video_part||0}" title="${t("seek_hint")}"><span class="rep">▶</span><button class="t" data-seek="${e.video_ts}">${fmt(e.video_ts)}</button>${multi?`<span class="partbadge">P${(e.video_part||0)+1}</span>`:""}<span class="pn" style="color:${s.color}">${p?(p.no||"–"):"?"}</span><span class="nm">${p?p.name:"unknown"}</span><span class="badge" style="background:${s.color}22;color:${s.color}">${slabel(e.stat_key)}</span><button class="rowbtn" data-edit="${e.id}">✎</button><button class="rowbtn del" data-del="${e.id}">×</button></div>`;
   }).join("");
   $("log").querySelectorAll(".logrow").forEach(row=>{
-    row.onclick=ev=>{ if(ev.target.closest("[data-edit],[data-del]"))return; const ts=+row.dataset.seek; if(!isNaN(ts))seekTo(Math.max(0,ts-3)); };
+    row.onclick=ev=>{ if(ev.target.closest("[data-edit],[data-del]"))return; const ts=+row.dataset.seek; const pt=+(row.dataset.part||0); if(!isNaN(ts))seekEventTo(pt,Math.max(0,ts-3)); };
   });
   $("log").querySelectorAll("[data-edit]").forEach(b=>b.onclick=()=>{editingId=b.dataset.edit;renderLog();});
   $("log").querySelectorAll("[data-del]").forEach(b=>b.onclick=()=>delEvent(b.dataset.del));
@@ -2422,9 +2455,9 @@ function buildDevelopExport(){
     opponent:m.kind==="training"?null:(m.opponent||null),level:m.kind==="training"?null:matchLevel(m),
     format:m.format||null,periods:m.periods||null,min_per:m.minPer||null,
     our_goals:m.kind==="training"?null:N(m.our_goals),
-    squad:squadByMatch[m.id]||null,minutes:minsByMatch[m.id]||{}}));
+    squad:squadByMatch[m.id]||null,minutes:minsByMatch[m.id]||{},videos:matchVideos(m)}));
   const events=[];
-  matches.forEach(m=>evsOfMatch(m.id).forEach(e=>events.push({session_id:m.id,player_id:e.player_id,stat_key:e.stat_key,foot:e.foot||null,ts:N(e.video_ts)})));
+  matches.forEach(m=>evsOfMatch(m.id).forEach(e=>events.push({session_id:m.id,player_id:e.player_id,stat_key:e.stat_key,foot:e.foot||null,ts:N(e.video_ts),part:e.video_part||0})));
   const by_player={};
   roster.forEach(p=>{
     const matchEvs=[],trainByEx={};
@@ -3201,7 +3234,7 @@ $("squadAll")&&($("squadAll").onclick=()=>{const m=curMatch();if(!m)return;delet
 $("squadNone")&&($("squadNone").onclick=()=>{const m=curMatch();if(!m)return;squadByMatch[m.id]=[];persistMap(K_SQUAD,squadByMatch);cw.meta(m);renderSubs();});
 $("mDetails")&&($("mDetails").onchange=()=>{const m=curMatch();if(m){m.details=$("mDetails").value;saveAll();cw.meta(m);renderMatchBar();}});
 $("m_opp").onchange=e=>{curMatch().opponent=e.target.value;cw.match(curMatch());saveAll();renderMatchBar();};
-$("m_url").onchange=e=>{curMatch().video_url=e.target.value;saveAll();cw.match(curMatch());};
+$("m_url").onchange=e=>{const m=curMatch();m.video_url=e.target.value;const vids=ensureVideosArray(m);if(vids.length)vids[0]=Object.assign({},vids[0],{url:e.target.value});else vids.push({url:e.target.value,label:"Part 1"});saveAll();cw.match(m);cw.meta(m);};
 $("m_goals").onchange=e=>{curMatch().our_goals=parseInt(e.target.value||"0",10);cw.match(curMatch());saveAll();};
 $("m_periods").onchange=e=>{const m=curMatch();m.periods=Math.max(1,Math.min(12,parseInt(e.target.value||"1",10)));if((m.curP||1)>m.periods)m.curP=1;saveAll();cw.meta(m);renderPeriodBar();renderMatchBar();};
 $("m_minper").onchange=e=>{const m=curMatch();m.minPer=Math.max(1,Math.min(60,parseInt(e.target.value||"10",10)));saveAll();cw.meta(m);};
