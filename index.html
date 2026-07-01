@@ -573,6 +573,30 @@
     #printArea .pcover h1{margin:14px 0 4px;font-size:27px;color:#141414;font-weight:800}
     #printArea .pc-sub{color:#2c2c2c;font-size:14px}
     #printArea .pcover svg{width:120px;height:auto;margin:0 auto}
+    /* player card — print design (accents use borders + text so they survive without background graphics) */
+    #printArea .pcard{border:1px solid #cfcfcf;border-top:4px solid #2e7d12;border-radius:10px;padding:20px 22px;background:#fff;break-inside:avoid}
+    #printArea .pc-head{display:flex;align-items:center;gap:12px;border-bottom:1.5px solid #d5dccb;padding-bottom:12px;margin-bottom:16px}
+    #printArea .pc-logo{width:46px;height:46px;border-radius:8px;object-fit:contain;border:1px solid #d5dccb;background:#f4f8ee;padding:2px;flex:0 0 auto}
+    #printArea .pc-headtxt{flex:1;min-width:0}
+    #printArea .pc-team{font-size:17px;font-weight:800;color:#141414}
+    #printArea .pc-ttl{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#2e7d12;margin-top:3px}
+    #printArea .pc-date{margin-left:auto;font-size:11.5px;color:#555;font-variant-numeric:tabular-nums;align-self:flex-start}
+    #printArea .pc-id{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+    #printArea .pc-avatar{width:52px;height:52px;border-radius:10px;object-fit:cover;border:1px solid #d5dccb;flex:0 0 auto}
+    #printArea .pc-init{background:#2e7d12;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px}
+    #printArea .pc-name{font-size:20px;font-weight:800;color:#141414}
+    #printArea .pc-id .pc-sub{font-size:12.5px;color:#555;margin-top:2px}
+    #printArea .pc-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin:0 0 18px}
+    #printArea .pc-kpis .pk{border:1px solid #c4cfb4;border-radius:9px;padding:9px 6px;text-align:center;background:#f7faf2}
+    #printArea .pc-kpis .pkv{font-size:20px;font-weight:800;color:#16320c;font-variant-numeric:tabular-nums;line-height:1.1}
+    #printArea .pc-kpis .pkl{font-size:10px;color:#444;margin-top:3px;line-height:1.2}
+    #printArea .pc-block{margin:0 0 14px;break-inside:avoid}
+    #printArea .pc-h{font-size:13px;font-weight:800;color:#141414;padding-left:10px;border-left:4px solid #2e7d12;margin-bottom:8px}
+    #printArea .pc-h.pc-foc{border-left-color:#c9971a}
+    #printArea .pc-block ul{margin:0;padding-left:20px;line-height:1.6}
+    #printArea .pc-block li{margin:3px 0;font-size:12.5px;color:#1c1c1c}
+    #printArea .pc-note.pc-comment{border-left:4px solid #2e7d12;padding:6px 0 6px 12px;font-style:italic;color:#222;background:none;text-align:left;font-weight:500;margin:14px 0 10px;font-size:12.5px}
+    #printArea .pc-foot{color:#666;font-size:11px;text-align:right;border-top:1px solid #e4e4e4;padding-top:8px;margin-top:14px}
   }
   /* ===== Thai typography tuning (Thai runs longer than English) ===== */
   body.lang-th .grouplab,body.lang-th .replabel,body.lang-th .wizfield label,body.lang-th .wizkicker,body.lang-th .appbar .sub,body.lang-th .lbl{letter-spacing:normal;text-transform:none}
@@ -1429,7 +1453,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-ay";
+const BUILD="06-29-az";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
