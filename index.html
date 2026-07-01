@@ -1325,7 +1325,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-aj";
+const BUILD="06-29-ak";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -1478,7 +1478,7 @@ function openRenameModal(){
   ov.querySelectorAll(".rnchip").forEach(b=>b.onclick=()=>{ov.querySelector("#rnInput").value=b.dataset.v;ov.querySelector("#rnInput").focus();});
   const inp=ov.querySelector("#rnInput");inp.focus();inp.select();
   const save=()=>{const v=inp.value.trim();
-    if(isTrain){m.details=v;rememberTopic(v);if($("mDetails"))$("mDetails").value=v;}
+    if(isTrain){m.details=v;rememberTopic(v);cw.meta(m);if($("mDetails"))$("mDetails").value=v;}
     else{m.opponent=v;cw.match(m);}
     saveAll();renderMatchBar();if($("v-match")&&$("v-match").classList.contains("on"))renderMatch();showToast(t("saved"));close();};
   ov.querySelector("#rnSave").onclick=save;
@@ -1505,7 +1505,7 @@ $("wizBack").onclick=()=>wizStep(1);
 $("wizCancel").onclick=closeWizard;
 stepper("wz_periods","wzPmin","wzPplus",1,12);
 stepper("wz_minper","wzMmin","wzMplus",1,60);
-$("wizCreate").onclick=()=>{
+$("wizCreate").onclick=async()=>{
   const dt=($("wz_date").value||nowLocalDT()).split("T");
   const date=dt[0],time=dt[1]||"";
   const notes=$("wz_notes").value.trim();
@@ -1514,6 +1514,18 @@ $("wizCreate").onclick=()=>{
   else m={id:uid("m"),kind:"match",date,time,opponent:$("wz_opp").value.trim(),format:$("wz_format").value,our_goals:0,periods:Math.max(1,Math.min(12,parseInt($("wz_periods").value||"4",10))),minPer:Math.max(1,Math.min(60,parseInt($("wz_minper").value||"10",10))),curP:1,video_url:"",notes,subs:{}};
   matches.unshift(m);currentMatchId=m.id;eventsByMatch[m.id]=[];saveAll();renderMatchBar();switchMatch();closeWizard();
   document.querySelector('.tab[data-v="tag"]').click();
+  // push the new session to the cloud so it syncs across devices (not just this device)
+  if(cloud.active){
+    const cm=await cloudCreateMatch(m);
+    if(cm){
+      const oldId=m.id;
+      const idx=matches.findIndex(x=>x.id===oldId);if(idx>=0)matches[idx]=cm;else matches.unshift(cm);
+      eventsByMatch[cm.id]=eventsByMatch[oldId]||[];if(oldId!==cm.id)delete eventsByMatch[oldId];
+      if(currentMatchId===oldId)currentMatchId=cm.id;
+      if(oldId!==cm.id){if(squadByMatch[oldId]!==undefined)delete squadByMatch[oldId];if(levelByMatch[oldId]!=null)delete levelByMatch[oldId];if(minsByMatch[oldId]!=null)delete minsByMatch[oldId];}
+      saveAll();renderMatchBar();switchMatch();cloudSubscribe();
+    }else warnSync();
+  }
 };
 function switchMatch(){
   flush();undoStack=[];
@@ -1697,7 +1709,7 @@ function renderStatBtns(){
     const ex=m.exercise||"finishing";
     $("exerciseBar").style.display="";
     $("exerciseBar").innerHTML=`<div class="setrow" style="margin:0"><span class="lbl">${t("lbl_exercise")}</span><div class="seg" id="exSeg">`+EXERCISES.map(e=>`<button data-ex="${e}" aria-pressed="${ex===e}">${exLabel(e)}</button>`).join("")+`</div></div>`;
-    $("exSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{m.exercise=b.dataset.ex;markDirty();renderStatBtns();});
+    $("exSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{m.exercise=b.dataset.ex;markDirty();cw.meta(m);renderStatBtns();});
     const list=trainButtons(ex,isGK(P(activeId)));
     $("statbtns").innerHTML=grp(list,"pos",t("pos_label"))+grp(list,"neg",t("neg_label"));
   }else{
@@ -1968,8 +1980,10 @@ async function cloudPull(){
   roster=(tp||[]).map(r=>{const old=prevR.find(x=>x.id===r.players.id)||{};return {id:r.players.id,no:r.jersey_no??old.no,name:r.players.full_name||old.name||"",position:(r.players.position&&r.players.position!=="field_player"&&r.players.position!=="goalkeeper")?r.players.position:(old.position||(r.players.position==="goalkeeper"?"Goalkeeper":"Field player")),photo:r.players.photo_url||old.photo||""};});
   // keep any local-only players the cloud didn't return (e.g. added via + Add before they synced) so a pull can't drop them
   prevR.forEach(op=>{if(!roster.some(x=>x.id===op.id))roster.push(op);});
+  // preferred foot (separate, guarded query so a missing column can't break the roster pull)
+  try{const ids=roster.map(p=>p.id).filter(Boolean);if(ids.length){const {data:pf,error:pfe}=await cloud.sb.from("players").select("id,preferred_foot").in("id",ids);if(!pfe)(pf||[]).forEach(r=>{if(r.preferred_foot)footByPlayer[r.id]=r.preferred_foot;});}}catch(e){}
   const {data:ms}=await cloud.sb.from("matches").select("*").eq("team_id",cloud.teamId).order("match_date",{ascending:false});
-  matches=(ms||[]).map(m=>{const old=prevM.find(x=>x.id===m.id)||{};return {id:m.id,date:m.match_date||old.date||"",opponent:m.opponent_name||old.opponent||"",video_url:m.video_url||old.video_url||"",our_goals:m.goals_for||old.our_goals||0,subs:old.subs||{},kind:old.kind,exercise:old.exercise,details:old.details,format:old.format,periods:old.periods,minPer:old.minPer};});
+  matches=(ms||[]).map(m=>{const old=prevM.find(x=>x.id===m.id)||{};const mm={id:m.id,date:m.match_date||old.date||"",opponent:m.opponent_name||old.opponent||"",video_url:m.video_url||old.video_url||"",our_goals:m.goals_for||old.our_goals||0,subs:old.subs||{},kind:old.kind,exercise:old.exercise,details:old.details,format:old.format,periods:old.periods,minPer:old.minPer,time:old.time,notes:old.notes};applyMeta(mm,m.meta);return mm;});
   // keep any local-only matches (e.g. training sessions not yet pushed) that the cloud didn't return
   prevM.forEach(om=>{if(!matches.some(x=>x.id===om.id))matches.push(om);});
   if(!matches.length){const nm=await cloudCreateMatch({date:new Date().toISOString().slice(0,10),opponent:"",our_goals:0});if(nm)matches=[nm];}
@@ -1996,18 +2010,53 @@ function cloudSubscribe(){
     .subscribe();
 }
 async function cloudCreateMatch(f){
-  const {data,error}=await cloud.sb.from("matches").insert({org_id:cloud.orgId,team_id:cloud.teamId,season_id:cloud.seasonId,match_date:f.date||null,opponent_name:f.opponent||null,goals_for:f.our_goals||0}).select().single();
+  const {data,error}=await cloud.sb.from("matches").insert({org_id:cloud.orgId,team_id:cloud.teamId,season_id:cloud.seasonId,match_date:f.date||null,opponent_name:f.opponent||null,goals_for:f.our_goals||0,video_url:f.video_url||null}).select().single();
   if(error||!data)return null;
-  return {id:data.id,date:data.match_date||"",opponent:data.opponent_name||"",video_url:data.video_url||"",our_goals:data.goals_for||0,subs:{}};
+  const r={id:data.id,date:data.match_date||"",opponent:data.opponent_name||"",video_url:data.video_url||"",our_goals:data.goals_for||0,subs:{}};
+  // carry over the local-only fields (kind/exercise/etc.) from the source object, then push them to the cloud meta column (best-effort)
+  ["kind","exercise","details","format","periods","minPer","time","notes"].forEach(k=>{if(f&&f[k]!=null)r[k]=f[k];});
+  if(f){if(levelByMatch[f.id]!=null)levelByMatch[r.id]=levelByMatch[f.id];if(squadByMatch[f.id]!==undefined)squadByMatch[r.id]=squadByMatch[f.id];if(minsByMatch[f.id]!=null)minsByMatch[r.id]=minsByMatch[f.id];}
+  applyMeta(r,data.meta);
+  cw.meta(r);
+  return r;
 }
 /* write-through helpers, all guarded + best-effort (errors never break tagging) */
 let _syncWarnAt=0;
 function warnSync(err){const now=Date.now();if(now-_syncWarnAt<8000)return;_syncWarnAt=now;try{console.warn("cloud save failed:",err&&(err.message||err.code||err));}catch(e){}showToast(t("sync_fail_warn"),"err");}
+/* match "meta" = everything not stored in a dedicated cloud column (kind, training topic/exercise,
+   format/periods/minutes-per, level, squad/attendance, minutes played, time, notes). Synced as one JSON blob.
+   Writing meta is best-effort: if the column isn't there yet (SQL not run) the write just no-ops. */
+function metaOf(m){
+  if(!m)return {};
+  return {kind:m.kind||"match",
+    exercise:m.kind==="training"?(m.exercise||null):null,
+    details:m.kind==="training"?(m.details||null):null,
+    format:m.format||null,periods:m.periods||null,minPer:m.minPer||null,
+    time:m.time||null,notes:m.notes||null,
+    level:levelByMatch[m.id]||null,
+    squad:squadByMatch[m.id]!==undefined?squadByMatch[m.id]:null,
+    minutes:minsByMatch[m.id]||null};
+}
+function applyMeta(m,meta){
+  if(!m||!meta||typeof meta!=="object")return;
+  if(meta.kind)m.kind=meta.kind;
+  if(meta.exercise!=null)m.exercise=meta.exercise;
+  if(meta.details!=null)m.details=meta.details;
+  if(meta.format!=null)m.format=meta.format;
+  if(meta.periods!=null)m.periods=meta.periods;
+  if(meta.minPer!=null)m.minPer=meta.minPer;
+  if(meta.time!=null)m.time=meta.time;
+  if(meta.notes!=null)m.notes=meta.notes;
+  if(meta.level!=null)levelByMatch[m.id]=meta.level;
+  if(Array.isArray(meta.squad))squadByMatch[m.id]=meta.squad;
+  if(meta.minutes&&typeof meta.minutes==="object")minsByMatch[m.id]=meta.minutes;
+}
 const cw={
   addEvent(e){if(!cloud.active)return;cloud.sb.from("events").insert({org_id:cloud.orgId,match_id:currentMatchId,player_id:e.player_id,event_type:e.stat_key,video_ts:e.video_ts,minute:minuteOf(e),foot:e.foot||null,source:"manual"}).select("id").single().then(r=>{if(r&&r.error){e.unsynced=true;warnSync(r.error);}else if(r&&r.data){e.dbid=r.data.id;e.unsynced=false;}},err=>{e.unsynced=true;warnSync(err);});},
   delEvent(e){if(!cloud.active||!e||!e.dbid)return;cloud.sb.from("events").delete().eq("id",e.dbid).then(()=>{},()=>{});},
   updEvent(e){if(!cloud.active||!e||!e.dbid)return;cloud.sb.from("events").update({player_id:e.player_id,event_type:e.stat_key,video_ts:e.video_ts,minute:minuteOf(e),foot:e.foot||null}).eq("id",e.dbid).then(()=>{},()=>{});},
   match(m){if(!cloud.active||!m)return;cloud.sb.from("matches").update({match_date:m.date||null,opponent_name:m.opponent||null,goals_for:m.our_goals||0,video_url:m.video_url||null}).eq("id",m.id).then(()=>{},()=>{});},
+  meta(m){if(!cloud.active||!m)return;cloud.sb.from("matches").update({meta:metaOf(m)}).eq("id",m.id).then(()=>{},()=>{});},
   delMatch(id){if(!cloud.active)return;cloud.sb.from("matches").delete().eq("id",id).then(()=>{},()=>{});},
   photo(playerId,dataUrl){if(!cloud.active)return;cloud.sb.from("players").update({photo_url:dataUrl}).eq("id",playerId).then(()=>{},()=>{});},
   player(playerId,fields){if(!cloud.active||!playerId||!fields)return;cloud.sb.from("players").update(fields).eq("id",playerId).then(()=>{},()=>{});},
@@ -2222,7 +2271,7 @@ function renderField(flashKey){
     const ex=m.exercise||"finishing";
     $("fExSeg").style.display="";
     $("fExSeg").innerHTML=EXERCISES.map(e=>`<button data-ex="${e}" aria-pressed="${ex===e}">${exLabel(e)}</button>`).join("");
-    $("fExSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{m.exercise=b.dataset.ex;markDirty();renderField();});
+    $("fExSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{m.exercise=b.dataset.ex;markDirty();cw.meta(m);renderField();});
   }else $("fExSeg").style.display="none";
   const list=isTrain?trainButtons(m.exercise||"finishing",isGK(a)):(isGK(a)?STATS.concat(GK_STATS):STATS);
   $("fActions").innerHTML=list.map(s=>`<button class="factbtn ${s.pol}" data-key="${s.key}"><span>${slabel(s.key)}</span><span class="c">${activeId?countFor(activeId,s.key):0}</span></button>`).join("");
@@ -3044,7 +3093,7 @@ function renderTeam(){
     row.querySelector(".pno").onchange=e=>{P(id).no=e.target.value.trim()?parseInt(e.target.value,10):null;saveAll();renderRoster();};
     row.querySelector(".pname").onchange=e=>{const v=e.target.value;P(id).name=v;saveAll();cw.player(id,{full_name:v});renderRoster();};
     row.querySelector(".ppos").onchange=e=>{const v=e.target.value;P(id).position=v;saveAll();cw.player(id,{position:/gk|goal|รักษา/i.test(v)?"goalkeeper":v});};
-    const fsel=row.querySelector("[data-foot]");if(fsel)fsel.onchange=e=>{const v=e.target.value;if(v)footByPlayer[id]=v;else delete footByPlayer[id];persistMap(K_FOOT,footByPlayer);};
+    const fsel=row.querySelector("[data-foot]");if(fsel)fsel.onchange=e=>{const v=e.target.value;if(v)footByPlayer[id]=v;else delete footByPlayer[id];persistMap(K_FOOT,footByPlayer);cw.player(id,{preferred_foot:v||null});};
     const psel=row.querySelector("[data-setphoto]");if(psel)psel.onchange=ev=>{const f=ev.target.files[0];if(!f)return;downscale(f,data=>{if(!data){showToast(t("photo_fail"));return;}P(id).photo=data;saveAll();cw.photo(id,data);renderTeam();renderRoster();showToast(t("photo_updated"));});};
     row.querySelector("[data-rm]").onclick=()=>{if(!confirm(tf("confirm_remove_player",{name:P(id)?P(id).name:""})))return;roster=roster.filter(p=>p.id!==id);saveAll();renderTeam();renderRoster();renderSubs();};
   });
@@ -3061,7 +3110,7 @@ function renderMatch(){
     const ex=m.exercise||"fd";
     const seg=$("mExercise");
     if(seg){seg.innerHTML=EXERCISES.map(e=>`<button type="button" data-ex="${e}" aria-pressed="${ex===e}">${exLabel(e)}</button>`).join("");
-      seg.querySelectorAll("button").forEach(b=>b.onclick=()=>{m.exercise=b.dataset.ex;saveAll();seg.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderStatBtns();renderMatchBar();if($("v-stats")&&$("v-stats").classList.contains("on")){renderDashboard();renderStatsTable();}});}
+      seg.querySelectorAll("button").forEach(b=>b.onclick=()=>{m.exercise=b.dataset.ex;saveAll();cw.meta(m);seg.querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderStatBtns();renderMatchBar();if($("v-stats")&&$("v-stats").classList.contains("on")){renderDashboard();renderStatsTable();}});}
     if($("mDetails"))$("mDetails").value=m.details||"";
   }else if(m){segPick($("mLevel"),matchLevel(m));}
   renderSubs();
@@ -3073,15 +3122,15 @@ function renderSubs(){
   const hd=sc&&sc.querySelector("summary h2");if(hd)hd.textContent=t(isTrain?"h_attendance":"h_lineup");
   const nt=sc&&sc.querySelector(".note");if(nt)nt.textContent=t(isTrain?"attend_note":"subs_note");
   // one-time migration: old "off at" minute ≈ minutes played
-  if(m.subs&&Object.keys(m.subs).length){minsByMatch[m.id]=minsByMatch[m.id]||{};Object.keys(m.subs).forEach(pid=>{if(minsByMatch[m.id][pid]==null&&m.subs[pid]!=null)minsByMatch[m.id][pid]=m.subs[pid];});persistMap(K_MINS,minsByMatch);delete m.subs;saveAll();}
+  if(m.subs&&Object.keys(m.subs).length){minsByMatch[m.id]=minsByMatch[m.id]||{};Object.keys(m.subs).forEach(pid=>{if(minsByMatch[m.id][pid]==null&&m.subs[pid]!=null)minsByMatch[m.id][pid]=m.subs[pid];});persistMap(K_MINS,minsByMatch);delete m.subs;saveAll();cw.meta(m);}
   const mm=minsByMatch[m.id]||{};const full=matchMinutes(m);
   const sq=squadByMatch[m.id];const inSq=pid=>sq===undefined?true:sq.includes(pid);
   $("subs").innerHTML=ordered().map(p=>{const on=inSq(p.id);
     const head=`<input type="checkbox" class="sqchk" data-sq="${p.id}" ${on?"checked":""} title="${t(isTrain?"in_training":"in_squad")}"><span class="n">${p.no||"–"}</span><span class="nm2">${p.name}${isGK(p)?" · GK":""}</span>`;
     const mins=isTrain?"":`<input type="number" min="0" max="${full}" data-min="${p.id}" value="${mm[p.id]??""}" placeholder="${full}" ${on?"":"disabled"}> ${t("min")}`;
     return `<div class="subline${on?"":" off"}">${head}${mins}</div>`;}).join("");
-  $("subs").querySelectorAll("[data-min]").forEach(i=>i.onchange=()=>{const v=i.value.trim();minsByMatch[m.id]=minsByMatch[m.id]||{};if(v===""||+v>=full)delete minsByMatch[m.id][i.dataset.min];else minsByMatch[m.id][i.dataset.min]=Math.max(0,parseInt(v,10));persistMap(K_MINS,minsByMatch);});
-  $("subs").querySelectorAll("[data-sq]").forEach(c=>c.onchange=()=>{const pid=c.dataset.sq;let cur=squadByMatch[m.id];if(cur===undefined)cur=ordered().map(p=>p.id);cur=cur.slice();if(c.checked){if(!cur.includes(pid))cur.push(pid);}else{cur=cur.filter(x=>x!==pid);}squadByMatch[m.id]=cur;persistMap(K_SQUAD,squadByMatch);renderSubs();renderRoster();renderStatBtns();});
+  $("subs").querySelectorAll("[data-min]").forEach(i=>i.onchange=()=>{const v=i.value.trim();minsByMatch[m.id]=minsByMatch[m.id]||{};if(v===""||+v>=full)delete minsByMatch[m.id][i.dataset.min];else minsByMatch[m.id][i.dataset.min]=Math.max(0,parseInt(v,10));persistMap(K_MINS,minsByMatch);cw.meta(m);});
+  $("subs").querySelectorAll("[data-sq]").forEach(c=>c.onchange=()=>{const pid=c.dataset.sq;let cur=squadByMatch[m.id];if(cur===undefined)cur=ordered().map(p=>p.id);cur=cur.slice();if(c.checked){if(!cur.includes(pid))cur.push(pid);}else{cur=cur.filter(x=>x!==pid);}squadByMatch[m.id]=cur;persistMap(K_SQUAD,squadByMatch);cw.meta(m);renderSubs();renderRoster();renderStatBtns();});
   renderVeoCompare();
 }
 function matchMinutes(m){m=m||curMatch();if(!m)return 0;return Math.max(1,(m.periods||4)*(m.minPer||10));}
@@ -3097,18 +3146,18 @@ $("addplayer").onclick=async()=>{
   if(cloud.active){const cid=await cw.addPlayer(p);if(cid){p.id=cid;saveAll();renderTeam();renderRoster();}else warnSync();}
 };
 $("m_date").onchange=e=>{curMatch().date=e.target.value;cw.match(curMatch());saveAll();renderMatchBar();};
-$("m_time").onchange=e=>{curMatch().time=e.target.value;saveAll();renderMatchBar();};
-(function(){const box=$("mFmt");if(box)box.querySelectorAll("button").forEach(b=>b.onclick=()=>{const m=curMatch();if(!m)return;m.format=b.dataset.v;segPick(box,b.dataset.v);saveAll();renderMatchBar();if(typeof fieldOpen!=="undefined"&&fieldOpen)renderField();});})();
-(function(){const box=$("mLevel");if(box)box.querySelectorAll("button").forEach(b=>b.onclick=()=>{const m=curMatch();if(!m)return;levelByMatch[m.id]=b.dataset.v;persistMap(K_LEVEL,levelByMatch);segPick(box,b.dataset.v);});})();
-$("squadAll")&&($("squadAll").onclick=()=>{const m=curMatch();if(!m)return;delete squadByMatch[m.id];persistMap(K_SQUAD,squadByMatch);renderSubs();});
-$("squadNone")&&($("squadNone").onclick=()=>{const m=curMatch();if(!m)return;squadByMatch[m.id]=[];persistMap(K_SQUAD,squadByMatch);renderSubs();});
-$("mDetails")&&($("mDetails").onchange=()=>{const m=curMatch();if(m){m.details=$("mDetails").value;saveAll();renderMatchBar();}});
+$("m_time").onchange=e=>{curMatch().time=e.target.value;saveAll();cw.meta(curMatch());renderMatchBar();};
+(function(){const box=$("mFmt");if(box)box.querySelectorAll("button").forEach(b=>b.onclick=()=>{const m=curMatch();if(!m)return;m.format=b.dataset.v;segPick(box,b.dataset.v);saveAll();cw.meta(m);renderMatchBar();if(typeof fieldOpen!=="undefined"&&fieldOpen)renderField();});})();
+(function(){const box=$("mLevel");if(box)box.querySelectorAll("button").forEach(b=>b.onclick=()=>{const m=curMatch();if(!m)return;levelByMatch[m.id]=b.dataset.v;persistMap(K_LEVEL,levelByMatch);cw.meta(m);segPick(box,b.dataset.v);});})();
+$("squadAll")&&($("squadAll").onclick=()=>{const m=curMatch();if(!m)return;delete squadByMatch[m.id];persistMap(K_SQUAD,squadByMatch);cw.meta(m);renderSubs();});
+$("squadNone")&&($("squadNone").onclick=()=>{const m=curMatch();if(!m)return;squadByMatch[m.id]=[];persistMap(K_SQUAD,squadByMatch);cw.meta(m);renderSubs();});
+$("mDetails")&&($("mDetails").onchange=()=>{const m=curMatch();if(m){m.details=$("mDetails").value;saveAll();cw.meta(m);renderMatchBar();}});
 $("m_opp").onchange=e=>{curMatch().opponent=e.target.value;cw.match(curMatch());saveAll();renderMatchBar();};
-$("m_url").onchange=e=>{curMatch().video_url=e.target.value;saveAll();};
+$("m_url").onchange=e=>{curMatch().video_url=e.target.value;saveAll();cw.match(curMatch());};
 $("m_goals").onchange=e=>{curMatch().our_goals=parseInt(e.target.value||"0",10);cw.match(curMatch());saveAll();};
-$("m_periods").onchange=e=>{const m=curMatch();m.periods=Math.max(1,Math.min(12,parseInt(e.target.value||"1",10)));if((m.curP||1)>m.periods)m.curP=1;saveAll();renderPeriodBar();renderMatchBar();};
-$("m_minper").onchange=e=>{const m=curMatch();m.minPer=Math.max(1,Math.min(60,parseInt(e.target.value||"10",10)));saveAll();};
-$("m_notes").onchange=e=>{const m=curMatch();if(m){m.notes=e.target.value;saveAll();renderMatchBar();}};
+$("m_periods").onchange=e=>{const m=curMatch();m.periods=Math.max(1,Math.min(12,parseInt(e.target.value||"1",10)));if((m.curP||1)>m.periods)m.curP=1;saveAll();cw.meta(m);renderPeriodBar();renderMatchBar();};
+$("m_minper").onchange=e=>{const m=curMatch();m.minPer=Math.max(1,Math.min(60,parseInt(e.target.value||"10",10)));saveAll();cw.meta(m);};
+$("m_notes").onchange=e=>{const m=curMatch();if(m){m.notes=e.target.value;saveAll();cw.meta(m);renderMatchBar();}};
 $("delmatch").onclick=()=>{
   if(matches.length<=1)return;
   if(!confirm(t("confirm_del_match")))return;
