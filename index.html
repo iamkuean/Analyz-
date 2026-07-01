@@ -124,6 +124,12 @@
   @media(hover:none){.statbtn[data-tip]:hover::after,.statbtn[data-tip]:hover::before{display:none}}
   .helpbtn{width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--surface2);color:var(--muted);font-weight:700;font-size:13px;cursor:pointer;flex:0 0 auto;line-height:1}
   .grouplab.gk{color:var(--lime)}
+  .grouplab.cat-shoot::before{background:#F59E0B}
+  .grouplab.cat-duel::before{background:#8B5CF6}
+  .grouplab.cat-pass::before{background:#38BDF8}
+  .grouplab.cat-zone::before{background:#F472B6}
+  .grouplab.cat-ssg::before{background:var(--lime)}
+  .grouplab.cat-other::before{background:var(--muted)}
   .helpbtn:hover{border-color:var(--lime);color:var(--lime)}
   .glossover{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:flex;align-items:center;justify-content:center;padding:18px}
   .glosscard{background:var(--surface);border:1px solid var(--line);border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.5);width:min(440px,94vw);max-height:80vh;display:flex;flex-direction:column;overflow:hidden}
@@ -1035,6 +1041,17 @@ const STATS=[
   {key:"foul",           color:NEG,kb:"F",pol:"neg"},
 ];
 const KB_STAT={c:"pass_complete",i:"pass_incomplete",a:"att_won",q:"att_lost",d:"def_won",e:"def_lost",t:"interception",l:"block",b:"into_box",k:"key_pass",p:"assist",s:"shot",o:"shot_on",g:"score",r:"recovery",h:"win_high",j:"loss_box",f:"foul"};
+// tag categories for pitch-side grouping (shooting / duels / passing-possession / zone / SSG / other)
+const STAT_CAT={
+  shot:"shoot",shot_on:"shoot",score:"shoot",key_pass:"shoot",assist:"shoot",into_box:"shoot",
+  att_won:"duel",att_lost:"duel",def_won:"duel",def_lost:"duel",
+  pass_complete:"pass",pass_incomplete:"pass",recovery:"pass",interception:"pass",block:"pass",
+  win_high:"zone",loss_box:"zone",
+  foul:"other",
+  ssg_press:"ssg",ssg_win:"ssg",ssg_cpress:"ssg",ssg_winbox:"ssg",ssg_pass:"ssg",ssg_dribble:"ssg",ssg_turnover:"ssg",ssg_lossbox:"ssg"
+};
+const CAT_ORDER=["ssg","shoot","duel","pass","zone","other"];
+const catOf=k=>STAT_CAT[k]||"other";
 // goalkeeper-only actions, shown when a GK is the active player
 const GK_STATS=[
   {key:"gk_save",    color:POS,kb:"V",pol:"pos"},
@@ -1125,7 +1142,7 @@ const I18N={
   h_tag:"Tag an action",active_player:"Active player",
   kb_hint:"Keyboard: number = player · letter on each button = action · <b>Z</b> = undo last",
   event_log:"Event log",autosave_idle:"Auto-saves every 15s",unsaved:"Unsaved changes · auto-saves within 15s",save_broken:"\u26a0\ufe0f Not saved on this device — use Save to file or sign in",save_fail:"\u26a0\ufe0f Could not save on this device (storage full or blocked). Use \u201cSave to file\u201d or sign in to sync.",save_degraded:"Saved, but photos couldn\u2019t be stored on this device (storage full). Sign in to keep photos in the cloud.",save_unavailable:"\u26a0\ufe0f This browser is blocking local saving (private mode / storage off). Sign in to sync, or save to a file.",saved:"Saved",undo:"Undo last",no_tags:"No tags yet.",
-  h_perplayer:"Per-player totals",col_player:"Player",col_pass:"Pass %",col_conv:"Conv %",col_box:"Box eff",col_att:"Att duel %",col_def:"Def duel %",col_save:"Save",col_conc:"Conc",col_savepct:"Save %",team_total:"Team total",pos_label:"Positive",neg_label:"Negative",
+  h_perplayer:"Per-player totals",col_player:"Player",col_pass:"Pass %",col_conv:"Conv %",col_box:"Box eff",col_att:"Att duel %",col_def:"Def duel %",col_save:"Save",col_conc:"Conc",col_savepct:"Save %",team_total:"Team total",pos_label:"Positive",cat_ssg:"SSG",cat_shoot:"Shooting / attack",cat_duel:"Duels",cat_pass:"Passing / possession",cat_zone:"Zone",cat_other:"Other",neg_label:"Negative",
   perplayer_note:"Computed live from tagged events — nothing is stored as a total.",
   h_export:"Export this match",dl_csv:"Download CSV",dl_json:"Download JSON",export_ph:"Exported data also appears here to copy manually.",
   h_runchecks:"Quality checks",run_all:"Run all checks",h_review:"Review Queue",qa_restore:"Show dismissed",qa_run_hint:"Tap “Run all checks” to scan this match.",
@@ -1197,7 +1214,7 @@ const I18N={
   h_tag:"ติดแท็กการเล่น",active_player:"ผู้เล่นที่เลือก",
   kb_hint:"คีย์บอร์ด: ตัวเลข = ผู้เล่น · ตัวอักษรบนปุ่ม = การเล่น · <b>Z</b> = ย้อนกลับ",
   event_log:"บันทึกเหตุการณ์",autosave_idle:"บันทึกอัตโนมัติทุก 15 วิ",unsaved:"มีการเปลี่ยนแปลง · จะบันทึกใน 15 วิ",save_broken:"\u26a0\ufe0f ยังไม่ได้บันทึกลงเครื่อง — กด 'เซฟลงไฟล์' หรือเข้าสู่ระบบ",save_fail:"\u26a0\ufe0f บันทึกลงเครื่องไม่สำเร็จ (พื้นที่เต็มหรือเบราว์เซอร์บล็อก) — กรุณา 'เซฟลงไฟล์' หรือเข้าสู่ระบบเพื่อซิงค์",save_degraded:"บันทึกแล้ว แต่เก็บรูปลงเครื่องไม่ได้ (พื้นที่เต็ม) — เข้าสู่ระบบเพื่อเก็บรูปบนคลาวด์",save_unavailable:"\u26a0\ufe0f เบราว์เซอร์นี้บล็อกการบันทึกลงเครื่อง (โหมดส่วนตัว/ปิด storage) — เข้าสู่ระบบเพื่อซิงค์ หรือเซฟลงไฟล์",saved:"บันทึกแล้ว",undo:"ย้อนกลับ",no_tags:"ยังไม่มีแท็ก",
-  h_perplayer:"สถิติรายคน",col_player:"ผู้เล่น",col_pass:"จ่าย %",col_conv:"ยิงเข้า %",col_box:"คมในกรอบ",col_att:"เกมรุก %",col_def:"เกมรับ %",col_save:"เซฟ",col_conc:"เสีย",col_savepct:"เซฟ %",team_total:"รวมทั้งทีม",pos_label:"เชิงบวก",neg_label:"เชิงลบ",
+  h_perplayer:"สถิติรายคน",col_player:"ผู้เล่น",col_pass:"จ่าย %",col_conv:"ยิงเข้า %",col_box:"คมในกรอบ",col_att:"เกมรุก %",col_def:"เกมรับ %",col_save:"เซฟ",col_conc:"เสีย",col_savepct:"เซฟ %",team_total:"รวมทั้งทีม",pos_label:"เชิงบวก",cat_ssg:"SSG",cat_shoot:"ยิง / เกมรุก",cat_duel:"ดวล",cat_pass:"ส่ง / ครองบอล",cat_zone:"โซน",cat_other:"อื่นๆ",neg_label:"เชิงลบ",
   perplayer_note:"คำนวณสดจากแท็ก — ไม่ได้เก็บเป็นยอดตายตัว",
   h_export:"ส่งออกแมตช์นี้",dl_csv:"ดาวน์โหลด CSV",dl_json:"ดาวน์โหลด JSON",export_ph:"ข้อมูลที่ส่งออกจะแสดงตรงนี้ให้คัดลอกเองได้",
   h_runchecks:"ตรวจสอบคุณภาพ",run_all:"ตรวจทั้งหมด",h_review:"คิวตรวจสอบ",qa_restore:"แสดงที่ข้ามแล้ว",qa_run_hint:"กด “ตรวจทั้งหมด” เพื่อสแกนแมตช์นี้",
@@ -1325,7 +1342,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-ak";
+const BUILD="06-29-al";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -1705,19 +1722,22 @@ function renderStatBtns(){
     return `<div class="statgroup"><div class="grouplab ${pol}">${lab}</div><div class="statgrid">${items.map(btn).join("")}</div></div>`;};
   const grpAll=(list,lab,cls)=>{if(!list.length)return"";
     return `<div class="statgroup"><div class="grouplab ${cls||""}">${lab}</div><div class="statgrid">${list.map(btn).join("")}</div></div>`;};
+  const grpCat=list=>CAT_ORDER.map(c=>{const items=list.filter(s=>catOf(s.key)===c);if(!items.length)return"";
+    return `<div class="statgroup"><div class="grouplab cat-${c}">${t("cat_"+c)}</div><div class="statgrid">${items.map(btn).join("")}</div></div>`;}).join("");
   if(isTrain){
     const ex=m.exercise||"finishing";
     $("exerciseBar").style.display="";
     $("exerciseBar").innerHTML=`<div class="setrow" style="margin:0"><span class="lbl">${t("lbl_exercise")}</span><div class="seg" id="exSeg">`+EXERCISES.map(e=>`<button data-ex="${e}" aria-pressed="${ex===e}">${exLabel(e)}</button>`).join("")+`</div></div>`;
     $("exSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{m.exercise=b.dataset.ex;markDirty();cw.meta(m);renderStatBtns();});
     const list=trainButtons(ex,isGK(P(activeId)));
-    $("statbtns").innerHTML=grp(list,"pos",t("pos_label"))+grp(list,"neg",t("neg_label"));
+    // SSG plays like a match (many tags) → group by category; other drills are short → keep simple +/-
+    $("statbtns").innerHTML=ex==="ssg"?grpCat(list):(grp(list,"pos",t("pos_label"))+grp(list,"neg",t("neg_label")));
   }else{
     $("exerciseBar").style.display="none";
     if(isGK(P(activeId))){
-      $("statbtns").innerHTML=grpAll(GK_STATS,t("h_gk_tags"),"gk")+grp(STATS,"pos",t("pos_label"))+grp(STATS,"neg",t("neg_label"));
+      $("statbtns").innerHTML=grpAll(GK_STATS,t("h_gk_tags"),"gk")+grpCat(STATS);
     }else{
-      $("statbtns").innerHTML=grp(STATS,"pos",t("pos_label"))+grp(STATS,"neg",t("neg_label"));
+      $("statbtns").innerHTML=grpCat(STATS);
     }
   }
   $("statbtns").querySelectorAll(".statbtn").forEach(b=>b.onclick=()=>addEvent(b.dataset.key));
