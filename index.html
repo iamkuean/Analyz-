@@ -50,6 +50,8 @@
   }
   .urlrow{display:flex;gap:8px;margin-bottom:12px}
   input,select{font-family:var(--sans)}
+  input[type="date"],input[type="datetime-local"]{background:var(--surface2);border:1px solid var(--line);color:var(--chalk);border-radius:8px;padding:7px 10px;font-size:14px;font-family:var(--sans);min-height:36px;box-sizing:border-box}
+  input[type="date"]::-webkit-calendar-picker-indicator,input[type="datetime-local"]::-webkit-calendar-picker-indicator{filter:var(--cal-filter,invert(1) brightness(1.5));opacity:.7;cursor:pointer}
   select{appearance:none;-webkit-appearance:none;-moz-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238DA597' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;background-size:12px;padding-right:34px!important;cursor:pointer;transition:border-color .15s,box-shadow .15s}
   select:hover{border-color:color-mix(in srgb,var(--lime) 45%,var(--line))}
   select:focus{outline:none;border-color:var(--lime);box-shadow:0 0 0 3px color-mix(in srgb,var(--lime) 18%,transparent)}
@@ -92,6 +94,10 @@
   .hlrow .hldot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
   .hlrow .hllab{flex:1}
   .hlrow .hlplay{color:var(--lime);font-size:13px}
+  .hlrow.playing{border-color:var(--lime);background:rgba(201,242,94,.14)}
+  .hlrow.playing .hlplay{animation:hlpulse 1s ease-in-out infinite}
+  @keyframes hlpulse{50%{opacity:.35}}
+  .btnlime.stopbtn{background:var(--neg);border-color:var(--neg);color:#fff}
   .pcard{border:1px solid var(--line);border-radius:14px;padding:20px;background:linear-gradient(180deg,rgba(201,242,94,.05),transparent 120px)}
   .pc-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
   .pc-team{font-weight:700;color:var(--lime)}
@@ -130,15 +136,17 @@
   .jersey{font-family:var(--mono);font-size:24px;font-weight:700;width:50px;height:50px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--lime);color:#11200a;flex:0 0 auto;overflow:hidden}
   .jersey img{width:100%;height:100%;object-fit:cover}
   .avatar{width:22px;height:22px;border-radius:50%;object-fit:cover;flex:0 0 auto}
-  .avatar-lg{width:34px;height:34px;border-radius:8px;object-fit:cover;flex:0 0 auto}
-  .avatar-edit{position:relative;flex:0 0 auto;cursor:pointer;line-height:0}
-  .avatar-ph{width:34px;height:34px;border-radius:8px;background:var(--surface2);border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:var(--muted)}
-  .avatar-cam{position:absolute;right:-3px;bottom:-3px;width:15px;height:15px;border-radius:50%;background:var(--lime);border:2px solid var(--surface);display:flex;align-items:center;justify-content:center}
+  .avatar-lg{width:38px;height:38px;border-radius:10px;object-fit:cover;flex:0 0 auto;display:block}
+  .avatar-wrap{position:relative;flex:0 0 auto;line-height:0}
+  .avatar-edit{position:relative;display:block;cursor:pointer;line-height:0}
+  .avatar-ph{width:38px;height:38px;border-radius:10px;background:var(--surface2);border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:var(--muted)}
+  .avatar-edit:hover .avatar-ph{border-color:var(--lime);color:var(--chalk)}
+  .avatar-cam{position:absolute;right:-3px;bottom:-3px;width:17px;height:17px;border-radius:50%;background:var(--lime);border:2px solid var(--surface);display:flex;align-items:center;justify-content:center;transition:transform .12s}
   .avatar-cam i{display:block;width:7px;height:6px;border:1.4px solid var(--accent-fg);border-radius:2px;position:relative}
   .avatar-cam i::after{content:"";position:absolute;top:-2.4px;left:1.4px;width:2.4px;height:1.6px;background:var(--accent-fg);border-radius:1px}
-  .avatar-edit:hover .avatar-cam{transform:scale(1.12)}
-  .rmphoto{flex:0 0 auto;font-size:11px;padding:3px 7px;border-radius:7px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;white-space:nowrap}
-  .rmphoto:hover{color:var(--neg);border-color:var(--neg)}
+  .avatar-edit:hover .avatar-cam{transform:scale(1.14)}
+  .avatar-rm{position:absolute;top:-6px;right:-6px;width:18px;height:18px;padding:0;border-radius:50%;background:var(--neg);color:#fff;border:2px solid var(--surface);font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2;transition:transform .12s;box-shadow:var(--shadow-sm)}
+  .avatar-rm:hover{transform:scale(1.15)}
   .gktag{font-family:var(--mono);font-size:9px;font-weight:700;letter-spacing:.04em;color:#11200a;background:var(--lime);border-radius:5px;padding:1px 5px}
   .chip.gk{border-color:#3a4a2a}
   .chip.gk[aria-pressed="true"]{border-color:var(--lime)}
@@ -393,15 +401,16 @@
   :root{--accent-fg:#11200a;--pos:#34D399;--neg:#F87171}
   :root[data-theme="light"]{
     color-scheme:light;
-    --bg:#E7EDE7;--surface:#FFFFFF;--surface2:#F0F4EF;--line:#D0D9D0;
+    --bg:#DCE5DB;--surface:#F6F9F5;--surface2:#EAF0E9;--line:#C8D3C7;
     --chalk:#14201A;--muted:#51635A;--faint:#859389;
     --accent-ink:color-mix(in srgb,var(--lime) 58%,#0a2e16);
     --accent-soft:color-mix(in srgb,var(--lime) 26%,#fff);
     --shadow:0 1px 2px rgba(18,38,28,.05),0 8px 22px rgba(18,38,28,.07);
     --shadow-sm:0 1px 2px rgba(18,38,28,.06);
     --goal:#E8612E;--danger:#E2453F;--ok:#2F9E63;--warn:#C9971A;
+    --cal-filter:none;
   }
-  :root[data-theme="light"] body{background:linear-gradient(180deg,#EAF0EA,#E4EAE4 60%);}
+  :root[data-theme="light"] body{background:linear-gradient(180deg,#E0E8DF,#D6DFD5 60%);}
   :root[data-theme="light"] .card{box-shadow:var(--shadow)}
   :root[data-theme="light"] .tab[aria-selected="true"],
   :root[data-theme="light"] .chip[aria-pressed="true"]{background:var(--accent-soft)}
@@ -1184,7 +1193,7 @@ const I18N={
   h_summary:"Match summary",dash_goals:"Goals",dash_shots:"Shots",dash_passpct:"Pass accuracy",dash_intobox:"Into the box",dash_attduel:"Attacking duels",dash_defduel:"Defensive duels",dash_recoveries:"Recoveries",dash_savepct:"Save rate",
   dash_all:"All",lbl_period:"Period",lbl_periods:"Periods (e.g. 4 quarters)",
   h_top:"Top performers",top_scorer:"Top scorer",top_involved:"Most involved",top_passer:"Best passer",top_duels:"Most duels won",exp_summary:"Summary CSV",exp_print:"Print / PDF",none_yet:"—",
-  tab_reports:"Reports",rep_match:"Match report",rep_player:"Player report",rep_compare:"Compare",rep_highlights:"Highlights",rep_card:"Player card",rep_trend:"Trend",trend_need2:"Need at least 2 matches to show a trend.",card_title:"Player development report",card_strengths:"Strengths",card_focus:"What to work on next",card_matches:"Matches played",card_minutes:"Minutes",card_goals:"Goals",card_assists:"Assists",card_ontarget:"Shots on target",card_passpct:"Pass accuracy",card_recov:"Ball recoveries",card_saves:"Saves",card_savepct:"Save %",card_clean:"Clean sheets",card_conceded:"Conceded",card_no_strength:"Improving every session — keep it up! \ud83d\udcaa",card_no_focus:"Doing well across the board — great work!",card_note:"Every session is progress. Keep enjoying your football! \ud83d\udc9a",card_from:"From the coach",card_none:"No match data yet for this player.",card_print_hint:"Tip: use Print / PDF above to save or share this card.",hl_empty:"No tags for this player in this session yet.",hl_no_video:"No video link for this part — add it in the tag screen.",hl_novideo_match:"Add a video link on the tag screen to jump to moments.",hl_moments:"{n} moments",hl_tap:"Tap a moment to play it (starts ~3s before).",repmode_match:"Matches",repmode_train:"Training",rep_level:"Match type",replevel_all:"All",rep_develop:"Development",rep_gk:"Goalkeepers",col_played:"Apps",col_clean:"Clean",col_distpct:"Dist %",gk_none:"No goalkeepers yet. Mark a player as a goalkeeper in the Team tab (position \"Goalkeeper\" or GK).",gk_note:"Saves, clean sheets and distribution come from your tagged actions across matches.",dev_strengths:"Strengths",dev_develop:"Focus areas to develop",dev_why:"Possible cause",dev_work:"How to improve",dev_tags:"tags",dev_lowdata:"Not enough tags yet for this player. Tag a few more actions and the suggestions will get sharper.",dev_allround:"Well-rounded so far — keep tagging to surface specific areas.",dev_scope_note:"Suggestions are generated from this player\u2019s tagged actions across all matches. They\u2019re a starting point for the coach, not a verdict.",dev_train_tags:"training tags",dev_train_link:"Training \u2194 match link",dev_lowmatch:"Not enough match tags yet — the training link below still works once you tag some sessions.",dev_train_hint:"Tip: tag training sessions (SSG, finishing, passing, 1v1) to see why match performance turns out the way it does.",dev_train_none:"",
+  tab_reports:"Reports",rep_match:"Match report",rep_player:"Player report",rep_compare:"Compare",rep_highlights:"Highlights",rep_card:"Player card",rep_trend:"Trend",trend_need2:"Need at least 2 matches to show a trend.",card_title:"Player development report",card_strengths:"Strengths",card_focus:"What to work on next",card_matches:"Matches played",card_minutes:"Minutes",card_goals:"Goals",card_assists:"Assists",card_ontarget:"Shots on target",card_passpct:"Pass accuracy",card_recov:"Ball recoveries",card_saves:"Saves",card_savepct:"Save %",card_clean:"Clean sheets",card_conceded:"Conceded",card_no_strength:"Improving every session — keep it up! \ud83d\udcaa",card_no_focus:"Doing well across the board — great work!",card_note:"Every session is progress. Keep enjoying your football! \ud83d\udc9a",card_from:"From the coach",card_none:"No match data yet for this player.",card_print_hint:"Tip: use Print / PDF above to save or share this card.",hl_empty:"No tags for this player in this session yet.",hl_no_video:"No video link for this part — add it in the tag screen.",hl_novideo_match:"Add a video link on the tag screen to jump to moments.",hl_moments:"{n} moments",hl_tap:"Tap a moment to play it (starts ~3s before).",hl_playall:"Play all",hl_stop:"Stop",repmode_match:"Matches",repmode_train:"Training",rep_level:"Match type",replevel_all:"All",rep_develop:"Development",rep_gk:"Goalkeepers",col_played:"Apps",col_clean:"Clean",col_distpct:"Dist %",gk_none:"No goalkeepers yet. Mark a player as a goalkeeper in the Team tab (position \"Goalkeeper\" or GK).",gk_note:"Saves, clean sheets and distribution come from your tagged actions across matches.",dev_strengths:"Strengths",dev_develop:"Focus areas to develop",dev_why:"Possible cause",dev_work:"How to improve",dev_tags:"tags",dev_lowdata:"Not enough tags yet for this player. Tag a few more actions and the suggestions will get sharper.",dev_allround:"Well-rounded so far — keep tagging to surface specific areas.",dev_scope_note:"Suggestions are generated from this player\u2019s tagged actions across all matches. They\u2019re a starting point for the coach, not a verdict.",dev_train_tags:"training tags",dev_train_link:"Training \u2194 match link",dev_lowmatch:"Not enough match tags yet — the training link below still works once you tag some sessions.",dev_train_hint:"Tip: tag training sessions (SSG, finishing, passing, 1v1) to see why match performance turns out the way it does.",dev_train_none:"",
   rep_ai_title:"AI summary",rep_ai_note:"Coming next: turn the numbers on this page into a short write-up for coaches and parents. The figures above are computed on-device; AI only phrases them.",rep_ai_btn:"Write summary (soon)",
   rep_areas:"Areas to work on",rep_per_match:"Per match",rep_totals:"Totals",rep_choose_player:"Choose a player",rep_no_data:"No tagged data yet.",rep_played:"matches",
   cmp_mode:"Compare",cmp_players:"Players",cmp_matches:"Matches",cmp_across:"One player, across matches",
@@ -1256,7 +1265,7 @@ const I18N={
   h_summary:"สรุปแมตช์",dash_goals:"ประตู",dash_shots:"การยิง",dash_passpct:"ความแม่นการจ่าย",dash_intobox:"เข้าเขตโทษ",dash_attduel:"ดวลเกมรุก",dash_defduel:"ดวลเกมรับ",dash_recoveries:"แย่งบอลคืน",dash_savepct:"อัตราการเซฟ",
   dash_all:"ทั้งหมด",lbl_period:"ช่วง",lbl_periods:"จำนวนช่วง (เช่น 4 ควอเตอร์)",
   h_top:"ผู้เล่นเด่น",top_scorer:"ดาวซัลโว",top_involved:"มีส่วนร่วมมากสุด",top_passer:"จ่ายแม่นสุด",top_duels:"ชนะดวลมากสุด",exp_summary:"สรุป CSV",exp_print:"พิมพ์ / PDF",none_yet:"—",
-  tab_reports:"รายงาน",rep_match:"รายงานแมตช์",rep_player:"รายงานผู้เล่น",rep_compare:"เปรียบเทียบ",rep_highlights:"ไฮไลต์",rep_card:"บัตรผู้เล่น",rep_trend:"เทรนด์",trend_need2:"ต้องมีอย่างน้อย 2 แมตช์เพื่อดูเทรนด์",card_title:"รายงานพัฒนาการผู้เล่น",card_strengths:"จุดเด่น",card_focus:"สิ่งที่ฝึกต่อ",card_matches:"แมตช์ที่ลงเล่น",card_minutes:"นาทีลงเล่น",card_goals:"ประตู",card_assists:"แอสซิสต์",card_ontarget:"ยิงเข้ากรอบ",card_passpct:"ความแม่นการส่ง",card_recov:"แย่งบอลคืน",card_saves:"เซฟ",card_savepct:"เปอร์เซ็นต์เซฟ",card_clean:"คลีนชีต",card_conceded:"เสียประตู",card_no_strength:"พัฒนาขึ้นทุกครั้งที่ซ้อม เก่งมาก! \ud83d\udcaa",card_no_focus:"ทำได้ดีในทุกด้าน เยี่ยมมาก!",card_note:"ทุกครั้งที่ซ้อมคือการพัฒนา สนุกกับฟุตบอลนะ! \ud83d\udc9a",card_from:"จากโค้ช",card_none:"ยังไม่มีข้อมูลแมตช์ของผู้เล่นคนนี้",card_print_hint:"เคล็ดลับ: กด พิมพ์ / PDF ด้านบน เพื่อบันทึกหรือส่งบัตรนี้",hl_empty:"ยังไม่มีแท็กของผู้เล่นคนนี้ในเซสชันนี้",hl_no_video:"พาร์ทนี้ยังไม่มีลิงก์วิดีโอ — เพิ่มในหน้าแท็ก",hl_novideo_match:"ใส่ลิงก์วิดีโอในหน้าแท็กก่อน เพื่อกดกระโดดไปดูจังหวะ",hl_moments:"{n} จังหวะ",hl_tap:"แตะแต่ละจังหวะเพื่อเล่น (เริ่มก่อน ~3 วิ)",repmode_match:"แมตช์",repmode_train:"ฝึกซ้อม",rep_level:"ประเภทแมตช์",replevel_all:"ทั้งหมด",rep_develop:"พัฒนาการ",rep_gk:"ผู้รักษาประตู",col_played:"ลงเล่น",col_clean:"คลีนชีต",col_distpct:"แจก %",gk_none:"ยังไม่มีผู้รักษาประตู — ตั้งตำแหน่งผู้เล่นเป็น \"Goalkeeper\" หรือ GK ในแท็บทีม",gk_note:"ค่าเซฟ คลีนชีต และการแจกบอล มาจากแท็กที่บันทึกไว้รวมทุกแมตช์",dev_strengths:"จุดแข็ง",dev_develop:"จุดที่ควรโฟกัสพัฒนา",dev_why:"สาเหตุที่เป็นไปได้",dev_work:"แนวทางพัฒนา",dev_tags:"แท็ก",dev_lowdata:"ข้อมูลของผู้เล่นคนนี้ยังน้อย แท็กเพิ่มอีกหน่อยแล้วคำแนะนำจะแม่นขึ้น",dev_allround:"ทำได้ดีรอบด้าน เก็บข้อมูลเพิ่มเพื่อเจาะลึกแต่ละด้าน",dev_scope_note:"คำแนะนำสร้างจากแท็กของผู้เล่นคนนี้รวมทุกแมตช์ ใช้เป็นจุดเริ่มต้นให้โค้ช ไม่ใช่คำตัดสิน",dev_train_tags:"แท็กซ้อม",dev_train_link:"เชื่อมโยงซ้อม \u2194 เกมจริง",dev_lowmatch:"ข้อมูลแมตช์ยังน้อย — แต่ส่วนเชื่อมโยงซ้อมด้านล่างยังใช้ได้เมื่อมีการแท็กซ้อม",dev_train_hint:"เคล็ดลับ: แท็กการซ้อม (SSG, จบสกอร์, ส่งบอล, 1v1) เพื่อดูว่าทำไมผลในแมตช์ถึงออกมาแบบนั้น",dev_train_none:"",
+  tab_reports:"รายงาน",rep_match:"รายงานแมตช์",rep_player:"รายงานผู้เล่น",rep_compare:"เปรียบเทียบ",rep_highlights:"ไฮไลต์",rep_card:"บัตรผู้เล่น",rep_trend:"เทรนด์",trend_need2:"ต้องมีอย่างน้อย 2 แมตช์เพื่อดูเทรนด์",card_title:"รายงานพัฒนาการผู้เล่น",card_strengths:"จุดเด่น",card_focus:"สิ่งที่ฝึกต่อ",card_matches:"แมตช์ที่ลงเล่น",card_minutes:"นาทีลงเล่น",card_goals:"ประตู",card_assists:"แอสซิสต์",card_ontarget:"ยิงเข้ากรอบ",card_passpct:"ความแม่นการส่ง",card_recov:"แย่งบอลคืน",card_saves:"เซฟ",card_savepct:"เปอร์เซ็นต์เซฟ",card_clean:"คลีนชีต",card_conceded:"เสียประตู",card_no_strength:"พัฒนาขึ้นทุกครั้งที่ซ้อม เก่งมาก! \ud83d\udcaa",card_no_focus:"ทำได้ดีในทุกด้าน เยี่ยมมาก!",card_note:"ทุกครั้งที่ซ้อมคือการพัฒนา สนุกกับฟุตบอลนะ! \ud83d\udc9a",card_from:"จากโค้ช",card_none:"ยังไม่มีข้อมูลแมตช์ของผู้เล่นคนนี้",card_print_hint:"เคล็ดลับ: กด พิมพ์ / PDF ด้านบน เพื่อบันทึกหรือส่งบัตรนี้",hl_empty:"ยังไม่มีแท็กของผู้เล่นคนนี้ในเซสชันนี้",hl_no_video:"พาร์ทนี้ยังไม่มีลิงก์วิดีโอ — เพิ่มในหน้าแท็ก",hl_novideo_match:"ใส่ลิงก์วิดีโอในหน้าแท็กก่อน เพื่อกดกระโดดไปดูจังหวะ",hl_moments:"{n} จังหวะ",hl_tap:"แตะแต่ละจังหวะเพื่อเล่น (เริ่มก่อน ~3 วิ)",hl_playall:"เล่นทั้งหมด",hl_stop:"หยุด",repmode_match:"แมตช์",repmode_train:"ฝึกซ้อม",rep_level:"ประเภทแมตช์",replevel_all:"ทั้งหมด",rep_develop:"พัฒนาการ",rep_gk:"ผู้รักษาประตู",col_played:"ลงเล่น",col_clean:"คลีนชีต",col_distpct:"แจก %",gk_none:"ยังไม่มีผู้รักษาประตู — ตั้งตำแหน่งผู้เล่นเป็น \"Goalkeeper\" หรือ GK ในแท็บทีม",gk_note:"ค่าเซฟ คลีนชีต และการแจกบอล มาจากแท็กที่บันทึกไว้รวมทุกแมตช์",dev_strengths:"จุดแข็ง",dev_develop:"จุดที่ควรโฟกัสพัฒนา",dev_why:"สาเหตุที่เป็นไปได้",dev_work:"แนวทางพัฒนา",dev_tags:"แท็ก",dev_lowdata:"ข้อมูลของผู้เล่นคนนี้ยังน้อย แท็กเพิ่มอีกหน่อยแล้วคำแนะนำจะแม่นขึ้น",dev_allround:"ทำได้ดีรอบด้าน เก็บข้อมูลเพิ่มเพื่อเจาะลึกแต่ละด้าน",dev_scope_note:"คำแนะนำสร้างจากแท็กของผู้เล่นคนนี้รวมทุกแมตช์ ใช้เป็นจุดเริ่มต้นให้โค้ช ไม่ใช่คำตัดสิน",dev_train_tags:"แท็กซ้อม",dev_train_link:"เชื่อมโยงซ้อม \u2194 เกมจริง",dev_lowmatch:"ข้อมูลแมตช์ยังน้อย — แต่ส่วนเชื่อมโยงซ้อมด้านล่างยังใช้ได้เมื่อมีการแท็กซ้อม",dev_train_hint:"เคล็ดลับ: แท็กการซ้อม (SSG, จบสกอร์, ส่งบอล, 1v1) เพื่อดูว่าทำไมผลในแมตช์ถึงออกมาแบบนั้น",dev_train_none:"",
   rep_ai_title:"สรุปด้วย AI",rep_ai_note:"จะเพิ่มขั้นถัดไป: ให้ AI เรียบเรียงตัวเลขในหน้านี้เป็นข้อความสั้นๆ ส่งโค้ช/ผู้ปกครอง · ตัวเลขด้านบนคำนวณในเครื่อง AI แค่เรียบเรียง",rep_ai_btn:"เขียนสรุป (เร็วๆ นี้)",
   rep_areas:"จุดที่ควรพัฒนา",rep_per_match:"รายแมตช์",rep_totals:"รวม",rep_choose_player:"เลือกผู้เล่น",rep_no_data:"ยังไม่มีข้อมูลที่ติดแท็ก",rep_played:"แมตช์",
   cmp_mode:"เปรียบเทียบ",cmp_players:"ผู้เล่น",cmp_matches:"แมตช์",cmp_across:"คนเดียว ข้ามหลายแมตช์",
@@ -1397,7 +1406,7 @@ let activeId=null,editingId=null,manualSec=0,running=false,ticker=null,fieldOpen
 
 const $=id=>document.getElementById(id);
 /* ===== build id + automatic update check (beats GitHub Pages / browser cache) ===== */
-const BUILD="06-29-ar";
+const BUILD="06-29-au";
 (function(){const el=$("buildMarker");if(el)el.textContent="build "+BUILD;const vf=$("verFoot");if(vf)vf.textContent="Analyz+ · v"+BUILD;})();
 function showUpdateBanner(newBuild){
   if($("updbanner"))return;
@@ -2797,6 +2806,7 @@ function renderMatchReport(){
   </section>`;
 }
 function renderHighlights(){
+  hlStop();
   const m=curMatch();
   const players=ordered();
   if(!m||!players.length){$("rep-body").innerHTML=`<section class="card"><div class="muted">${t("hl_empty")}</div></section>`;return;}
@@ -2807,16 +2817,35 @@ function renderHighlights(){
   if(repState.hlCat&&repState.hlCat!=="all"&&!presentCats.includes(repState.hlCat))repState.hlCat="all";
   const useCat=repState.hlCat||"all";
   const filtered=useCat==="all"?evsP:evsP.filter(e=>catOf(e.stat_key)===useCat);
+  hlQueue=filtered.map(e=>({part:e.video_part||0,ts:e.video_ts}));
   const multi=vids.length>1;
   const sel=`<select id="repPlayer">`+players.map(p=>`<option value="${p.id}" ${p.id===repState.player?"selected":""}>#${p.no||"–"} ${p.name}</option>`).join("")+`</select>`;
   const catSeg=`<div class="seg" id="hlCat"><button data-hc="all" aria-pressed="${useCat==='all'}">${t("replevel_all")}</button>`+presentCats.map(c=>`<button data-hc="${c}" aria-pressed="${useCat===c}">${t("cat_"+c)}</button>`).join("")+`</div>`;
-  const list=filtered.length?filtered.map(e=>{const s=S(e.stat_key);return `<button class="hlrow" data-ts="${e.video_ts}" data-part="${e.video_part||0}"><span class="hlt">${fmt(e.video_ts)}</span>${multi?`<span class="partbadge">P${(e.video_part||0)+1}</span>`:""}<span class="hldot" style="background:${s.color}"></span><span class="hllab">${slabel(e.stat_key)}</span><span class="hlplay">▶</span></button>`;}).join(""):`<div class="muted" style="padding:12px 2px">${t("hl_empty")}</div>`;
+  const list=filtered.length?filtered.map((e,i)=>{const s=S(e.stat_key);return `<button class="hlrow" data-idx="${i}" data-ts="${e.video_ts}" data-part="${e.video_part||0}"><span class="hlt">${fmt(e.video_ts)}</span>${multi?`<span class="partbadge">P${(e.video_part||0)+1}</span>`:""}<span class="hldot" style="background:${s.color}"></span><span class="hllab">${slabel(e.stat_key)}</span><span class="hlplay">▶</span></button>`;}).join(""):`<div class="muted" style="padding:12px 2px">${t("hl_empty")}</div>`;
   const player=`<div class="videobox" id="hlPlayer"><div class="empty">${vids.length?t("hl_tap"):t("hl_novideo_match")}</div></div>`;
-  $("rep-body").innerHTML=`<section class="card"><div class="setrow" style="margin:0 0 10px"><span class="lbl">${t("rep_choose_player")}</span>${sel}<span class="muted" style="margin-left:auto">${tf("hl_moments",{n:evsP.length})}</span></div>${player}<div class="setrow" style="margin:10px 0 0;flex-wrap:wrap;gap:6px">${catSeg}</div><div class="hllist" style="margin-top:10px">${list}</div><p class="note">${t("hl_tap")}</p></section>`;
+  const canPlay=vids.some(v=>v.url)&&filtered.length;
+  const controls=canPlay?`<div class="setrow" style="margin:10px 0 0;gap:10px;align-items:center"><button class="btnlime" id="hlPlayAll">▶ ${t("hl_playall")}</button><span class="muted" id="hlPos"></span></div>`:"";
+  $("rep-body").innerHTML=`<section class="card"><div class="setrow" style="margin:0 0 10px"><span class="lbl">${t("rep_choose_player")}</span>${sel}<span class="muted" style="margin-left:auto">${tf("hl_moments",{n:evsP.length})}</span></div>${player}<div class="setrow" style="margin:10px 0 0;flex-wrap:wrap;gap:6px">${catSeg}</div>${controls}<div class="hllist" style="margin-top:10px">${list}</div><p class="note">${t("hl_tap")}</p></section>`;
   $("repPlayer").onchange=e=>{repState.player=e.target.value;repState.hlCat="all";renderHighlights();};
   const cb=$("hlCat");if(cb)cb.querySelectorAll("button").forEach(b=>b.onclick=()=>{repState.hlCat=b.dataset.hc;renderHighlights();});
-  $("rep-body").querySelectorAll(".hlrow").forEach(row=>row.onclick=()=>hlPlay(+(row.dataset.part||0),+row.dataset.ts));
+  $("rep-body").querySelectorAll(".hlrow").forEach(row=>row.onclick=()=>{hlStop();hlMarkRow(+row.dataset.idx);hlPlay(+(row.dataset.part||0),+row.dataset.ts);});
+  const pa=$("hlPlayAll");if(pa)pa.onclick=()=>{hlPlaying?hlStop():hlPlayAll();};
 }
+let hlQueue=[],hlIdx=-1,hlTimer=null,hlPlaying=false;const HL_CLIP=8;
+function hlPlayAll(){if(!hlQueue.length)return;hlPlaying=true;hlIdx=-1;hlSetBtn();hlPlayIdx(0);}
+function hlPlayIdx(i){
+  if(!hlPlaying)return;
+  if(!$("hlPlayer")){hlStop();return;}            // left the page → stop the loop
+  if(i>=hlQueue.length){hlStop();return;}
+  const prev=hlIdx>=0?hlQueue[hlIdx]:null,mo=hlQueue[i];hlIdx=i;
+  const crossing=!prev||prev.part!==mo.part;
+  hlPlay(mo.part,mo.ts);hlMarkRow(i);hlSetBtn();
+  clearTimeout(hlTimer);
+  hlTimer=setTimeout(()=>hlPlayIdx(i+1),(HL_CLIP+(crossing?2:0))*1000);
+}
+function hlStop(){hlPlaying=false;clearTimeout(hlTimer);hlTimer=null;hlIdx=-1;hlMarkRow(-1);hlSetBtn();}
+function hlMarkRow(i){const box=$("rep-body");if(!box)return;box.querySelectorAll(".hlrow").forEach(r=>{const on=(+r.dataset.idx===i);r.classList.toggle("playing",on);if(on&&r.scrollIntoView)try{r.scrollIntoView({block:"nearest",behavior:"smooth"});}catch(e){}});}
+function hlSetBtn(){const b=$("hlPlayAll");if(b){b.textContent=hlPlaying?("⏹ "+t("hl_stop")):("▶ "+t("hl_playall"));b.classList.toggle("stopbtn",hlPlaying);}const pos=$("hlPos");if(pos)pos.textContent=(hlPlaying&&hlIdx>=0)?((hlIdx+1)+"/"+hlQueue.length):"";}
 function hlPlay(part,ts){
   const vids=matchVideos(curMatch());const v=vids[part];const box=$("hlPlayer");if(!box)return;
   if(!v||!v.url){box.innerHTML=`<div class="empty">${t("hl_no_video")}</div>`;return;}
@@ -3176,6 +3205,7 @@ function buildPrintDoc(opts){
   if(opts.stats){renderStatsTable();const tbl=$("statstable")?$("statstable").outerHTML:"";out+=psec(t("print_stats"),`<div style="overflow:auto">${tbl}</div>`,true);}
   if(opts.players)opts.playerIds.forEach(pid=>{repState.player=pid;renderPlayerReport();out+=psec(t("rep_player")+" — "+(P(pid)?P(pid).name:""),captureRep(),true);});
   if(opts.develop)opts.playerIds.forEach(pid=>{repState.player=pid;renderDevelopReport();out+=psec(t("rep_develop")+" — "+(P(pid)?P(pid).name:""),captureRep(),true);});
+  if(opts.card)opts.playerIds.forEach(pid=>{repState.player=pid;renderPlayerCard();out+=psec(t("rep_card")+" — "+(P(pid)?P(pid).name:""),captureRep(),true);});
   if(opts.gk)ordered().filter(isGK).forEach(g=>{repState.player=g.id;renderGKReport();out+=psec(t("rep_gk")+" — "+g.name,captureRep(),true);});
   repState.type=saveType;repState.player=savePlayer;renderReports();
   return out||`<div class="pcover"><h1>Analyz+</h1></div>`;
@@ -3189,6 +3219,7 @@ function doChecklistPrint(opts){
 }
 function openPrintModal(){
   const ex=$("printModal");if(ex)ex.remove();
+  const onCard=repState.type==="card";
   const ov=document.createElement("div");ov.id="printModal";ov.className="printover";
   const chk=(id,lab,on)=>`<label class="prchk"><input type="checkbox" id="${id}" ${on?"checked":""}><span>${lab}</span></label>`;
   const players=ordered();
@@ -3197,9 +3228,10 @@ function openPrintModal(){
     <div class="printbody">
       <div class="prgroup"><div class="prlab">${t("print_include")}</div>
         ${chk("pr_cover",t("print_cover"),true)}
-        ${chk("pr_match",t("rep_match"),true)}
-        ${chk("pr_stats",t("print_stats"),true)}
+        ${chk("pr_match",t("rep_match"),!onCard)}
+        ${chk("pr_stats",t("print_stats"),!onCard)}
         ${chk("pr_players",t("rep_player"),false)}
+        ${chk("pr_card",t("rep_card"),onCard)}
         ${chk("pr_develop",t("rep_develop"),false)}
         ${chk("pr_gk",t("rep_gk"),false)}
       </div>
@@ -3216,7 +3248,7 @@ function openPrintModal(){
   $("prAll").onclick=()=>players.forEach(p=>{const b=$("pp_"+p.id);if(b)b.checked=true;});
   $("prNone").onclick=()=>players.forEach(p=>{const b=$("pp_"+p.id);if(b)b.checked=false;});
   $("prGo").onclick=()=>{
-    const opts={cover:$("pr_cover").checked,match:$("pr_match").checked,stats:$("pr_stats").checked,players:$("pr_players").checked,develop:$("pr_develop").checked,gk:$("pr_gk").checked,playerIds:players.filter(p=>{const b=$("pp_"+p.id);return b&&b.checked;}).map(p=>p.id)};
+    const opts={cover:$("pr_cover").checked,match:$("pr_match").checked,stats:$("pr_stats").checked,players:$("pr_players").checked,card:$("pr_card").checked,develop:$("pr_develop").checked,gk:$("pr_gk").checked,playerIds:players.filter(p=>{const b=$("pp_"+p.id);return b&&b.checked;}).map(p=>p.id)};
     close();doChecklistPrint(opts);
   };
 }
@@ -3300,7 +3332,7 @@ const repAIbtn=$("repAI");if(repAIbtn){repAIbtn.disabled=false;repAIbtn.onclick=
 /* team tab */
 function renderTeam(){
   $("rostercount").textContent=roster.length;
-  $("rosteredit").innerHTML=roster.length?ordered().map(p=>`<div class="playeredit" data-id="${p.id}"><label class="avatar-edit" title="${t("change_photo")}">${hasPhoto(p)?`<img class="avatar-lg" src="${p.photo}" alt="">`:`<span class="avatar-ph">${(p.name||"?").trim().slice(0,1).toUpperCase()}</span>`}<span class="avatar-cam"><i></i></span><input type="file" accept="image/*" hidden data-setphoto="${p.id}"></label>${hasPhoto(p)?`<button type="button" class="rmphoto" data-rmphoto="${p.id}" title="${t("remove_photo")}">${t("remove_photo")}</button>`:""}<input class="pno" value="${p.no||""}" placeholder="No"><input class="pname" value="${p.name}"><input class="ppos" value="${p.position||""}" placeholder="Position"><select class="pfoot" data-foot="${p.id}"><option value="" ${!footByPlayer[p.id]?"selected":""}>${t("foot_unset")}</option><option value="R" ${footByPlayer[p.id]==="R"?"selected":""}>${t("foot_right")}</option><option value="L" ${footByPlayer[p.id]==="L"?"selected":""}>${t("foot_left")}</option><option value="B" ${footByPlayer[p.id]==="B"?"selected":""}>${t("foot_both")}</option></select>${isGK(p)?'<span class="gktag">GK</span>':""}<button class="rowbtn del" data-rm="${p.id}" title="Remove">×</button></div>`).join(""):`<div class="emptyroster"><div class="er-ttl">${t("er_title")}</div><div class="er-sub">${t("er_sub")}</div><button class="btnlime" id="addSample">${t("add_sample")}</button></div>`;
+  $("rosteredit").innerHTML=roster.length?ordered().map(p=>`<div class="playeredit" data-id="${p.id}"><div class="avatar-wrap"><label class="avatar-edit" title="${t("change_photo")}">${hasPhoto(p)?`<img class="avatar-lg" src="${p.photo}" alt="">`:`<span class="avatar-ph">${(p.name||"?").trim().slice(0,1).toUpperCase()}</span>`}<span class="avatar-cam"><i></i></span><input type="file" accept="image/*" hidden data-setphoto="${p.id}"></label>${hasPhoto(p)?`<button type="button" class="avatar-rm" data-rmphoto="${p.id}" title="${t("remove_photo")}">×</button>`:""}</div><input class="pno" value="${p.no||""}" placeholder="No"><input class="pname" value="${p.name}"><input class="ppos" value="${p.position||""}" placeholder="Position"><select class="pfoot" data-foot="${p.id}"><option value="" ${!footByPlayer[p.id]?"selected":""}>${t("foot_unset")}</option><option value="R" ${footByPlayer[p.id]==="R"?"selected":""}>${t("foot_right")}</option><option value="L" ${footByPlayer[p.id]==="L"?"selected":""}>${t("foot_left")}</option><option value="B" ${footByPlayer[p.id]==="B"?"selected":""}>${t("foot_both")}</option></select>${isGK(p)?'<span class="gktag">GK</span>':""}<button class="rowbtn del" data-rm="${p.id}" title="Remove">×</button></div>`).join(""):`<div class="emptyroster"><div class="er-ttl">${t("er_title")}</div><div class="er-sub">${t("er_sub")}</div><button class="btnlime" id="addSample">${t("add_sample")}</button></div>`;
   if(!roster.length){const sb=$("addSample");if(sb)sb.onclick=()=>{["GK|1|Goalkeeper","Beam|4|Defender","Win|5|Defender","Tem|6|Midfielder","Anan|8|Midfielder","Sky|10|Forward","Som|9|Forward"].forEach(s=>{const[n,no,pos]=s.split("|");roster.push({id:uid("p"),no:parseInt(no,10),name:n,position:pos});});saveAll();renderTeam();renderRoster();showToast(t("sample_added"));};}
   $("rosteredit").querySelectorAll(".playeredit").forEach(row=>{
     const id=row.dataset.id;
@@ -3650,10 +3682,9 @@ const _repE=$("repExport");if(_repE)_repE.onclick=exportSession;
   matches=await store.get(K_MATCHES)||[];
   eventsByMatch=await store.get(K_EVENTS)||{};
   currentMatchId=await store.get(K_CUR);
-  if(!roster.length)roster=[{id:"p9",no:9,name:"Somchai P.",position:"Forward"},{id:"p7",no:7,name:"Anan T.",position:"Midfielder"},{id:"p4",no:4,name:"Win K.",position:"Defender"},{id:"p1",no:1,name:"Beam S.",position:"Goalkeeper"},{id:"p11",no:11,name:"Tem R.",position:"Forward"}];
-  if(!matches.length){const m={id:uid("m"),date:new Date().toISOString().slice(0,10),opponent:"Riverside Youth",video_url:"",our_goals:0,subs:{}};matches=[m];currentMatchId=m.id;
-    const old=await store.get("m1_events_v1");if(Array.isArray(old)&&old.length)eventsByMatch[m.id]=old;}
-  if(!currentMatchId||!curMatch())currentMatchId=matches[0].id;
+  // new/empty users start with an empty team (no demo data). only migrate genuine legacy data if present.
+  if(!matches.length){const old=await store.get("m1_events_v1");if(Array.isArray(old)&&old.length){const m={id:uid("m"),date:new Date().toISOString().slice(0,10),opponent:"",video_url:"",our_goals:0,subs:{}};matches=[m];currentMatchId=m.id;eventsByMatch[m.id]=old;}}
+  if(!currentMatchId||!curMatch())currentMatchId=matches[0]?matches[0].id:null;
   activeId=ordered()[0]?ordered()[0].id:null;
   saveAll();applyStaticI18n();renderMatchBar();switchMatch();paintClock();startTicker();
   applyKbHints();renderSettings();
